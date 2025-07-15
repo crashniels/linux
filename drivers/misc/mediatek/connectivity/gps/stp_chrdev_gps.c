@@ -1153,7 +1153,7 @@ static int GPS_init(void)
 		goto error;
 #if WMT_CREATE_NODE_DYNAMIC || REMOVE_MK_NODE
 
-	stpgps_class = class_create(THIS_MODULE, "stpgps");
+	stpgps_class = class_create(THIS_MODULE);
 	if (IS_ERR(stpgps_class))
 		goto error;
 	stpgps_dev = device_create(stpgps_class, NULL, dev, NULL, "stpgps");
@@ -1162,7 +1162,7 @@ static int GPS_init(void)
 #endif
 	pr_warn("%s driver(major %d) installed.\n", GPS_DRIVER_NAME, GPS_major);
 
-	gps_wake_lock_ptr = wakeup_source_register("gpswakelock");
+	gps_wake_lock_ptr = wakeup_source_register(NULL, "gpswakelock");
 	if (!gps_wake_lock_ptr) {
 		pr_info("%s %d: init wakeup source fail!", __func__, __LINE__);
 		goto error;

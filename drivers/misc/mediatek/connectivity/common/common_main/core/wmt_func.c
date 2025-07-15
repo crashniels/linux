@@ -378,7 +378,7 @@ INT32 wmt_func_ant_off(P_WMT_IC_OPS pOps, P_WMT_GEN_CONF pConf)
 
 #if CFG_FUNC_GPS_SUPPORT
 
-INT32 _osal_inline_ wmt_func_gps_ctrl(ENUM_FUNC_STATE funcState)
+_osal_inline_ INT32 wmt_func_gps_ctrl(ENUM_FUNC_STATE funcState)
 {
 	/*send turn GPS subsystem wmt command */
 	return wmt_core_func_ctrl_cmd(WMTDRV_TYPE_GPS,
@@ -603,7 +603,7 @@ INT32 wmt_func_gps_off(P_WMT_IC_OPS pOps, P_WMT_GEN_CONF pConf)
 
 #if CFG_FUNC_FM_SUPPORT
 
-INT32 _osal_inline_ wmt_func_fm_ctrl(ENUM_FUNC_STATE funcState)
+_osal_inline_ INT32 wmt_func_fm_ctrl(ENUM_FUNC_STATE funcState)
 {
 	/*only need to send turn FM subsystem wmt command */
 	return wmt_core_func_ctrl_cmd(WMTDRV_TYPE_FM,
