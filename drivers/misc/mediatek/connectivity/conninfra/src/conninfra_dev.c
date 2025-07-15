@@ -219,7 +219,7 @@ static int conninfra_dev_init(void)
 		goto err1;
 	}
 
-	pConninfraClass = class_create(THIS_MODULE, CONNINFRA_DEVICE_NAME);
+	pConninfraClass = class_create(THIS_MODULE);
 	if (IS_ERR(pConninfraClass)) {
 		pr_err("class create fail, error code(%ld)\n",
 						PTR_ERR(pConninfraClass));

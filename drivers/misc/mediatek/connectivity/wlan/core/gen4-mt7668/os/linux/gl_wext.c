@@ -3111,7 +3111,7 @@ int wext_support_ioctl(IN struct net_device *prDev, IN struct ifreq *prIfReq, IN
 	struct iw_request_info rIwReqInfo;
 	int ret = 0;
 	char *prExtraBuf = NULL;
-	UINT_32 u4ExtraSize = 16;
+	UINT_32 u4ExtraSize = 0;
 
 	/* prDev is verified in the caller function wlanDoIOCTL() */
 

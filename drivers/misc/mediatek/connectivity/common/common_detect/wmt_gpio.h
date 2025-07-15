@@ -22,7 +22,7 @@
 #include <linux/gpio.h>
 #include <linux/platform_device.h>
 #include "osal.h"
-
+#include "osal_typedef.h"
 /*******************************************************************************
 *                         C O M P I L E R   F L A G S
 ********************************************************************************

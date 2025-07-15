@@ -46,6 +46,7 @@ ccflags-y += -I$(srctree)/drivers/misc/mediatek/eccci
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/eccci/$(MTK_PLATFORM)
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/eemcs
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/conn_md/include
+ccflags-y += -I$(srctree)/drivers/misc/mediatek/connectivity/conninfra/base/include
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/mach/$(MTK_PLATFORM)/include/mach
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/emi/submodule
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/emi/$(MTK_PLATFORM)
@@ -258,7 +259,6 @@ $(MODULE_NAME)-objs += common_main/core/wmt_ic_6630.o
 $(MODULE_NAME)-objs += common_main/linux/hif_sdio.o
 $(MODULE_NAME)-objs += common_main/linux/stp_dbg_soc.o
 $(MODULE_NAME)-objs += common_main/linux/stp_dbg_combo.o
-$(MODULE_NAME)-objs += common_main/linux/osal.o
 $(MODULE_NAME)-objs += common_main/linux/wmt_dev.o
 $(MODULE_NAME)-objs += common_main/linux/stp_sdio.o
 $(MODULE_NAME)-objs += common_main/linux/bgw_desense.o
@@ -276,7 +276,7 @@ ifeq ($(CONFIG_MTK_BTIF), y)
 $(MODULE_NAME)-objs += common_main/linux/stp_btif.o
 endif
 
-$(MODULE_NAME)-objs += debug_utility/ring.o
+#$(MODULE_NAME)-objs += debug_utility/ring.o
 $(MODULE_NAME)-objs += debug_utility/ring_emi.o
 $(MODULE_NAME)-objs += debug_utility/connsys_debug_utility.o
 ###############################################################################

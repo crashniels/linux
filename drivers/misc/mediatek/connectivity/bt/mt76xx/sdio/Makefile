@@ -8,6 +8,7 @@ ccflags-y += -DDBG=0
 ccflags-y += -I$(src)/../../../wlan/os
 ccflags-y += -I$(src)/../../../wlan/core/gen4-mt7668/os/linux/include
 ccflags-y += -I$(src)/../../../common/common_main/linux/include
+ccflags-y += -I$(src)/../../../conninfra/base/include
 ccflags-y += -I$(src)/../../../common/common_main/include
 
 ifeq ($(MTK_CHIP_PCM), TRUE)

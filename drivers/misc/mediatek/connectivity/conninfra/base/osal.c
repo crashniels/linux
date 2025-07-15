@@ -39,8 +39,10 @@
 #include <linux/vmalloc.h>
 #include <asm/current.h>
 #include <linux/kfifo.h>
+#include <linux/io.h>
 #include "connectivity_build_in_adapter.h"
 #include "osal.h"
+#include "osal_typedef.h"
 #include <linux/sched/clock.h>
 
 /*******************************************************************************
@@ -200,6 +202,22 @@ int osal_snprintf(char *buf, unsigned int len, const char *fmt, ...)
 	return iRet;
 }
 
+INT32 osal_dbg_assert_aee(const PINT8 module, const PINT8 detail_description, ...)
+{
+        INT8 tempString[DBG_LOG_STR_SIZE];
+        va_list args;
+
+        va_start(args, detail_description);
+        vsnprintf(tempString, DBG_LOG_STR_SIZE, detail_description, args);
+        osal_err_print("[WMT-ASSERT][E][Module]:%s, [INFO]%s\n", module, tempString);
+#if defined WMT_PLAT_ALPS && CFG_ENABLE_AEE_MSG
+        /* There exists Format-String vulnerability. For safety, we must use the %s format parameter to read data */
+        aee_kernel_warning_api(__FILE__, __LINE__, DB_OPT_WCN_ISSUE_INFO, module, detail_description, "%s", tempString);
+#endif
+        va_end(args);
+        return 0;
+}
+
 int osal_sprintf(char *str, const char *format, ...)
 {
 	int iRet = 0;
@@ -210,6 +228,48 @@ int osal_sprintf(char *str, const char *format, ...)
 	va_end(args);
 
 	return iRet;
+}
+
+INT32 osal_err_print(const PINT8 str, ...)
+{
+        va_list args;
+        INT8 tempString[DBG_LOG_STR_SIZE];
+
+        va_start(args, str);
+        vsnprintf(tempString, DBG_LOG_STR_SIZE, str, args);
+        va_end(args);
+
+        pr_err("%s", tempString);
+
+        return 0;
+}
+
+INT32 osal_dbg_print(const PINT8 str, ...)
+{
+        va_list args;
+        INT8 tempString[DBG_LOG_STR_SIZE];
+
+        va_start(args, str);
+        vsnprintf(tempString, DBG_LOG_STR_SIZE, str, args);
+        va_end(args);
+
+        pr_debug("%s", tempString);
+
+        return 0;
+}
+
+INT32 osal_warn_print(const PINT8 str, ...)
+{
+        va_list args;
+        INT8 tempString[DBG_LOG_STR_SIZE];
+
+        va_start(args, str);
+        vsnprintf(tempString, DBG_LOG_STR_SIZE, str, args);
+        va_end(args);
+
+        pr_warn("%s", tempString);
+
+        return 0;
 }
 
 void *osal_malloc(unsigned int size)
@@ -768,7 +828,7 @@ int osal_timer_stop(P_OSAL_TIMER pTimer)
 {
 	struct timer_list *timer = &pTimer->timer;
 
-	del_timer(timer);
+	timer_shutdown(timer);
 	return 0;
 }
 
@@ -776,7 +836,7 @@ int osal_timer_stop_sync(P_OSAL_TIMER pTimer)
 {
 	struct timer_list *timer = &pTimer->timer;
 
-	del_timer_sync(timer);
+	timer_shutdown_sync(timer);
 	return 0;
 }
 
@@ -1162,7 +1222,7 @@ int osal_wake_lock_init(P_OSAL_WAKE_LOCK pLock)
 		return -1;
 
 	if (pLock->init_flag == 0) {
-		pLock->wake_lock = wakeup_source_register(pLock->name);
+		pLock->wake_lock = wakeup_source_register(NULL, pLock->name);
 		pLock->init_flag = 1;
 	}
 
@@ -1318,9 +1378,9 @@ int osal_usleep_range(unsigned long min, unsigned long max)
 int osal_gettimeofday(int *sec, int *usec)
 {
 	int ret = 0;
-	struct timeval now;
+	struct timespec64 now;
 
-	do_gettimeofday(&now);
+        ktime_get_ts64(&now);
 
 	if (sec != NULL)
 		*sec = now.tv_sec;
@@ -1328,11 +1388,23 @@ int osal_gettimeofday(int *sec, int *usec)
 		ret = -1;
 
 	if (usec != NULL)
-		*usec = now.tv_usec;
+		*usec = (unsigned long) (now.tv_nsec / 1000);
 	else
 		ret = -1;
 
 	return ret;
+}
+
+INT32 osal_printtimeofday(const PUINT8 prefix)
+{
+        INT32 ret;
+        INT32 sec;
+        INT32 usec;
+
+        ret = osal_gettimeofday(&sec, &usec);
+        ret += osal_dbg_print("%s>sec=%d, usec=%d\n", prefix, sec, usec);
+
+        return ret;
 }
 
 void osal_get_local_time(unsigned long long *sec, unsigned long *nsec)
@@ -1727,7 +1799,7 @@ static void osal_systrace_b(const char *log)
 {
 	osal_systrace_prepare();
 	preempt_disable();
-	event_trace_printk(mark_addr, "B|%d|%s\n", g_pid, log);
+	//event_trace_printk(mark_addr, "B|%d|%s\n", g_pid, log);
 	preempt_enable();
 }
 
@@ -1735,7 +1807,7 @@ static void osal_systrace_b(const char *log)
 static void osal_systrace_e(void)
 {
 	preempt_disable();
-	event_trace_printk(mark_addr, "E\n");
+	//event_trace_printk(mark_addr, "E\n");
 	preempt_enable();
 }
 
@@ -1743,7 +1815,7 @@ static void osal_systrace_c(int val, const char *log)
 {
 	osal_systrace_prepare();
 	preempt_disable();
-	event_trace_printk(mark_addr, "C|%d|%s|%d\n", g_pid, log, val);
+	//event_trace_printk(mark_addr, "C|%d|%s|%d\n", g_pid, log, val);
 	preempt_enable();
 }
 

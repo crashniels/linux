@@ -44,7 +44,7 @@ static bool cik_event_interrupt_isr(struct kfd_node *dev,
 	if ((ihre->source_id == CIK_INTSRC_GFX_PAGE_INV_FAULT ||
 		ihre->source_id == CIK_INTSRC_GFX_MEM_PROT_FAULT) &&
 		((dev->adev->asic_type == CHIP_HAWAII) || 
-		 (dev->adev->asic_type == CHIP_LIVERPOOL)) {
+		 (dev->adev->asic_type == CHIP_LIVERPOOL))) {
 		struct cik_ih_ring_entry *tmp_ihre =
 			(struct cik_ih_ring_entry *)patched_ihre;
 

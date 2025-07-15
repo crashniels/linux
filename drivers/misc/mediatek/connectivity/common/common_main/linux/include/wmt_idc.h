@@ -14,7 +14,7 @@
 #ifndef _WMT_IDC_H_
 #define _WMT_IDC_H_
 
-#include "osal.h"
+//#include "osal.h"
 #include "stp_exp.h"
 
 #if CFG_WMT_LTE_COEX_HANDLING
@@ -51,7 +51,7 @@ typedef enum {
 	WMT_IDC_RX_OPCODE_MAX
 } WMT_IDC_RX_OPCODE;
 
-#if (CFG_WMT_LTE_ENABLE_MSGID_MAPPING == 0)
+#if CFG_WMT_LTE_ENABLE_MSGID_MAPPING
 typedef enum {
 	IPC_L4C_MSG_ID_INVALID = IPC_L4C_MSG_ID_BEGIN,
 	IPC_L4C_MSG_ID_END,
@@ -97,7 +97,7 @@ typedef enum {
 
 typedef struct _MTK_WCN_WMT_IDC_INFO_ {
 	conn_md_ipc_ilm_t iit;
-	struct conn_md_bridge_ops ops;
+	CONN_MD_BRIDGE_OPS /*struct conn_md_bridge_ops*/ ops;
 	UINT8 buffer[LTE_IDC_BUFFER_MAX_SIZE];
 } MTK_WCN_WMT_IDC_INFO, *P_MTK_WCN_WMT_IDC_INFO;
 

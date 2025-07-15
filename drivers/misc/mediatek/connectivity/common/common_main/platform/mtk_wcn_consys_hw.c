@@ -72,7 +72,7 @@ UINT8 __iomem *pEmibaseaddr;
 
 P_WMT_CONSYS_IC_OPS wmt_consys_ic_ops;
 
-struct platform_device *g_pdev;
+//struct platform_device *g_pdev;
 
 UINT32 gps_lna_pin_num = 0xffffffff;
 

@@ -299,7 +299,12 @@ void osal_bug_on(unsigned int val);
 
 int osal_snprintf(char *buf, unsigned int len, const char *fmt, ...);
 
+int osal_dbg_assert_aee(char* const module, char* const detail_description, ...);
 int osal_sprintf(char *str, const char *format, ...);
+int osal_err_print(char* const str, ...);
+int osal_dbg_print(char* const str, ...);
+int osal_warn_print(char* const str, ...);
+
 void *osal_malloc(unsigned int size);
 void osal_free(const void *dst);
 void *osal_memset(void *buf, int i, unsigned int len);
@@ -393,7 +398,7 @@ int osal_test_and_clear_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData);
 int osal_test_and_set_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData);
 
 int osal_gettimeofday(int *sec, int *usec);
-//int osal_printtimeofday(const unsigned char *prefix);
+int osal_printtimeofday(unsigned char* const prefix);
 void osal_get_local_time(unsigned long long *sec, unsigned long *nsec);
 unsigned long long osal_elapsed_us(unsigned long long ts, unsigned long usec);
 
@@ -428,5 +433,11 @@ void osal_systrace_minor_c(int val, const char *name, ...);
 *                              F U N C T I O N S
 ********************************************************************************
 */
+
+#define osal_assert(condition) \
+do { \
+    if (!(condition)) \
+	osal_err_print("%s, %d, (%s)\n", __FILE__, __LINE__, #condition); \
+} while (0)
 
 #endif /* _OSAL_H_ */

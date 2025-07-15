@@ -53,6 +53,8 @@ static int wmt_detect_dump_pin_conf(void)
 	return 0;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
 int _wmt_detect_output_low(unsigned int id)
 {
 	if (gpio_ctrl_info.gpio_ctrl_state[id].gpio_num != INVALID_PIN_ID) {
@@ -91,6 +93,7 @@ int _wmt_detect_read_gpio_input(unsigned int id)
 
 	return retval;
 }
+#pragma GCC diagnostic pop
 
 /*This power on sequence must support all combo chip's basic power on sequence
  * 1. LDO control is a must, if external LDO exist

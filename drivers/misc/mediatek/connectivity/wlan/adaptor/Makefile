@@ -11,6 +11,7 @@ KBUILD_MODPOST_FAIL_ON_WARNINGS := y
 
 ccflags-y += \
     -I$(srctree)/drivers/misc/mediatek/include/mt-plat \
+    -I$(srctree)/drivers/misc/mediatek/connectivity/conninfra/base/include \
     -I$(srctree)/drivers/misc/mediatek/connectivity/common/common_main/include \
     -I$(srctree)/drivers/misc/mediatek/connectivity/common/common_main/linux/include
 

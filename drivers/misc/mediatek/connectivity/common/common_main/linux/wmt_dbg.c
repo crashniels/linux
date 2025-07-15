@@ -1218,12 +1218,12 @@ static INT32 wmt_dbg_jtag_flag_ctrl(INT32 par1, INT32 par2, INT32 par3)
 static INT32 wmt_dbg_lte_to_wmt_test(UINT32 opcode, UINT32 msg_len)
 {
 	conn_md_ipc_ilm_t ilm;
-	struct local_para *p_buf_str;
+	local_para *p_buf_str;
 	INT32 i = 0;
 	INT32 iRet = -1;
 
 	WMT_INFO_FUNC("opcode(0x%02x),msg_len(%d)\n", opcode, msg_len);
-	p_buf_str = osal_malloc(osal_sizeof(struct local_para) + msg_len);
+	p_buf_str = osal_malloc(osal_sizeof(local_para) + msg_len);
 	if (p_buf_str == NULL) {
 		WMT_ERR_FUNC("kmalloc for local para ptr structure failed.\n");
 		return -1;
