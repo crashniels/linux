@@ -121,26 +121,31 @@ unsigned int osal_strlen(const char *str)
 {
 	return strlen(str);
 }
+EXPORT_SYMBOL(osal_strlen);
 
 int osal_strcmp(const char *dst, const char *src)
 {
 	return strcmp(dst, src);
 }
+EXPORT_SYMBOL(osal_strcmp);
 
 int osal_strncmp(const char *dst, const char *src, unsigned int len)
 {
 	return strncmp(dst, src, len);
 }
+EXPORT_SYMBOL(osal_strncmp);
 
 char *osal_strcpy(char *dst, const char *src)
 {
 	return strncpy(dst, src, strlen(src)+1);
 }
+EXPORT_SYMBOL(osal_strcpy);
 
 char *osal_strncpy(char *dst, const char *src, unsigned int len)
 {
 	return strncpy(dst, src, len);
 }
+EXPORT_SYMBOL(osal_strncpy);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-overflow"
@@ -154,16 +159,19 @@ char *osal_strncat(char *dst, const char *src, unsigned int len)
 {
 	return strncat(dst, src, len);
 }
+EXPORT_SYMBOL(osal_strncat);
 
 char *osal_strchr(const char *str, unsigned char c)
 {
 	return strchr(str, c);
 }
+EXPORT_SYMBOL(osal_strchr);
 
 char *osal_strsep(char **str, const char *c)
 {
 	return strsep(str, c);
 }
+EXPORT_SYMBOL(osal_strsep);
 
 int osal_strtol(const char *str, unsigned int adecimal, long *res)
 {
@@ -172,21 +180,25 @@ int osal_strtol(const char *str, unsigned int adecimal, long *res)
 	else
 		return kstrtol(str, adecimal, res);
 }
+EXPORT_SYMBOL(osal_strtol);
 
 char *osal_strstr(char *str1, const char *str2)
 {
 	return strstr(str1, str2);
 }
+EXPORT_SYMBOL(osal_strstr);
 
 char *osal_strnstr(char *str1, const char *str2, int n)
 {
 	return strnstr(str1, str2, n);
 }
+EXPORT_SYMBOL(osal_strnstr);
 
 void osal_bug_on(unsigned int val)
 {
 	WARN_ON(val);
 }
+EXPORT_SYMBOL(osal_bug_on);
 
 int osal_snprintf(char *buf, unsigned int len, const char *fmt, ...)
 {
@@ -201,6 +213,7 @@ int osal_snprintf(char *buf, unsigned int len, const char *fmt, ...)
 
 	return iRet;
 }
+EXPORT_SYMBOL(osal_snprintf);
 
 INT32 osal_dbg_assert_aee(const PINT8 module, const PINT8 detail_description, ...)
 {
@@ -217,6 +230,7 @@ INT32 osal_dbg_assert_aee(const PINT8 module, const PINT8 detail_description, ..
         va_end(args);
         return 0;
 }
+EXPORT_SYMBOL(osal_dbg_assert_aee);
 
 int osal_sprintf(char *str, const char *format, ...)
 {
@@ -229,6 +243,7 @@ int osal_sprintf(char *str, const char *format, ...)
 
 	return iRet;
 }
+EXPORT_SYMBOL(osal_sprintf);
 
 INT32 osal_err_print(const PINT8 str, ...)
 {
@@ -243,6 +258,7 @@ INT32 osal_err_print(const PINT8 str, ...)
 
         return 0;
 }
+EXPORT_SYMBOL(osal_err_print);
 
 INT32 osal_dbg_print(const PINT8 str, ...)
 {
@@ -257,6 +273,7 @@ INT32 osal_dbg_print(const PINT8 str, ...)
 
         return 0;
 }
+EXPORT_SYMBOL(osal_dbg_print);
 
 INT32 osal_warn_print(const PINT8 str, ...)
 {
@@ -271,41 +288,49 @@ INT32 osal_warn_print(const PINT8 str, ...)
 
         return 0;
 }
+EXPORT_SYMBOL(osal_warn_print);
 
 void *osal_malloc(unsigned int size)
 {
 	return vmalloc(size);
 }
+EXPORT_SYMBOL(osal_malloc);
 
 void osal_free(const void *dst)
 {
 	vfree(dst);
 }
+EXPORT_SYMBOL(osal_free);
 
 void *osal_memset(void *buf, int i, unsigned int len)
 {
 	return memset(buf, i, len);
 }
+EXPORT_SYMBOL(osal_memset);
 
 void *osal_memcpy(void *dst, const void *src, unsigned int len)
 {
 	return memcpy(dst, src, len);
 }
+EXPORT_SYMBOL(osal_memcpy);
 
 void osal_memcpy_fromio(void *dst, const void *src, unsigned int len)
 {
 	return memcpy_fromio(dst, src, len);
 }
+EXPORT_SYMBOL(osal_memcpy_fromio);
 
 void osal_memcpy_toio(void *dst, const void *src, unsigned int len)
 {
 	return memcpy_toio(dst, src, len);
 }
+EXPORT_SYMBOL(osal_memcpy_toio);
 
 int osal_memcmp(const void *buf1, const void *buf2, unsigned int len)
 {
 	return memcmp(buf1, buf2, len);
 }
+EXPORT_SYMBOL(osal_memcmp);
 
 unsigned short osal_crc16(const unsigned char *buffer,
 				const unsigned int length)
@@ -320,11 +345,13 @@ unsigned short osal_crc16(const unsigned char *buffer,
 		crc = (crc >> 8) ^ crc16_table[(crc ^ (*temp)) & 0xff];
 	return crc;
 }
+EXPORT_SYMBOL(osal_crc16);
 
 void osal_dump_thread_state(const unsigned char *name)
 {
 	//return connectivity_export_dump_thread_state(name);
 }
+EXPORT_SYMBOL(osal_dump_thread_state);
 
 void osal_thread_show_stack(P_OSAL_THREAD pThread)
 {
@@ -333,6 +360,7 @@ void osal_thread_show_stack(P_OSAL_THREAD pThread)
 		KERNEL_show_stack(pThread->pThread, NULL);
 #endif
 }
+EXPORT_SYMBOL(osal_thread_show_stack);
 
 /*
  * OSAL layer Thread Opeartion related APIs
@@ -350,6 +378,7 @@ int osal_thread_create(P_OSAL_THREAD pThread)
 
 	return 0;
 }
+EXPORT_SYMBOL(osal_thread_create);
 
 int osal_thread_run(P_OSAL_THREAD pThread)
 {
@@ -360,6 +389,7 @@ int osal_thread_run(P_OSAL_THREAD pThread)
 		return -1;
 	}
 }
+EXPORT_SYMBOL(osal_thread_run);
 
 int osal_thread_stop(P_OSAL_THREAD pThread)
 {
@@ -372,6 +402,7 @@ int osal_thread_stop(P_OSAL_THREAD pThread)
 	}
 	return -1;
 }
+EXPORT_SYMBOL(osal_thread_stop);
 
 int osal_thread_should_stop(P_OSAL_THREAD pThread)
 {
@@ -381,6 +412,7 @@ int osal_thread_should_stop(P_OSAL_THREAD pThread)
 		return 1;
 
 }
+EXPORT_SYMBOL(osal_thread_should_stop);
 
 int osal_thread_wait_for_event(P_OSAL_THREAD pThread,
 		P_OSAL_EVENT pEvent, P_OSAL_EVENT_CHECKER pChecker)
@@ -394,6 +426,7 @@ int osal_thread_wait_for_event(P_OSAL_THREAD pThread,
 	}
 	return -1;
 }
+EXPORT_SYMBOL(osal_thread_wait_for_event);
 
 int osal_thread_destroy(P_OSAL_THREAD pThread)
 {
@@ -403,6 +436,7 @@ int osal_thread_destroy(P_OSAL_THREAD pThread)
 	}
 	return 0;
 }
+EXPORT_SYMBOL(osal_thread_destroy);
 
 /*
  * osal_thread_sched_retrieve
@@ -461,6 +495,7 @@ int osal_thread_sched_mark(P_OSAL_THREAD pThread,
 {
 	return osal_thread_sched_retrieve(pThread, schedstats);
 }
+EXPORT_SYMBOL(osal_thread_sched_mark);
 
 /*
  * osal_thread_sched_unmark
@@ -492,6 +527,7 @@ int osal_thread_sched_unmark(P_OSAL_THREAD pThread,
 	}
 	return ret;
 }
+EXPORT_SYMBOL(osal_thread_sched_unmark);
 
 /*
  * OSAL layer Signal Opeartion related APIs
@@ -512,6 +548,7 @@ int osal_signal_init(P_OSAL_SIGNAL pSignal)
 		return -1;
 	}
 }
+EXPORT_SYMBOL(osal_signal_init);
 
 int osal_wait_for_signal(P_OSAL_SIGNAL pSignal)
 {
@@ -593,6 +630,7 @@ int osal_wait_for_signal_timeout(P_OSAL_SIGNAL pSignal, P_OSAL_THREAD pThread)
 	} while (pSignal->timeoutExtension--);
 	return waitRet;
 }
+EXPORT_SYMBOL(osal_wait_for_signal_timeout);
 
 int osal_raise_signal(P_OSAL_SIGNAL pSignal)
 {
@@ -602,6 +640,7 @@ int osal_raise_signal(P_OSAL_SIGNAL pSignal)
 	} else
 		return -1;
 }
+EXPORT_SYMBOL(osal_raise_signal);
 
 int osal_signal_active_state(P_OSAL_SIGNAL pSignal)
 {
@@ -619,6 +658,7 @@ int osal_signal_deinit(P_OSAL_SIGNAL pSignal)
 	} else
 		return -1;
 }
+EXPORT_SYMBOL(osal_signal_deinit);
 
 /*
  * OSAL layer Event Opeartion related APIs
@@ -638,6 +678,7 @@ int osal_event_init(P_OSAL_EVENT pEvent)
 	}
 	return -1;
 }
+EXPORT_SYMBOL(osal_event_init);
 
 int osal_trigger_event(P_OSAL_EVENT pEvent)
 {
@@ -649,6 +690,7 @@ int osal_trigger_event(P_OSAL_EVENT pEvent)
 	}
 	return -1;
 }
+EXPORT_SYMBOL(osal_trigger_event);
 
 int osal_wait_for_event(P_OSAL_EVENT pEvent,
 			int (*condition)(void *), void *cond_pa)
@@ -659,6 +701,7 @@ int osal_wait_for_event(P_OSAL_EVENT pEvent,
 	else
 		return -1;
 }
+EXPORT_SYMBOL(osal_wait_for_event);
 
 int osal_wait_for_event_timeout(P_OSAL_EVENT pEvent,
 				int (*condition)(void *), void *cond_pa)
@@ -669,12 +712,14 @@ int osal_wait_for_event_timeout(P_OSAL_EVENT pEvent,
 					msecs_to_jiffies(pEvent->timeoutValue));
 	return -1;
 }
+EXPORT_SYMBOL(osal_wait_for_event_timeout);
 
 
 int osal_event_deinit(P_OSAL_EVENT pEvent)
 {
 	return 0;
 }
+EXPORT_SYMBOL(osal_event_deinit);
 
 long osal_wait_for_event_bit_set(P_OSAL_EVENT pEvent,
 			unsigned long *pState, unsigned int bitOffset)
@@ -742,6 +787,7 @@ int osal_clear_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 	osal_bit_op_unlock(&(pData->opLock));
 	return 0;
 }
+EXPORT_SYMBOL(osal_clear_bit);
 
 int osal_set_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 {
@@ -750,6 +796,7 @@ int osal_set_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 	osal_bit_op_unlock(&(pData->opLock));
 	return 0;
 }
+EXPORT_SYMBOL(osal_set_bit);
 
 int osal_test_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 {
@@ -760,6 +807,7 @@ int osal_test_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 	osal_bit_op_unlock(&(pData->opLock));
 	return iRet;
 }
+EXPORT_SYMBOL(osal_test_bit);
 
 int osal_test_and_clear_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 {
@@ -771,6 +819,7 @@ int osal_test_and_clear_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 	return iRet;
 
 }
+EXPORT_SYMBOL(osal_test_and_clear_bit);
 
 int osal_test_and_set_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 {
@@ -781,6 +830,7 @@ int osal_test_and_set_bit(unsigned int bitOffset, P_OSAL_BIT_OP_VAR pData)
 	osal_bit_op_unlock(&(pData->opLock));
 	return iRet;
 }
+EXPORT_SYMBOL(osal_test_and_set_bit);
 
 void (*timeoutHandlerHack)(unsigned long);
 
@@ -813,6 +863,7 @@ int osal_timer_create(P_OSAL_TIMER pTimer)
 	timer_setup(timer, timeoutHandlerWrapper, 0);
 	return 0;
 }
+EXPORT_SYMBOL(osal_timer_create);
 
 int osal_timer_start(P_OSAL_TIMER pTimer, unsigned int ms)
 {
@@ -823,6 +874,7 @@ int osal_timer_start(P_OSAL_TIMER pTimer, unsigned int ms)
 	add_timer(timer);
 	return 0;
 }
+EXPORT_SYMBOL(osal_timer_start);
 
 int osal_timer_stop(P_OSAL_TIMER pTimer)
 {
@@ -831,6 +883,7 @@ int osal_timer_stop(P_OSAL_TIMER pTimer)
 	timer_shutdown(timer);
 	return 0;
 }
+EXPORT_SYMBOL(osal_timer_stop);
 
 int osal_timer_stop_sync(P_OSAL_TIMER pTimer)
 {
@@ -839,6 +892,7 @@ int osal_timer_stop_sync(P_OSAL_TIMER pTimer)
 	timer_shutdown_sync(timer);
 	return 0;
 }
+EXPORT_SYMBOL(osal_timer_stop_sync);
 
 int osal_timer_modify(P_OSAL_TIMER pTimer, unsigned int ms)
 {
@@ -846,6 +900,7 @@ int osal_timer_modify(P_OSAL_TIMER pTimer, unsigned int ms)
 	mod_timer(&pTimer->timer, jiffies + (ms) / (1000 / HZ));
 	return 0;
 }
+EXPORT_SYMBOL(osal_timer_modify);
 
 int _osal_fifo_init(OSAL_FIFO *pFifo, unsigned char *buf, unsigned int size)
 {
@@ -880,6 +935,7 @@ int _osal_fifo_init(OSAL_FIFO *pFifo, unsigned char *buf, unsigned int size)
 	pFifo->pFifoBody = fifo;
 	return (ret < 0) ? (-1) : (0);
 }
+EXPORT_SYMBOL(osal_fifo_init);
 
 int _osal_fifo_deinit(OSAL_FIFO *pFifo)
 {
@@ -957,6 +1013,7 @@ int _osal_fifo_len(OSAL_FIFO *pFifo)
 
 	return ret;
 }
+EXPORT_SYMBOL(osal_fifo_len);
 
 int _osal_fifo_is_empty(OSAL_FIFO *pFifo)
 {
@@ -1063,6 +1120,7 @@ int _osal_fifo_reset(OSAL_FIFO *pFifo)
 
 	return 0;
 }
+EXPORT_SYMBOL(osal_fifo_reset);
 
 int osal_fifo_init(P_OSAL_FIFO pFifo, unsigned char *buffer, unsigned int size)
 {
@@ -1103,6 +1161,7 @@ void osal_fifo_deinit(P_OSAL_FIFO pFifo)
 	}
 	kfree(pFifo->pFifoBody);
 }
+EXPORT_SYMBOL(osal_fifo_deinit);
 
 int osal_fifo_reset(P_OSAL_FIFO pFifo)
 {
@@ -1131,6 +1190,7 @@ unsigned int osal_fifo_in(P_OSAL_FIFO pFifo,
 
 	return ret;
 }
+EXPORT_SYMBOL(osal_fifo_in);
 
 unsigned int osal_fifo_out(P_OSAL_FIFO pFifo,
 			unsigned char *buffer, unsigned int size)
@@ -1146,6 +1206,7 @@ unsigned int osal_fifo_out(P_OSAL_FIFO pFifo,
 
 	return ret;
 }
+EXPORT_SYMBOL(osal_fifo_out);
 
 unsigned int osal_fifo_len(P_OSAL_FIFO pFifo)
 {
@@ -1228,6 +1289,7 @@ int osal_wake_lock_init(P_OSAL_WAKE_LOCK pLock)
 
 	return 0;
 }
+EXPORT_SYMBOL(osal_wake_lock_init);
 
 int osal_wake_lock_deinit(P_OSAL_WAKE_LOCK pLock)
 {
@@ -1242,6 +1304,7 @@ int osal_wake_lock_deinit(P_OSAL_WAKE_LOCK pLock)
 
 	return 0;
 }
+EXPORT_SYMBOL(osal_wake_lock_deinit);
 
 int osal_wake_lock(P_OSAL_WAKE_LOCK pLock)
 {
@@ -1255,6 +1318,7 @@ int osal_wake_lock(P_OSAL_WAKE_LOCK pLock)
 
 	return 0;
 }
+EXPORT_SYMBOL(osal_wake_lock);
 
 int osal_wake_unlock(P_OSAL_WAKE_LOCK pLock)
 {
@@ -1269,6 +1333,7 @@ int osal_wake_unlock(P_OSAL_WAKE_LOCK pLock)
 	return 0;
 
 }
+EXPORT_SYMBOL(osal_wake_unlock);
 
 int osal_wake_lock_count(P_OSAL_WAKE_LOCK pLock)
 {
@@ -1284,6 +1349,7 @@ int osal_wake_lock_count(P_OSAL_WAKE_LOCK pLock)
 
 	return count;
 }
+EXPORT_SYMBOL(osal_wake_lock_count);
 
 /*
  * sleepable lock operations APIs
@@ -1299,6 +1365,7 @@ int osal_unsleepable_lock_init(P_OSAL_UNSLEEPABLE_LOCK pUSL)
 	spin_lock_init(&(pUSL->lock));
 	return 0;
 }
+EXPORT_SYMBOL(osal_unsleepable_lock_init);
 #endif
 
 int osal_lock_unsleepable_lock(P_OSAL_UNSLEEPABLE_LOCK pUSL)
@@ -1306,17 +1373,20 @@ int osal_lock_unsleepable_lock(P_OSAL_UNSLEEPABLE_LOCK pUSL)
 	spin_lock_irqsave(&(pUSL->lock), pUSL->flag);
 	return 0;
 }
+EXPORT_SYMBOL(osal_lock_unsleepable_lock);
 
 int osal_unlock_unsleepable_lock(P_OSAL_UNSLEEPABLE_LOCK pUSL)
 {
 	spin_unlock_irqrestore(&(pUSL->lock), pUSL->flag);
 	return 0;
 }
+EXPORT_SYMBOL(osal_unlock_unsleepable_lock);
 
 int osal_unsleepable_lock_deinit(P_OSAL_UNSLEEPABLE_LOCK pUSL)
 {
 	return 0;
 }
+EXPORT_SYMBOL(osal_unsleepable_lock_deinit);
 
 /*
  * unsleepable operations APIs
@@ -1333,35 +1403,41 @@ int osal_sleepable_lock_init(P_OSAL_SLEEPABLE_LOCK pSL)
 	mutex_init(&pSL->lock);
 	return 0;
 }
+EXPORT_SYMBOL(osal_sleepable_lock_init);
 #endif
 
 int osal_lock_sleepable_lock(P_OSAL_SLEEPABLE_LOCK pSL)
 {
 	return mutex_lock_killable(&pSL->lock);
 }
+EXPORT_SYMBOL(osal_lock_sleepable_lock);
 
 int osal_unlock_sleepable_lock(P_OSAL_SLEEPABLE_LOCK pSL)
 {
 	mutex_unlock(&pSL->lock);
 	return 0;
 }
+EXPORT_SYMBOL(osal_unlock_sleepable_lock);
 
 int osal_trylock_sleepable_lock(P_OSAL_SLEEPABLE_LOCK pSL)
 {
 	return mutex_trylock(&pSL->lock);
 }
+EXPORT_SYMBOL(osal_trylock_sleepable_lock);
 
 int osal_sleepable_lock_deinit(P_OSAL_SLEEPABLE_LOCK pSL)
 {
 	mutex_destroy(&pSL->lock);
 	return 0;
 }
+EXPORT_SYMBOL(osal_sleepable_lock_deinit);
 
 int osal_sleep_ms(unsigned int ms)
 {
 	msleep(ms);
 	return 0;
 }
+EXPORT_SYMBOL(osal_sleep_ms);
 
 int osal_udelay(unsigned int us)
 {
@@ -1374,6 +1450,7 @@ int osal_usleep_range(unsigned long min, unsigned long max)
 	usleep_range(min, max);
 	return 0;
 }
+EXPORT_SYMBOL(osal_usleep_range);
 
 int osal_gettimeofday(int *sec, int *usec)
 {
@@ -1394,6 +1471,7 @@ int osal_gettimeofday(int *sec, int *usec)
 
 	return ret;
 }
+EXPORT_SYMBOL(osal_gettimeofday);
 
 INT32 osal_printtimeofday(const PUINT8 prefix)
 {
@@ -1406,6 +1484,7 @@ INT32 osal_printtimeofday(const PUINT8 prefix)
 
         return ret;
 }
+EXPORT_SYMBOL(osal_printtimeofday);
 
 void osal_get_local_time(unsigned long long *sec, unsigned long *nsec)
 {
@@ -1415,6 +1494,7 @@ void osal_get_local_time(unsigned long long *sec, unsigned long *nsec)
 	} else
 		pr_err("The input parameters error when get local time\n");
 }
+EXPORT_SYMBOL(osal_get_local_time);
 
 unsigned long long osal_elapsed_us(unsigned long long ts, unsigned long usec)
 {
@@ -1424,6 +1504,7 @@ unsigned long long osal_elapsed_us(unsigned long long ts, unsigned long usec)
 	osal_get_local_time(&current_ts, &current_usec);
 	return (current_ts*1000000 + current_usec) - (ts*1000000 + usec);
 }
+EXPORT_SYMBOL(osal_elapsed_us);
 
 void osal_buffer_dump(const unsigned char *buf,
 			const unsigned char *title, const unsigned int len,
@@ -1454,6 +1535,7 @@ void osal_buffer_dump(const unsigned char *buf,
 
 	pr_info("end of dump\n");
 }
+EXPORT_SYMBOL(osal_buffer_dump);
 
 void osal_buffer_dump_data(const unsigned int *buf,
 			const unsigned char *title, const unsigned int len,
@@ -1487,17 +1569,20 @@ void osal_buffer_dump_data(const unsigned int *buf,
 			pr_info("%s%s", title, str);
 	}
 }
+EXPORT_SYMBOL(osal_buffer_dump_data);
 
 unsigned int osal_op_get_id(P_OSAL_OP pOp)
 {
 	return (pOp) ? pOp->op.opId : 0xFFFFFFFF;
 }
+EXPORT_SYMBOL(osal_op_get_id);
 
 MTK_CONN_BOOL osal_op_is_wait_for_signal(P_OSAL_OP pOp)
 {
 	return (pOp && pOp->signal.timeoutValue)
 			? MTK_CONN_BOOL_TRUE : MTK_CONN_BOOL_FALSE;
 }
+EXPORT_SYMBOL(osal_op_is_wait_for_signal);
 
 void osal_op_raise_signal(P_OSAL_OP pOp, int result)
 {
@@ -1506,6 +1591,7 @@ void osal_op_raise_signal(P_OSAL_OP pOp, int result)
 		osal_raise_signal(&pOp->signal);
 	}
 }
+EXPORT_SYMBOL(osal_op_raise_signal);
 
 int osal_ftrace_print(const char *str, ...)
 {
@@ -1523,6 +1609,7 @@ int osal_ftrace_print(const char *str, ...)
 #endif
 	return 0;
 }
+EXPORT_SYMBOL(osal_ftrace_print);
 
 int osal_ftrace_print_ctrl(int flag)
 {
@@ -1534,6 +1621,7 @@ int osal_ftrace_print_ctrl(int flag)
 #endif
 	return 0;
 }
+EXPORT_SYMBOL(osal_ftrace_print_ctrl);
 
 void osal_set_op_result(P_OSAL_OP pOp, int result)
 {
@@ -1610,6 +1698,7 @@ static void _osal_opq_dump(const char *qName, P_OSAL_OP_Q pOpQ)
 		idx++;
 	}
 }
+EXPORT_SYMBOL(osal_opq_dump);
 
 void osal_opq_dump(const char *qName, P_OSAL_OP_Q pOpQ)
 {
@@ -1630,6 +1719,7 @@ void osal_opq_dump_locked(const char *qName, P_OSAL_OP_Q pOpQ)
 {
 	_osal_opq_dump(qName, pOpQ);
 }
+EXPORT_SYMBOL(osal_opq_dump_locked);
 
 MTK_CONN_BOOL osal_opq_has_op(P_OSAL_OP_Q pOpQ, P_OSAL_OP pOp)
 {
@@ -1704,6 +1794,7 @@ void osal_op_history_init(struct osal_op_history *log_history, int queue_size)
 
 	INIT_WORK(&log_history->dump_work, osal_op_history_print_work);
 }
+EXPORT_SYMBOL(osal_op_history_init);
 
 void osal_op_history_print(struct osal_op_history *log_history, char *name)
 {
@@ -1746,6 +1837,7 @@ void osal_op_history_print(struct osal_op_history *log_history, char *name)
 	spin_unlock_irqrestore(lock, flags);
 	schedule_work(work);
 }
+EXPORT_SYMBOL(osal_op_history_print);
 
 void osal_op_history_save(struct osal_op_history *log_history, P_OSAL_OP pOp)
 {
@@ -1786,6 +1878,7 @@ void osal_op_history_save(struct osal_op_history *log_history, P_OSAL_OP pOp)
 	entry->usec = usec;
 	spin_unlock_irqrestore(&(log_history->lock), flags);
 }
+EXPORT_SYMBOL(osal_op_history_save);
 
 static inline void osal_systrace_prepare(void)
 {

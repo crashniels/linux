@@ -19,7 +19,6 @@
 
 #ifndef _WMT_PLAT_H_
 #define _WMT_PLAT_H_
-#include "osal_typedef.h"
 #include "stp_exp.h"
 #include <mtk_wcn_cmb_stub.h>
 #include "mtk_wcn_cmb_hw.h"

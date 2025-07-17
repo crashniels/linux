@@ -37,7 +37,6 @@
 #include <linux/jiffies.h>
 #include <linux/slab.h>
 #include <mt-plat/mtk_wcn_cmb_stub.h>
-#include "osal_typedef.h"
 #include "stp_exp.h"
 #include "wmt_exp.h"
 

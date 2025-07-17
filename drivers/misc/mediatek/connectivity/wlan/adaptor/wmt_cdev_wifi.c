@@ -77,6 +77,8 @@ uint32_t gDbgLevel = WIFI_LOG_DBG;
 
 #define VERSION "2.0"
 
+MODULE_DESCRIPTION("MediaTek WiFi Driver");
+
 static int32_t WIFI_devs = 1;
 static int32_t WIFI_major = WIFI_DEV_MAJOR;
 module_param(WIFI_major, uint, 0);

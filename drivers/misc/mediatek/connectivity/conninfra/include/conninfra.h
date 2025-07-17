@@ -79,11 +79,11 @@ enum consys_drv_type {
 */
 
 /* EMI */
-void conninfra_get_phy_addr(unsigned int *addr, unsigned int *size);
+extern void conninfra_get_phy_addr(unsigned int *addr, unsigned int *size);
 
 /* power on/off */
-int conninfra_pwr_on(enum consys_drv_type drv_type);
-int conninfra_pwr_off(enum consys_drv_type drv_type);
+extern int conninfra_pwr_on(enum consys_drv_type drv_type);
+extern int conninfra_pwr_off(enum consys_drv_type drv_type);
 
 
 /* chip reset
@@ -92,7 +92,7 @@ int conninfra_pwr_off(enum consys_drv_type drv_type);
 *    =0: triggered
 *    =1: ongoing
 */
-int conninfra_trigger_whole_chip_rst(enum consys_drv_type drv, char *reason);
+extern int conninfra_trigger_whole_chip_rst(enum consys_drv_type drv, char *reason);
 
 struct whole_chip_rst_cb {
 	int (*pre_whole_chip_rst)(void);
@@ -131,8 +131,8 @@ struct sub_drv_ops_cb {
 
 };
 
-int conninfra_sub_drv_ops_register(enum consys_drv_type drv_type, struct sub_drv_ops_cb *cb);
-int conninfra_sub_drv_ops_unregister(enum consys_drv_type drv_type);
+extern int conninfra_sub_drv_ops_register(enum consys_drv_type drv_type, struct sub_drv_ops_cb *cb);
+extern int conninfra_sub_drv_ops_unregister(enum consys_drv_type drv_type);
 
 
 /*******************************************************************************

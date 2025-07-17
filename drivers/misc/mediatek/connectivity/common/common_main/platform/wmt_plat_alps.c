@@ -67,7 +67,6 @@
 #include "mtk_wcn_cmb_hw.h"
 #include "mtk_wcn_consys_hw.h"
 #include "stp_dbg.h"
-//#include "osal.h"
 #include "wmt_gpio.h"
 #include "wmt_detect.h"
 #include "stp_exp.h"

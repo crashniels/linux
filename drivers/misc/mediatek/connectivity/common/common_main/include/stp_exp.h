@@ -20,8 +20,8 @@
 #ifndef _STP_EXP_H_
 #define _STP_EXP_H_
 
-#include "osal.h"
-#include "osal_typedef.h"
+#include <osal.h>
+#include <osal_typedef.h>
 /*******************************************************************************
 *                         C O M P I L E R   F L A G S
 ********************************************************************************

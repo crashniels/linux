@@ -358,6 +358,9 @@ INT32 mtk_wcn_hif_sdio_query_chipid(INT32 waitFlag);
 ********************************************************************************
 */
 
+extern int mmc_io_rw_direct(struct mmc_card *card, int write, unsigned fn,
+        unsigned addr, u8 in, u8 *out);
+
 /*******************************************************************************
 *                   E X T E R N A L    F U N C T I O N   D E C L A R A T I O N S
 ********************************************************************************

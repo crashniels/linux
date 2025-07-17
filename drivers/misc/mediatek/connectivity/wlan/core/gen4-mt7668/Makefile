@@ -159,14 +159,15 @@ else ifeq ($(CONFIG_MTK_COMBO_WIFI_HIF), usb)
     ccflags-y += -I$(src)/os/linux/hif/usb/include
 endif
 
-ifneq ($(PLATFORM_FLAGS), )
+ifneq ($(PLATFORM_FLAGS),)
     ccflags-y += $(PLATFORM_FLAGS)
 endif
 
 ifeq ($(CONFIG_MTK_WIFI_DEVICE),y)
-    obj-$(CONFIG_MTK_WIFI_DEVICE) += $(MODULE_NAME).o
+obj-$(CONFIG_MTK_WIFI_DEVICE) += $(MODULE_NAME).o
 else
-    obj-$(CONFIG_MTK_COMBO_WIFI) += $(MODULE_NAME).o
+$(warning $(MODULE_NAME) is kernel module)
+obj-$(CONFIG_MTK_COMBO_WIFI) += $(MODULE_NAME).o
 endif
 
 #MODULE_NAME := wlan_drv_gen4_mt7668
@@ -179,11 +180,11 @@ COMMON_DIR  := common/
 OS_DIR      := os/linux/
 
 ifeq ($(CONFIG_MTK_COMBO_WIFI_HIF), sdio)
-    HIF_DIR	    := os/linux/hif/sdio/
+    HIF_DIR	    := $(OS_DIR)hif/sdio/
 else ifeq ($(CONFIG_MTK_COMBO_WIFI_HIF), pcie)
-    HIF_DIR     := os/linux/hif/pcie/
+    HIF_DIR     := $(OS_DIR)hif/pcie/
 else ifeq ($(CONFIG_MTK_COMBO_WIFI_HIF), usb)
-    HIF_DIR	    := os/linux/hif/usb/
+    HIF_DIR	    := $(OS_DIR)hif/usb/
 endif
 
 NIC_DIR     := nic/

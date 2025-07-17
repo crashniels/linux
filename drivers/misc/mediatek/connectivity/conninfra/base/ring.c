@@ -33,6 +33,7 @@ void ring_init(void *base, unsigned int max_size, unsigned int read,
 	ring->write = write;
 	ring->max_size = max_size;
 }
+EXPORT_SYMBOL(ring_init);
 
 void ring_dump(const char *title, struct ring *ring)
 {
@@ -66,6 +67,7 @@ unsigned int ring_read_prepare(unsigned int sz,
 	/* ring_dump_segment(__func__, seg); */
 	return seg->remain;
 }
+EXPORT_SYMBOL(ring_read_prepare);
 
 /*
  * Function prepares the ring_segment and
@@ -86,6 +88,7 @@ unsigned int ring_write_prepare(unsigned int sz,
 	/* ring_dump_segment(__func__, seg); */
 	return seg->remain;
 }
+EXPORT_SYMBOL(ring_write_prepare);
 
 unsigned int ring_overwrite_prepare(unsigned int sz, struct ring_segment *seg,
 						      struct ring *ring)
@@ -125,6 +128,7 @@ void _ring_segment_prepare(unsigned int from,
 {
 	__ring_segment_prepare(from, seg->remain, seg, ring);
 }
+EXPORT_SYMBOL(_ring_segment_prepare);
 
 void _ring_segment_prepare_item(unsigned int from,
 					struct ring_segment *seg,
@@ -142,10 +146,12 @@ void _ring_read_commit(struct ring_segment *seg, struct ring *ring)
 	/* ring_dump(__func__, ring); */
 	/* ring_dump_segment(__func__, seg); */
 }
+EXPORT_SYMBOL(_ring_read_commit);
+
 void _ring_write_commit(struct ring_segment *seg, struct ring *ring)
 {
 	ring->write += seg->sz;
 	/* ring_dump(__func__, ring); */
 	/* ring_dump_segment(__func__, seg); */
 }
-
+EXPORT_SYMBOL(_ring_write_commit);

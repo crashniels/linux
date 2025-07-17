@@ -79,6 +79,8 @@ static ssize_t conninfra_dev_write(struct file *filp,
 ********************************************************************************
 */
 
+MODULE_DESCRIPTION("MediaTek Conninfra Driver");
+
 /*******************************************************************************
 *                           P R I V A T E   D A T A
 ********************************************************************************
@@ -318,7 +320,7 @@ static void conninfra_dev_deinit(void)
 module_init(conninfra_dev_init);
 module_exit(conninfra_dev_deinit);
 
-MODULE_LICENSE("GPL");
+MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Willy.Yu @ CTD/SE5/CS5");
 
 module_param(gConnInfraMajor, uint, 0644);

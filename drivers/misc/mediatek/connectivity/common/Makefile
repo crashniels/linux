@@ -9,9 +9,9 @@ ifneq ($(CONFIG_MTK_COMBO),)
 
 ccflags-y += -imacros $(AUTOCONF_H)
 
-#ifeq ($(CONFIG_MTK_COMBO_CHIP),)
-#    $(error CONFIG_MTK_COMBO_CHIP not defined)
-#3endif
+ifeq ($(CONFIG_MTK_COMBO_CHIP),)
+    $(error CONFIG_MTK_COMBO_CHIP not defined)
+endif
 
 ifeq ($(TARGET_BUILD_VARIANT),$(filter $(TARGET_BUILD_VARIANT),userdebug user))
     #ldflags-y += -s
@@ -46,7 +46,9 @@ ccflags-y += -I$(srctree)/drivers/misc/mediatek/eccci
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/eccci/$(MTK_PLATFORM)
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/eemcs
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/conn_md/include
+ccflags-y += -I$(srctree)/drivers/misc/mediatek/connectivity/conninfra/include
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/connectivity/conninfra/base/include
+ccflags-y += -I$(srctree)/drivers/mmc/core
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/mach/$(MTK_PLATFORM)/include/mach
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/emi/submodule
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/emi/$(MTK_PLATFORM)

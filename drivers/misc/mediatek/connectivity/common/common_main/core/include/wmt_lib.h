@@ -28,10 +28,7 @@
 #include "stp_wmt.h"
 #include "wmt_plat.h"
 #include "wmt_idc.h"
-#include "osal.h"
 #include "mtk_wcn_consys_hw.h"
-
-
 
 /*******************************************************************************
 *                         C O M P I L E R   F L A G S

@@ -188,7 +188,7 @@ static PUINT_8 apucEepromName[] = {
 phys_addr_t gConEmiPhyBase;
 EXPORT_SYMBOL(gConEmiPhyBase);
 
-unsigned long long gConEmiSize;
+UINT_64 gConEmiSize;
 EXPORT_SYMBOL(gConEmiSize);
 
 #if CFG_CHIP_RESET_SUPPORT
@@ -1909,7 +1909,7 @@ free_wdev:
 	kfree(prWdev);
 }
 
-/*
+
 static void wlanDestroyWirelessDevice(void)
 {
 	// Move set_wiphy_dev(wiphy, NULL) in wlanNetDestroy
@@ -1917,7 +1917,7 @@ static void wlanDestroyWirelessDevice(void)
 	wiphy_free(gprWdev->wiphy);
 	kfree(gprWdev);
 	gprWdev = NULL;
-}*/
+}
 
 VOID wlanWakeLockInit(P_GLUE_INFO_T prGlueInfo)
 {
@@ -3540,7 +3540,7 @@ static int initWlan(void)
 */
 /*----------------------------------------------------------------------------*/
 /* 1 Module Leave Point */
-/*
+
 static VOID exitWlan(void)
 {
 	// printk("remove %p\n", wlanRemove);
@@ -3559,7 +3559,7 @@ static VOID exitWlan(void)
 #endif
 	DBGLOG(INIT, INFO, "exitWlan\n");
 
-}*/				/* end of exitWlan() */
+}				/* end of exitWlan() */
 
 #if CFG_POWER_OFF_CTRL_SUPPORT
 static int wf_pdwnc_notify(struct notifier_block *nb,

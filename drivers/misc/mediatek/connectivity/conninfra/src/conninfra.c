@@ -16,8 +16,8 @@
 *    Any definitions in this file will be shared among GLUE Layer and internal Driver Stack.
 */
 
-#include <linux/platform_device.h>
-#include <linux/cdev.h>
+//#include <linux/platform_device.h>
+//#include <linux/cdev.h>
 #include <linux/module.h>
 #include <linux/fb.h>
 #include <linux/workqueue.h>
@@ -63,6 +63,8 @@
 ********************************************************************************
 */
 
+MODULE_DESCRIPTION("MediaTek Conninfra Driver");
+
 /*******************************************************************************
 *                           P R I V A T E   D A T A
 ********************************************************************************
@@ -91,19 +93,22 @@ void conninfra_get_phy_addr(unsigned int *addr, unsigned int *size)
 		*size = addr_info->emi_size;
 	return;
 }
-EXPORT_SYMBOL(conninfra_get_phy_addr);
+
+EXPORT_SYMBOL_GPL(conninfra_get_phy_addr);
 
 int conninfra_pwr_on(enum consys_drv_type drv_type)
 {
 	return conninfra_core_power_on(drv_type);
 }
-EXPORT_SYMBOL(conninfra_pwr_on);
+
+EXPORT_SYMBOL_GPL(conninfra_pwr_on);
 
 int conninfra_pwr_off(enum consys_drv_type drv_type)
 {
 	return conninfra_core_power_off(drv_type);
 }
-EXPORT_SYMBOL(conninfra_pwr_off);
+
+EXPORT_SYMBOL_GPL(conninfra_pwr_off);
 
 static void conninfra_rst_handler(struct work_struct *work)
 {
@@ -147,7 +152,7 @@ int conninfra_trigger_whole_chip_rst(enum consys_drv_type who, char *reason)
 
 	return 0;
 }
-EXPORT_SYMBOL(conninfra_trigger_whole_chip_rst);
+EXPORT_SYMBOL_GPL(conninfra_trigger_whole_chip_rst);
 
 int conninfra_sub_drv_ops_register(enum consys_drv_type type,
 				struct sub_drv_ops_cb *cb)
@@ -161,7 +166,8 @@ int conninfra_sub_drv_ops_register(enum consys_drv_type type,
 	conninfra_core_subsys_ops_reg(type, cb);
 	return 0;
 }
-EXPORT_SYMBOL(conninfra_sub_drv_ops_register);
+
+EXPORT_SYMBOL_GPL(conninfra_sub_drv_ops_register);
 
 int conninfra_sub_drv_ops_unregister(enum consys_drv_type type)
 {
@@ -174,6 +180,5 @@ int conninfra_sub_drv_ops_unregister(enum consys_drv_type type)
 	conninfra_core_subsys_ops_unreg(type);
 	return 0;
 }
-EXPORT_SYMBOL(conninfra_sub_drv_ops_unregister);
 
-
+EXPORT_SYMBOL_GPL(conninfra_sub_drv_ops_unregister);

@@ -457,8 +457,6 @@ static int opfunc_subdrv_therm_ctrl(struct msg_op_data *op)
 }
 
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-extra-args"
 /*
  * CONNINFRA API
  */
@@ -470,7 +468,7 @@ int conninfra_core_power_on(enum consys_drv_type type)
 	ret = msg_thread_send_wait_1(&infra_ctx->msg_ctx,
 				CONNINFRA_OPID_PWR_ON, 0, type);
 	if (ret) {
-		pr_err("[%s] fail", __func__, ret);
+		pr_err("[%s] fail", __func__);
 		return -1;
 	}
 	return 0;
@@ -484,7 +482,7 @@ int conninfra_core_power_off(enum consys_drv_type type)
 	ret = msg_thread_send_wait_1(&infra_ctx->msg_ctx,
 				CONNINFRA_OPID_PWR_OFF, 0, type);
 	if (ret) {
-		pr_err("[%s] send msg fail", __func__, ret);
+		pr_err("[%s] send msg fail", __func__);
 		return -1;
 	}
 	return 0;
@@ -498,7 +496,7 @@ int conninfra_core_pre_cal_start(void)
 	ret = msg_thread_send(&infra_ctx->cb_ctx,
 				CONNINFRA_CB_OPID_PRE_CAL);
 	if (ret) {
-		pr_err("[%s] send msg fail", __func__, ret);
+		pr_err("[%s] send msg fail", __func__);
 		return -1;
 	}
 	return 0;
@@ -545,12 +543,11 @@ int conninfra_core_trg_chip_rst(enum consys_drv_type drv, char *reason)
 	ret = msg_thread_send_wait_1(&infra_ctx->cb_ctx,
 				CONNINFRA_CB_OPID_CHIP_RST, 0, drv);
 	if (ret) {
-		pr_err("[%s] send msg fail", __func__, ret);
+		pr_err("[%s] send msg fail", __func__);
 		return -1;
 	}
 	return 0;
 }
-#pragma GCC diagnostic pop
 
 int conninfra_core_subsys_ops_reg(enum consys_drv_type type,
 					struct sub_drv_ops_cb *cb)

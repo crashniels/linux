@@ -14,7 +14,7 @@ ccflags-y += -imacros $(AUTOCONF_H)
 #endif
 
 ifeq ($(TARGET_BUILD_VARIANT),$(filter $(TARGET_BUILD_VARIANT),userdebug user))
-    ldflags-y += -s
+    #ldflags-y += -s
 endif
 
 # Force build fail on modpost warning
@@ -59,8 +59,8 @@ ccflags-y += -Werror
 
 
 ###############################################################################
-MODULE_NAME := conninfra
-ifeq ($(CONFIG_WLAN_DRV_BUILD_IN),y)
+MODULE_NAME := mtk_conninfra
+ifeq ($(CONFIG_MTK_COMBO_COMM),y)
 $(warning $(MODULE_NAME) build-in boot.img)
 obj-y += $(MODULE_NAME).o
 else
@@ -147,4 +147,3 @@ $(MODULE_NAME)-objs += test/chip_rst_test.o
 $(MODULE_NAME)-objs += test/conninfra_test.o
 $(MODULE_NAME)-objs += test/mailbox_test.o
 endif
-

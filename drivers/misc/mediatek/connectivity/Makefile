@@ -23,7 +23,7 @@ endif
 subdir-ccflags-y += -D CFG_SUPPORT_AEE=0
 
 # Do build-in for Makefile checking
-export CONFIG_WLAN_DRV_BUILD_IN=y
+#export CONFIG_WLAN_DRV_BUILD_IN=y
 
 ifeq ($(CONFIG_MTK_CONN_LTE_IDC_SUPPORT),y)
     subdir-ccflags-y += -D WMT_IDC_SUPPORT=1
@@ -32,7 +32,7 @@ else
 endif
     subdir-ccflags-y += -D MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
     obj-$(CONFIG_MTK_COMBO_COMM) += common/
-    obj-y += conninfra/
+    obj-$(CONFIG_MTK_COMBO_COMM) += conninfra/
 
 ifeq ($(CONFIG_MTK_COMBO_BT_HCI),$(filter $(CONFIG_MTK_COMBO_BT_HCI),m y))
     subdir-ccflags-y += -D MTK_BT_HCI -D REMOVE_MK_NODE=1

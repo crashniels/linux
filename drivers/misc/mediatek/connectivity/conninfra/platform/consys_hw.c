@@ -89,6 +89,7 @@ static struct platform_driver mtk_conninfra_dev_drv = {
 
 struct consys_hw_ops_struct *consys_hw_ops;
 struct platform_device *g_pdev;
+EXPORT_SYMBOL(g_pdev);
 
 /*******************************************************************************
 *                           P R I V A T E   D A T A

@@ -5395,7 +5395,7 @@ BOOLEAN kalMetCheckProfilingPacket(IN P_GLUE_INFO_T prGlueInfo, IN P_NATIVE_PACK
 }
 
 static unsigned long __read_mostly tracing_mark_write_addr;
-
+/*
 static int __mt_find_tracing_mark_write_symbol_fn(void *prData, const char *pcNameBuf,
 						   struct module *prModule, unsigned long ulAddress)
 {
@@ -5405,11 +5405,13 @@ static int __mt_find_tracing_mark_write_symbol_fn(void *prData, const char *pcNa
 	}
 	return 0;
 }
+*/
 
 static inline void __mt_update_tracing_mark_write_addr(void)
 {
-	if (unlikely(tracing_mark_write_addr == 0))
-		kallsyms_on_each_symbol(__mt_find_tracing_mark_write_symbol_fn, NULL);
+	if (unlikely(tracing_mark_write_addr == 0)) {
+		//module_kallsyms_on_each_symbol(__mt_find_tracing_mark_write_symbol_fn, NULL);
+	}
 }
 
 VOID kalMetTagPacket(IN P_GLUE_INFO_T prGlueInfo, IN P_NATIVE_PACKET prPacket, IN ENUM_TX_PROFILING_TAG_T eTag)

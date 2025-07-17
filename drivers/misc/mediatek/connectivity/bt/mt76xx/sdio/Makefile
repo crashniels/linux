@@ -1,5 +1,5 @@
 export KBUILD_VERBOSE=1
-#export KERNEL_SRC := /lib/modules/$(shell uname -r)/build
+export LINUX_SRC := $(srctree) #/lib/modules/$(shell uname -r)/build
 
 ###############################################################################
 # SDIO
@@ -37,12 +37,12 @@ obj-$(CONFIG_MTK_COMBO_BT_MT7668_SDIO) := $(SDIO_MOD_NAME).o
 PWD   := $(shell pwd)
 
 all:
-	make -C $(LINUX_SRC) M=$(PWD) PLATFORM_FLAGS="$(ccfleags_y)" modules
+	make -C $(LINUX_SRC) M=$(PWD) PLATFORM_FLAGS="$(ccflags-y)" modules
 
 sdio:
 	make -C $(LINUX_SRC) M=$(PWD) $(SDIO_MOD_NAME).ko
 modules_install:
-	$(MAKE) -C $(LINUX_SRC) M=`pwd` modules_install INSTALL_MOD_PATH=$(LINUX_SRC)-build
+	make -C $(LINUX_SRC) M=`pwd` modules_install INSTALL_MOD_PATH=$(LINUX_SRC)-build
 clean:
 	rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions bin2h
 	rm -f Module.markers
