@@ -1153,7 +1153,7 @@ static int GPS_init(void)
 		goto error;
 #if WMT_CREATE_NODE_DYNAMIC || REMOVE_MK_NODE
 
-	stpgps_class = class_create(THIS_MODULE);
+	stpgps_class = class_create(/*THIS_MODULE,*/ "stpgps");
 	if (IS_ERR(stpgps_class))
 		goto error;
 	stpgps_dev = device_create(stpgps_class, NULL, dev, NULL, "stpgps");

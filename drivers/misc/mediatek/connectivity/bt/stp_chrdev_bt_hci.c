@@ -846,7 +846,7 @@ static int BT_init(void)
 		goto error;
 
 #if REMOVE_MK_NODE 
-	stpbt_class = class_create(THIS_MODULE/*, "stpbt"*/);
+	stpbt_class = class_create(/*THIS_MODULE,*/ "stpbt");
 	if (IS_ERR(stpbt_class))
 		goto error;
 	stpbt_dev = device_create(stpbt_class, NULL, dev, NULL, "stpbt");
