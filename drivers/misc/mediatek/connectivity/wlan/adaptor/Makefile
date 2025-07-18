@@ -36,7 +36,7 @@ ccflags-y += -D MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
 
 MODULE_NAME := wmt_chrdev_wifi
-ifeq ($(CONFIG_WLAN_DRV_BUILD_IN),y)
+ifeq ($(CONFIG_MTK_COMBO_WIFI),y)
 $(warning $(MODULE_NAME) build-in boot.img)
 obj-y += $(MODULE_NAME).o
 else

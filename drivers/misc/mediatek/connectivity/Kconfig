@@ -153,11 +153,21 @@ config MTK_COMBO_COMM_APO
 	help
 	  Enable chip will always power on
 
-config MTK_COMBO_BT
-	tristate "MediaTek Combo Chip BT driver"
+choice
+	prompt "Select Combo driver for BT"
+	default MTK_COMBO_BT_HCI
 	depends on MTK_COMBO
-	help
-	  MTK BT /dev/stpbt driver for Bluedroid
+    
+	config MTK_COMBO_BT_BDROID
+		bool "MediaTek Combo Chip BT driver"
+        	help
+          	MTK BT /dev/stpbt driver for Bluedroid 
+
+	config MTK_COMBO_BT_HCI
+        	bool "MediaTek Combo Chip BlueZ driver"
+        	help
+         	 MTK BT driver for BlueZ
+endchoice
 
 config MTK_COMBO_BT_MT7668_SDIO
 	tristate "MediaTek Combo Chip MT7668 BT SDIO driver"
@@ -174,12 +184,6 @@ config MTK_COMBO_ANT
 	depends on MTK_COMBO
 	help
 	  MTK ANT /dev/stpant driver for ANT
-
-config MTK_COMBO_BT_HCI
-	tristate "MediaTek Combo Chip BlueZ driver"
-	depends on BT && MTK_COMBO
-	help
-	  MTK BT driver for BlueZ
 
 config MTK_COMBO_GPS
 	tristate "MediaTek Combo Chip GPS driver"

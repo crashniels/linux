@@ -32,11 +32,11 @@ else
 endif
     subdir-ccflags-y += -D MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
     obj-$(CONFIG_MTK_COMBO_COMM) += common/
-    obj-$(CONFIG_MTK_COMBO_COMM) += conninfra/
+    obj-$(CONFIG_MTK_COMBO) += conninfra/
 
-ifeq ($(CONFIG_MTK_COMBO_BT_HCI),$(filter $(CONFIG_MTK_COMBO_BT_HCI),m y))
+ifeq ($(CONFIG_MTK_COMBO),$(filter $(CONFIG_MTK_COMBO),m y))
     subdir-ccflags-y += -D MTK_BT_HCI -D REMOVE_MK_NODE=1
-    obj-$(CONFIG_MTK_COMBO_BT_HCI) += bt/
+    obj-$(CONFIG_MTK_COMBO) += bt/
 endif
 
 ifeq ($(CONFIG_MTK_COMBO_BT_MT7668_SDIO),$(filter $(CONFIG_MTK_COMBO_BT_MT7668_SDIO),m y))

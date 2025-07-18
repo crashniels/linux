@@ -1909,7 +1909,7 @@ free_wdev:
 	kfree(prWdev);
 }
 
-
+#if (CFG_BUILT_IN_DRIVER == 0)
 static void wlanDestroyWirelessDevice(void)
 {
 	// Move set_wiphy_dev(wiphy, NULL) in wlanNetDestroy
@@ -1918,6 +1918,7 @@ static void wlanDestroyWirelessDevice(void)
 	kfree(gprWdev);
 	gprWdev = NULL;
 }
+#endif
 
 VOID wlanWakeLockInit(P_GLUE_INFO_T prGlueInfo)
 {
@@ -3541,6 +3542,7 @@ static int initWlan(void)
 /*----------------------------------------------------------------------------*/
 /* 1 Module Leave Point */
 
+#if (CFG_BUILT_IN_DRIVER == 0)
 static VOID exitWlan(void)
 {
 	// printk("remove %p\n", wlanRemove);
@@ -3559,7 +3561,8 @@ static VOID exitWlan(void)
 #endif
 	DBGLOG(INIT, INFO, "exitWlan\n");
 
-}				/* end of exitWlan() */
+}
+#endif /* end of exitWlan() */
 
 #if CFG_POWER_OFF_CTRL_SUPPORT
 static int wf_pdwnc_notify(struct notifier_block *nb,

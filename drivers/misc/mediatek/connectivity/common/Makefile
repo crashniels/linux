@@ -101,7 +101,7 @@ endif
 
 ###############################################################################
 MODULE_NAME := wmt_drv
-ifeq ($(CONFIG_WLAN_DRV_BUILD_IN),y)
+ifeq ($(CONFIG_MTK_COMBO_COMM),y)
 $(warning $(MODULE_NAME) build-in boot.img)
 obj-y += $(MODULE_NAME).o
 else
