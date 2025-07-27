@@ -1465,7 +1465,7 @@ int osal_gettimeofday(int *sec, int *usec)
 		ret = -1;
 
 	if (usec != NULL)
-		*usec = (unsigned long) (now.tv_nsec / 1000);
+		*usec = now.tv_nsec / NSEC_PER_USEC;
 	else
 		ret = -1;
 

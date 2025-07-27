@@ -1796,7 +1796,7 @@ static INT32 _stp_psm_dbg_dmp_in(STP_PSM_RECORD_T *stp_psm_dbg, UINT32 flag, UIN
 		stp_psm_dbg->queue[stp_psm_dbg->in].line_num = line_num;
 		stp_psm_dbg->queue[stp_psm_dbg->in].package_no = g_record_num++;
 		stp_psm_dbg->queue[stp_psm_dbg->in].sec = now.tv_sec;
-		stp_psm_dbg->queue[stp_psm_dbg->in].usec = (unsigned long) (now.tv_nsec / 1000);
+		stp_psm_dbg->queue[stp_psm_dbg->in].usec = now.tv_nsec / NSEC_PER_USEC;
 		stp_psm_dbg->size++;
 		STP_PSM_PR_DBG("pre_Flag = %d, cur_flag = %d\n", stp_psm_dbg->queue[stp_psm_dbg->in].prev_flag,
 				 stp_psm_dbg->queue[stp_psm_dbg->in].cur_flag);
@@ -1868,7 +1868,7 @@ static INT32 _stp_psm_opid_dbg_dmp_in(P_STP_PSM_OPID_RECORD p_opid_dbg, UINT32 o
 		p_opid_dbg->queue[p_opid_dbg->in].line_num = line_num;
 		p_opid_dbg->queue[p_opid_dbg->in].package_no = g_opid_record_num++;
 		p_opid_dbg->queue[p_opid_dbg->in].sec = now.tv_sec;
-		p_opid_dbg->queue[p_opid_dbg->in].usec = (unsigned long) (now.tv_nsec / 1000);
+		p_opid_dbg->queue[p_opid_dbg->in].usec = now.tv_nsec / NSEC_PER_USEC;
 		p_opid_dbg->queue[p_opid_dbg->in].pid = current->pid;
 		p_opid_dbg->queue[p_opid_dbg->in].l_sec = ts;
 		p_opid_dbg->queue[p_opid_dbg->in].l_nsec = nsec;

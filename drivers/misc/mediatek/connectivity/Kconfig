@@ -159,14 +159,14 @@ choice
 	depends on MTK_COMBO
     
 	config MTK_COMBO_BT_BDROID
-		bool "MediaTek Combo Chip BT driver"
-        	help
-          	MTK BT /dev/stpbt driver for Bluedroid 
+		bool "MediaTek Combo Chip Bluedroid driver"
+		help
+		MTK BT /dev/stpbt driver for Bluedroid 
 
 	config MTK_COMBO_BT_HCI
-        	bool "MediaTek Combo Chip BlueZ driver"
-        	help
-         	 MTK BT driver for BlueZ
+		bool "MediaTek Combo Chip BlueZ driver"
+		help
+		MTK BT driver for BlueZ
 endchoice
 
 config MTK_COMBO_BT_MT7668_SDIO
