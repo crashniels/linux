@@ -156,7 +156,7 @@ config MTK_COMBO_COMM_APO
 choice
 	prompt "Select Combo driver for BT"
 	default MTK_COMBO_BT_HCI
-	depends on MTK_COMBO
+	depends on !BT_HCIBTSDIO && MTK_COMBO
     
 	config MTK_COMBO_BT_BDROID
 		bool "MediaTek Combo Chip Bluedroid driver"

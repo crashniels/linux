@@ -1187,8 +1187,7 @@ EXPORT_SYMBOL(connsys_log_get_emi_log_base_vir_addr);
 * RETURNS
 *  void
 *****************************************************************************/
-void connsys_dedicated_log_get_utc_time(unsigned int *second,
-	unsigned int *usecond)
+void connsys_dedicated_log_get_utc_time(unsigned int *second, unsigned int *usecond)
 {
 	struct timespec64 time;
 
