@@ -719,12 +719,12 @@ int hal_tx_dma_irq_handler(P_MTK_DMA_INFO_STR p_dma_info)
 	valid_size = BTIF_READ32(TX_DMA_VFF_VALID_SIZE(base));
 	left_len = BTIF_READ32(TX_DMA_VFF_LEFT_SIZE(base));
 	if (flush_irq_counter == 0)
-		ktime_get_real_ts64(&start_timer);
+		ktime_get_ts64(&start_timer);
 	if ((valid_size > 0) && (valid_size < 8)) {
 		i_ret = _tx_dma_flush(p_dma_info);
 		flush_irq_counter++;
 		if (flush_irq_counter >= MAX_CONTINIOUS_TIMES) {
-			ktime_get_real_ts64(&end_timer);
+			ktime_get_ts64(&end_timer);
 /*
  * when btif tx fifo cannot accept any data and counts of bytes left in tx vfifo < 8 for a while
  * we assume that btif cannot send data for a long time

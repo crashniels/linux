@@ -1738,10 +1738,10 @@ int _btif_enter_dpidle_from_on(p_mtk_btif p_btif)
 	struct timespec64 timer_start;
 	struct timespec64 timer_now;
 
-	ktime_get_real_ts64(&timer_start);
+	ktime_get_ts64(&timer_start);
 
 	while ((!_btif_is_tx_complete(p_btif)) && (retry < max_retry)) {
-		ktime_get_real_ts64(&timer_now);
+		ktime_get_ts64(&timer_now);
 		if ((MAX_WAIT_TIME_MS/1000) <= (timer_now.tv_sec - timer_start.tv_sec)) {
 			BTIF_WARN_FUNC("max retry timer expired, timer_start.tv_sec:%d, timer_now.tv_sec:%d,",
 				"retry:%d\n", timer_start.tv_sec, timer_now.tv_sec, retry);
@@ -2177,7 +2177,7 @@ static int mtk_btif_rxd_be_blocked_by_timer(void)
 	struct timespec64 now;
 	int time_gap[MAX_BTIF_RXD_TIME_REC];
 
-	ktime_get_real_ts64(&now);
+	ktime_get_ts64(&now);
 
 	for (i = 0; i < MAX_BTIF_RXD_TIME_REC; i++) {
 		BTIF_INFO_FUNC("btif_rxd_time_stamp[%d]=%d.%d\n", i,
@@ -2275,7 +2275,7 @@ static int btif_rx_thread(void *p_data)
 			break;
 		}
 #ifdef BTIF_RXD_BE_BLOCKED_DETECT
-		ktime_get_real_ts64(&btif_rxd_time_stamp[i]);
+		ktime_get_ts64(&btif_rxd_time_stamp[i]);
 		i++;
 		if (i >= MAX_BTIF_RXD_TIME_REC)
 			i = 0;
@@ -2991,7 +2991,7 @@ int btif_log_buf_dmp_in(P_BTIF_LOG_QUEUE_T p_log_que, const char *p_buf,
 	p_timer = &p_log_buf->timer;
 
 /*log time stamp*/
-	ktime_get_real_ts64(p_timer);
+	ktime_get_ts64(p_timer);
 
 /*record data information including length and content*/
 	p_log_buf->len = len;

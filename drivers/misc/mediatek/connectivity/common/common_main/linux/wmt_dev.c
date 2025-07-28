@@ -793,7 +793,7 @@ LONG wmt_dev_tm_temp_query(VOID)
 		}
 	}
 
-	ktime_get_real_ts64(&now_time);
+	ktime_get_ts64(&now_time);
 #if 1
 	/* Query condition 2: */
 	/* Moniter the bus activity to decide if we have the need to query temperature. */
@@ -852,7 +852,7 @@ LONG wmt_dev_tm_temp_query(VOID)
 			osal_memcpy(s_temp_table, temp_table, sizeof(s_temp_table));
 			s_idx_temp_table = (s_idx_temp_table + 1) % HISTORY_NUM;
 			s_temp_table[s_idx_temp_table] = current_temp;
-			ktime_get_real_ts64(&s_query_time);
+			ktime_get_ts64(&s_query_time);
 			index = -1;
 		} else {
 			index = s_idx_temp_table;

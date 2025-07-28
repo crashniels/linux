@@ -274,7 +274,8 @@ $(MODULE_NAME)-objs += common_main/linux/fw_log_wmt.o
 endif
 $(MODULE_NAME)-objs += common_main/linux/wmt_step.o
 
-ifeq ($(CONFIG_MTK_BTIF), $(filter $(CONFIG_MTK_BTIF),m y))
+ifneq ($(CONFIG_MTK_BTIF),)
+$(warning $(CONFIG_MTK_BTIF) btif !!!)
 $(MODULE_NAME)-objs += common_main/linux/stp_btif.o
 endif
 

@@ -3165,7 +3165,7 @@ VOID aisCollectDisconnInfo(IN P_ADAPTER_T prAdapter)
 	prAisBssInfo = prAdapter->prAisBssInfo;
 
 #if KERNEL_VERSION(5, 0, 0) <= LINUX_VERSION_CODE
-	ktime_get_real_ts64(&prDisconn->tv);
+	ktime_get_ts64(&prDisconn->tv);
 #else
 	do_gettimeofday(&prDisconn->tv);
 #endif

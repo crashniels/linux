@@ -1064,7 +1064,7 @@ static INT32 wmt_lib_is_bt_able_to_reset(VOID)
 		ULONG local_time;
 		struct rtc_time tm;
 
-		ktime_get_real_ts64(&time);
+		ktime_get_ts64(&time);
 		local_time = (ULONG)(time.tv_sec - (sys_tz.tz_minuteswest * 60));
 		rtc_time64_to_tm(local_time, &tm);
 		if (tm.tm_hour == 2)

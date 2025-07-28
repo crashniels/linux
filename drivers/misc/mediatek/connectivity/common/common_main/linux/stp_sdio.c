@@ -1913,7 +1913,7 @@ static VOID stp_sdio_tx_wkr(struct work_struct *work)
 			++stp_sdio_txperf_fifo_lmt_cnt;
 #endif
 
-			ktime_get_real_ts64(&now);
+			ktime_get_ts64(&now);
 			if ((now.tv_sec - old.tv_sec) > TX_NO_ACK_TIMEOUT_ASSERT) {
 				STPSDIO_PR_INFO("tx_fifo_size(%d), four_byte_align_len(%d), tx_packet_num(%d)\n",
 						p_info->firmware_info.tx_fifo_size, four_byte_align_len,
@@ -2092,7 +2092,7 @@ static VOID stp_sdio_tx_wkr(struct work_struct *work)
 			}
 			spin_unlock_irqrestore(&p_info->pkt_buf.rd_idx_lock,
 					       p_info->pkt_buf.rd_irq_flag);
-			ktime_get_real_ts64(&old);
+			ktime_get_ts64(&old);
 		} else {
 #if STP_SDIO_DBG_SUPPORT && STP_SDIO_TXPERFDBG
 			stp_sdio_txperf_fifo_left += p_info->firmware_info.tx_fifo_size;
@@ -2100,7 +2100,7 @@ static VOID stp_sdio_tx_wkr(struct work_struct *work)
 			++stp_sdio_txperf_fifo_lmt_cnt;
 #endif
 			/* (tx FIFO free space < packet size) or (the number of tx packets >= 7) */
-			ktime_get_real_ts64(&now);
+			ktime_get_ts64(&now);
 			if ((now.tv_sec - old.tv_sec) > TX_NO_ACK_TIMEOUT_ASSERT) {
 				STPSDIO_PR_INFO("tx_fifo_size(%d), four_byte_align_len(%d), tx_packet_num(%d)\n",
 						p_info->firmware_info.tx_fifo_size, four_byte_align_len,

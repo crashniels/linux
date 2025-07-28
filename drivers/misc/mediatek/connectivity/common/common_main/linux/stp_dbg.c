@@ -1451,7 +1451,7 @@ static _osal_inline_ INT32 stp_dbg_fill_hdr(STP_DBG_HDR_T *hdr, INT32 type, INT3
 		return -EINVAL;
 	}
 
-	ktime_get_real_ts64(&now);
+	ktime_get_ts64(&now);
 	osal_get_local_time(&ts, &nsec);
 	hdr->last_dbg_type = gStpDbgDumpType;
 	gStpDbgDumpType = dbg_type;
