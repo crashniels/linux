@@ -1191,7 +1191,7 @@ void connsys_dedicated_log_get_utc_time(unsigned int *second, unsigned int *usec
 {
 	struct timespec64 time;
 
-	ktime_get_ts64(&time);
+	ktime_get_real_ts64(&time);
 	*second = (unsigned int)time.tv_sec; /* UTC time second unit */
 	*usecond = (unsigned int)(time.tv_nsec / NSEC_PER_USEC); /* UTC time microsecond unit */
 }

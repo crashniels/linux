@@ -515,9 +515,9 @@ int hal_btif_hw_init(P_MTK_BTIF_INFO_STR p_btif)
 			     | BTIF_TRI_LOOP_DIS, BTIF_TRI_LVL(base));
 	hal_btif_loopback_ctrl(p_btif, false);
 /*disable BTIF Tx DMA mode*/
-	hal_btif_tx_mode_ctrl(p_btif, false);
+	hal_btif_tx_mode_ctrl(p_btif, BTIF_MODE_PIO);
 /*disable BTIF Rx DMA mode*/
-	hal_btif_rx_mode_ctrl(p_btif, false);
+	hal_btif_rx_mode_ctrl(p_btif, BTIF_MODE_PIO);
 /*auto reset*/
 	BTIF_SET_BIT(BTIF_DMA_EN(base), BTIF_DMA_EN_AUTORST_EN);
 /*disable Tx IER*/

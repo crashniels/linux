@@ -19,3 +19,4 @@ subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(CONFIG_
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat/
 
 obj-$(CONFIG_MTK_COMBO) += connectivity/
+obj-$(CONFIG_MTK_BTIF) += btif/

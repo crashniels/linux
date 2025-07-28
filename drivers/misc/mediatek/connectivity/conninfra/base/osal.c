@@ -1457,7 +1457,7 @@ int osal_gettimeofday(int *sec, int *usec)
 	int ret = 0;
 	struct timespec64 now;
 
-        ktime_get_ts64(&now);
+        ktime_get_real_ts64(&now);
 
 	if (sec != NULL)
 		*sec = now.tv_sec;
