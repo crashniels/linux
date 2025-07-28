@@ -32,7 +32,6 @@ ccflags-y += -D CFG_ANDORID_CONNINFRA_SUPPORT=0
 endif
 
 ccflags-y += -D MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
-
 ccflags-y += -D CREATE_NODE_DYNAMIC=1
 
 MODULE_NAME := wmt_chrdev_wifi
