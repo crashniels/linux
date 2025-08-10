@@ -4,22 +4,25 @@ export LINUX_SRC := $(srctree) #/lib/modules/$(shell uname -r)/build
 ###############################################################################
 # SDIO
 ###############################################################################
+ifneq ($(KERNELRELEASE),)
 ccflags-y += -DDBG=0
-ccflags-y += -I$(src)/../../../wlan/os
-ccflags-y += -I$(src)/../../../wlan/core/gen4-mt7668/os/linux/include
-ccflags-y += -I$(src)/../../../common/common_main/linux/include
-ccflags-y += -I$(src)/../../../conninfra/base/include
-ccflags-y += -I$(src)/../../../common/common_main/include
+ccflags-y += -I$(src)/../wlan/os
+ccflags-y += -I$(src)/../wlan/core/gen4-mt7668/os/linux/include
+ccflags-y += -I$(src)/../common/common_main/linux/include
+ccflags-y += -I$(src)/../conninfra/base/include
+ccflags-y += -I$(src)/../common/common_main/include
 
 ifeq ($(MTK_CHIP_PCM), TRUE)
     ccflags-y += -DMTK_CHIP_PCM
 endif
 
-SDIO_MOD_NAME = btmtksdio
+SDIO_MOD_NAME := btmtksdio
 SDIO_CFILES := \
 	btmtk_sdio.c \
         btmtk_main.c
-ifeq ($(CONFIG_AMAZON_A2DP_TS),y)
+export CONFIG_AMAZON_A2DP_TS_SDIO=y
+
+ifeq ($(CONFIG_AMAZON_A2DP_TS_SDIO),y)
     SDIO_CFILES += btif_audio_ts.c
 endif
 
@@ -34,6 +37,7 @@ $(SDIO_MOD_NAME)-objs := $(SDIO_CFILES:.c=.o)
 ###############################################################################
 obj-$(CONFIG_MTK_COMBO_BT_MT7668_SDIO) := $(SDIO_MOD_NAME).o
 
+else
 PWD   := $(shell pwd)
 
 all:
@@ -58,4 +62,4 @@ ccs:
 	./util/checkpatch.pl --no-tree --show-types --max-line-length=120 --ignore $(IGNORE_CODING_STYLE_RULES) -f btmtk_config.h
 	./util/checkpatch.pl --no-tree --show-types --max-line-length=120 --ignore $(IGNORE_CODING_STYLE_RULES) -f btmtk_define.h
 	./util/checkpatch.pl --no-tree --show-types --max-line-length=120 --ignore $(IGNORE_CODING_STYLE_RULES) -f btmtk_drv.h
-
+endif

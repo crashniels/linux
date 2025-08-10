@@ -338,7 +338,7 @@ extern struct wireless_dev *gprWdev;
 #endif
 
 #if CFG_SUPPORT_OWE
-#define WLAN_AKM_SUITE_OWE		0x000FAC12
+//#define WLAN_AKM_SUITE_OWE		0x000FAC12
 #endif
 
 #define IW_AUTH_CIPHER_GCMP256  0x00000080

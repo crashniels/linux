@@ -74,7 +74,7 @@
 ********************************************************************************
 */
 
-extern struct mt66xx_hif_driver_data mt66xx_driver_data_mt6632;
+//extern struct mt66xx_hif_driver_data mt66xx_driver_data_mt6632;
 extern struct mt66xx_hif_driver_data mt66xx_driver_data_mt7668;
 
 /*******************************************************************************

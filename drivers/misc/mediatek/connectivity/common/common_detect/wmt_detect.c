@@ -24,7 +24,7 @@
 #include "wmt_gpio.h"
 #include "wmt_dev.h"
 
-#if MTK_WCN_REMOVE_KO
+#if (MTK_WCN_REMOVE_KO)
 #include "conn_drv_init.h"
 #endif
 #ifdef CONFIG_COMPAT
@@ -73,7 +73,7 @@ ssize_t wmt_detect_write(struct file *filp, const char __user *buf, size_t count
 	return 0;
 }
 
-static long wmt_detect_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+long wmt_detect_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	int retval = 0;
 
@@ -137,8 +137,10 @@ static long wmt_detect_unlocked_ioctl(struct file *filp, unsigned int cmd, unsig
 	}
 	return retval;
 }
+EXPORT_SYMBOL(wmt_detect_unlocked_ioctl);
+
 #ifdef CONFIG_COMPAT
-static long WMT_compat_detect_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+long WMT_compat_detect_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	long ret;
 
@@ -146,7 +148,9 @@ static long WMT_compat_detect_ioctl(struct file *filp, unsigned int cmd, unsigne
 	ret = wmt_detect_unlocked_ioctl(filp, cmd, arg);
 	return ret;
 }
+EXPORT_SYMBOL(WMT_compat_detect_ioctl);
 #endif
+
 const struct file_operations gWmtDetectFops = {
 	.open = wmt_detect_open,
 	.release = wmt_detect_close,

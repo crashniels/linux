@@ -147,8 +147,8 @@ static int mtk_sdio_pm_suspend(struct device *pDev);
 static int mtk_sdio_pm_resume(struct device *pDev);
 
 const struct sdio_device_id mtk_sdio_ids[] = {
-	{	SDIO_DEVICE(0x037a, 0x6602),
-		.driver_data = (kernel_ulong_t)&mt66xx_driver_data_mt6632},/* Not an SDIO standard class device */
+	/*{	SDIO_DEVICE(0x037a, 0x6602),
+		.driver_data = (kernel_ulong_t)&mt66xx_driver_data_mt6632},*/ /* Not an SDIO standard class device */
 	{	SDIO_DEVICE(0x037a, 0x7608),
 		.driver_data = (kernel_ulong_t)&mt66xx_driver_data_mt7668},/* Not an SDIO standard class device */
 	{ /* end: all zeroes */ },

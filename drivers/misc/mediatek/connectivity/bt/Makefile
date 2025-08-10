@@ -15,6 +15,7 @@ ccflags-y += \
 ifeq ($(CONFIG_MTK_COMBO_BT_BDROID),y)
 	obj-$(CONFIG_MTK_COMBO) += stp_chrdev_bt.o
 else ifeq ($(CONFIG_MTK_COMBO_BT_HCI),y)
-	obj-$(CONFIG_MTK_COMBO) += stp_chrdev_bt_hci.o
+	stpbt-objs := stp_chrdev_bt_hci.o
+	obj-$(CONFIG_MTK_COMBO) += stpbt.o
 endif
 

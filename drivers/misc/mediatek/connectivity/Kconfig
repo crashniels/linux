@@ -156,7 +156,7 @@ config MTK_COMBO_COMM_APO
 choice
 	prompt "Select Combo driver for BT"
 	default MTK_COMBO_BT_HCI
-	depends on !BT_HCIBTSDIO && MTK_COMBO
+	depends on MTK_COMBO
     
 	config MTK_COMBO_BT_BDROID
 		bool "MediaTek Combo Chip Bluedroid driver"
@@ -291,6 +291,15 @@ config MTK_GPS_SUPPORT
 	  (with MTK_AGPS_APP=no at the same time)
 	  to turn off.
 
+config MTK_CONN_MT3337_CHIP_SUPPORT
+	bool "Mediatek MT3337 device driver"
+	depends on MTK_GPS_SUPPORT
+	help
+	  This config is used to enable or disble chip 3337's gps driver.
+	  MT3337 is gps only chip without BT and wifi,
+	  it is powered on by new gps driver.
+	  Otherwise we must close this config.
+
 menuconfig GPS
 	tristate "GPS drivers"
 	default y
@@ -330,10 +339,3 @@ config MTK_COMBO_CHIP_DEEP_SLEEP_SUPPORT
 	  host can`t wake up chip form deep sleep,
 	  we must close this config.
 
-config MTK_CONN_MT3337_CHIP_SUPPORT
-	bool "Mediatek MT3337 device driver support"
-	help
-	  This config is used to enable or disble chip 3337's gps driver.
-	  MT3337 is gps only chip without BT and wifi,
-	  it is powered on by new gps driver.
-	  Otherwise we must close this config.

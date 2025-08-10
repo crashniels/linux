@@ -1888,7 +1888,8 @@ int p2pSetMACAddress(IN struct net_device *prDev, void *addr)
 	sa = (struct sockaddr *)addr;
 
 	COPY_MAC_ADDR(prBssInfo->aucOwnMacAddr, sa->sa_data);
-	COPY_MAC_ADDR((char*) prDev->dev_addr, sa->sa_data);
+	//COPY_MAC_ADDR((char*) prDev->dev_addr, sa->sa_data);
+	dev_addr_set(prDev, sa->sa_data);
 
 	if (prP2pInfo->prDevHandler == prDev) {
 		COPY_MAC_ADDR(prAdapter->rWifiVar.aucDeviceAddress,

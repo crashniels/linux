@@ -933,7 +933,7 @@ static void BT_exit(void)
 	BT_INFO_FUNC("%s driver removed\n", BT_DRIVER_NAME);
 }
 
-#ifdef REMOVE_MK_NODE 
+#if REMOVE_MK_NODE 
 
 int mtk_wcn_stpbt_drv_init(void)
 {

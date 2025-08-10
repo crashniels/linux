@@ -1510,7 +1510,8 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
 	prAdapter = prGlueInfo->prAdapter;
 
 	COPY_MAC_ADDR(prAdapter->prAisBssInfo->aucOwnMacAddr, sa->sa_data);
-	COPY_MAC_ADDR((char*)prGlueInfo->prDevHandler->dev_addr, sa->sa_data);
+	//COPY_MAC_ADDR((char*)prGlueInfo->prDevHandler->dev_addr, sa->sa_data);
+	dev_addr_set(prGlueInfo->prDevHandler, sa->sa_data);
 	DBGLOG(INIT, INFO, "Set connect random macaddr to " MACSTR ".\n",
 	       MAC2STR(prAdapter->prAisBssInfo->aucOwnMacAddr));
 

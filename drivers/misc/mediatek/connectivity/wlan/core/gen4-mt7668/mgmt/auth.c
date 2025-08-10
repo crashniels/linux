@@ -654,16 +654,17 @@ WLAN_STATUS authCheckRxAuthFrameTransSeq(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T
 			if (prBssInfo == NULL)
 				return WLAN_STATUS_SUCCESS;
 
-			if (prBssInfo->eCurrentOPMode == OP_MODE_INFRASTRUCTURE)
+			if (prBssInfo->eCurrentOPMode == OP_MODE_INFRASTRUCTURE) {
 				saaFsmRunEventRxAuth(prAdapter, prSwRfb);
 #if CFG_SUPPORT_AAA
-			else if (prBssInfo->eCurrentOPMode ==
-						OP_MODE_ACCESS_POINT)
+			} else if (prBssInfo->eCurrentOPMode ==
+						OP_MODE_ACCESS_POINT) {
 				aaaFsmRunEventRxAuth(prAdapter, prSwRfb);
 #endif
-			else
+			} else {
 				DBGLOG(SAA, WARN,
 					"Don't support SAE for non-AIS/P2P network\n");
+			}
 		} else {
 			DBGLOG(SAA, WARN,
 				"RX SAE auth with unexpected TransSeqNum:%d\n",

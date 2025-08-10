@@ -33,7 +33,7 @@
 ********************************************************************************
 */
 
-#if 1				/* defined(CONFIG_MTK_COMBO_BT_HCI) || defined(CONFIG_MTK_COMBO_BT) */
+#if defined(CONFIG_MTK_COMBO_BT_HCI) || defined(CONFIG_MTK_COMBO_BT)
 #define CFG_FUNC_BT_SUPPORT 1
 #else
 #define CFG_FUNC_BT_SUPPORT 0

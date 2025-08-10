@@ -265,8 +265,9 @@ void saaSendAuthAssoc(IN P_ADAPTER_T prAdapter, IN P_STA_RECORD_T prStaRec)
 						prBssDesc
 						->u4RsnSelectedAKMSuite;
 				}
-			} else
+			} else {
 				DBGLOG(RSN, WARN, "Bss fail for RSN check\n");
+			}
 #endif
 			if (prStaRec->ucStaState == STA_STATE_1) {
 				/* don't change to state2 for reassociation */
@@ -820,9 +821,10 @@ saaFsmRunEventTxDone(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo, IN E
 			if (assocCheckTxReAssocReqFrame(prAdapter,
 				prMsduInfo) != WLAN_STATUS_SUCCESS)
 				return WLAN_STATUS_SUCCESS;
-		} else
+		} else {
 			DBGLOG(SAA, WARN, "unexpected sent frame = %d\n",
 				prStaRec->eAuthAssocSent);
+		}
 
 		cnmTimerStopTimer(prAdapter,
 			&prStaRec->rTxReqDoneOrRxRespTimer);
@@ -1316,9 +1318,10 @@ WLAN_STATUS saaFsmRunEventRxAssoc(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prSwRf
 			DBGLOG(SAA, INFO,
 				"Report RX Assoc to upper layer, Done\n");
 			prConnSettings->bss = NULL;
-		} else
+		} else {
 			DBGLOG(SAA, WARN,
 				"Rx Assoc Resp without specific BSS\n");
+		}
 		/* Reset Send Auth/(Re)Assoc Frame Count */
 		prStaRec->ucTxAuthAssocRetryCount = 0;
 
@@ -1730,7 +1733,7 @@ WLAN_STATUS saaFsmRunEventRxDisassoc(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prS
 #if CFG_SUPPORT_CFG80211_AUTH
 		DBGLOG(SAA, INFO, "notification of RX disassociation %d\n",
 			prSwRfb->u2PacketLen);
-		if (wdev->current_bss)
+		if (wdev->u.ibss.current_bss)
 			kalIndicateRxDisassocToUpperLayer(
 					prAdapter->prGlueInfo->prDevHandler,
 					(PUINT_8)prDisassocFrame,
@@ -1759,7 +1762,7 @@ WLAN_STATUS saaFsmRunEventRxDisassoc(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prS
 		ucRoleIdx = (UINT_8)prBssInfo->u4PrivateData;
 		wdev = prAdapter->prGlueInfo->prP2PInfo[ucRoleIdx]
 					->prDevHandler->ieee80211_ptr;
-		if (wdev->current_bss)
+		if (wdev->u.ibss.current_bss)
 			kalIndicateRxDisassocToUpperLayer(
 				prAdapter->prGlueInfo
 					->prP2PInfo[ucRoleIdx]->aprRoleHandler,

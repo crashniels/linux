@@ -64,7 +64,7 @@ struct device *pBTDevfwlog;
 static wait_queue_head_t inq;
 static wait_queue_head_t fw_log_inq;
 static struct fasync_struct *fasync;
-//static struct hci_dev *hdev;
+static struct hci_dev *hdev;
 
 static int need_reset_stack;
 static int need_reopen;
@@ -1283,6 +1283,32 @@ static int btmtk_sdio_bt_set_power(u8 onoff)
 }
 
 #if BTMTK_BIN_FILE_MODE
+static void GetRandomValue(u8 string[6], bool is7668)
+{
+	int iRandom = 0;
+	pr_info("Enable random generation\n");
+	/* first random */
+	get_random_bytes(&iRandom, sizeof(int));
+	pr_info("iRandom = [%d]", iRandom);
+	string[0] = (((iRandom>>24|iRandom>>16) & (0xFE)) | (0x02)); /* Must use private bit(1) and no BCMC bit(0) */
+	/* second random */
+	get_random_bytes(&iRandom, sizeof(int));
+	pr_info("iRandom = [%d]", iRandom);
+	string[1] = ((iRandom>>8) & 0xFF);
+	/* third random */
+	get_random_bytes(&iRandom, sizeof(int));
+	pr_info("iRandom = [%d]", iRandom);
+	string[5] = (iRandom & 0xFF);
+	/*  */
+	string[2] = 0x46;
+	if (is7668)
+		string[3] = 0x68;
+	else
+		string[3] = 0x62;
+	string[4] = 0x76;
+	return;
+}
+
 static int btmtk_sdio_send_and_check(u8 *cmd, u16 cmd_len,
 						u8 *event, u16 event_len)
 {
@@ -1552,7 +1578,8 @@ static void btmtk_set_eeprom2ctrler(uint8_t *buf,
 	if (0x0 == set_bdaddr[4] && 0x0 == set_bdaddr[5]
 			&& 0x0 == set_bdaddr[6] && 0x0 == set_bdaddr[7]
 			&& 0x0 == set_bdaddr[8] && 0x0 == set_bdaddr[9]) {
-		pr_notice("%s: BDAddr is Zero, not set\n", __func__);
+		//pr_notice("%s: BDAddr is Zero, not set\n", __func__);
+		GetRandomValue(&set_bdaddr[4], true);
 	} else {
 		ret = btmtk_sdio_send_and_check(set_bdaddr, set_bdaddr[3] + 4, set_bdaddr_e, sizeof(set_bdaddr_e));
 		pr_notice("%s: set BDAddress(%02X-%02X-%02X-%02X-%02X-%02X) %s\n",
@@ -2731,7 +2758,7 @@ static int btmtk_sdio_card_to_host(struct btmtk_private *priv, const u8 *event, 
 	static u8 fwdump_blocking_warn;
 	char *dump_file_name;
 
-	//struct sk_buff *skb_hci;
+	struct sk_buff *skb_hci;
 
 	if (rx_length > (MTK_SDIO_PACKET_HEADER_SIZE + 1))
 		buf_len = rx_length - (MTK_SDIO_PACKET_HEADER_SIZE + 1);
@@ -2995,7 +3022,7 @@ SKIP_DUMP:
 		bt_cb(fops_skb)->pkt_type = type;
 		memcpy(fops_skb->data, skb->data, buf_len);
 
-		/*skb_hci = bt_skb_alloc(buf_len, GFP_KERNEL);
+		skb_hci = bt_skb_alloc(buf_len, GFP_KERNEL);
 		skb_put(skb_hci, buf_len);
 		memcpy(skb_hci->data, fops_skb->data, buf_len);
 #if KERNEL_VERSION(4, 5, 0) > LINUX_VERSION_CODE
@@ -3005,7 +3032,7 @@ SKIP_DUMP:
 #endif
 		ret = hci_recv_frame(hdev, skb_hci);
 		if (ret < 0)
-			printk(KERN_ERR "XXX: error recv frame: %d\n", ret);*/
+			printk(KERN_ERR "XXX: error recv frame: %d\n", ret);
 
 		fops_skb->len = buf_len;
 		LOCK_UNSLEEPABLE_LOCK(&(metabuffer.spin_lock));
@@ -3810,7 +3837,7 @@ static int btmtk_sdio_RegisterBTIrq(struct btmtk_sdio_card *data)
 }
 #endif
 
-/*static int btsdio_open(struct hci_dev *hdev)
+static int btsdio_open(struct hci_dev *hdev)
 {
 	return 0;
 }
@@ -3827,7 +3854,7 @@ static int btsdio_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
 	skb_queue_tail(&g_priv->adapter->tx_queue, skb);
 	wake_up_interruptible(&g_priv->main_thread.wait_q);
 	return 0;
-}*/
+}
 
 static int btmtk_sdio_probe(struct sdio_func *func,
 					const struct sdio_device_id *id)
@@ -3949,18 +3976,19 @@ static int btmtk_sdio_probe(struct sdio_func *func,
 	wake_lock_init(&g_card->eint_wlock, WAKE_LOCK_SUSPEND, "btevent_eint");
 #endif
 
-	/*hdev = hci_alloc_dev();
+	hdev = hci_alloc_dev();
 	if (!hdev)
 		return -ENOMEM;
 	hdev->bus = HCI_SDIO;
-	if (id->class == SDIO_CLASS_BT_AMP)
-		hdev->dev.type = "HCI_AMP";
-	else
+	if (id->class == SDIO_CLASS_BT_AMP) {
+		//hdev->dev_type = HCI_AMP;
+	} else {
 #if KERNEL_VERSION(4, 8, 0) > LINUX_VERSION_CODE
 		hdev->dev_type = HCI_BREDR;
 #else
-		hdev->dev.type = "HCI_PRIMARY";
+		//hdev->dev_type = HCI_PRIMARY;
 #endif
+	}
 	SET_HCIDEV_DEV(hdev, &func->dev);
 	hdev->open     = btsdio_open;
 	hdev->close    = btsdio_close;
@@ -3971,7 +3999,7 @@ static int btmtk_sdio_probe(struct sdio_func *func,
 		pr_err("XXX: Failed to register HCI: %d\n", ret);
 		hci_free_dev(hdev);
 		return ret;
-	}*/
+	}
 
 	pr_info("%s normal end\n", __func__);
 	probe_ready = true;
@@ -4008,8 +4036,8 @@ static void btmtk_sdio_remove(struct sdio_func *func)
 	pr_info("%s begin user_rmmod %d\n", __func__, user_rmmod);
 	probe_ready = false;
 	
-	//hci_unregister_dev(hdev);
-	//hci_free_dev(hdev);
+	hci_unregister_dev(hdev);
+	hci_free_dev(hdev);
 	
 	btmtk_sdio_set_no_fw_own(g_priv, FALSE);
 	if (func) {
@@ -5590,7 +5618,7 @@ static int __init btmtk_sdio_init_module(void)
 {
 	int ret = 0;
 
-#ifdef CONFIG_AMAZON_A2DP_TS
+#ifdef CONFIG_AMAZON_A2DP_TS_SDIO
 	ret = btif_ts_init();
 	if (ret) {
 		pr_err("%s: btif_ts_init failed!", __func__);
@@ -5629,7 +5657,7 @@ static void __exit btmtk_sdio_exit_module(void)
 	BTMTK_exit();
 	sdio_unregister_driver(&bt_mtk_sdio);
 	btmtk_sdio_free_memory();
-#ifdef CONFIG_AMAZON_A2DP_TS
+#ifdef CONFIG_AMAZON_A2DP_TS_SDIO
 	btif_ts_exit();
 #endif
 }

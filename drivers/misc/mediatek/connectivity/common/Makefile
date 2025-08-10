@@ -275,7 +275,7 @@ endif
 $(MODULE_NAME)-objs += common_main/linux/wmt_step.o
 
 ifneq ($(CONFIG_MTK_BTIF),)
-$(warning $(CONFIG_MTK_BTIF) btif !!!)
+$(warning stp_btif build-in boot.img)
 $(MODULE_NAME)-objs += common_main/linux/stp_btif.o
 endif
 

@@ -40,7 +40,7 @@ ifeq ($(CONFIG_MTK_COMBO),$(filter $(CONFIG_MTK_COMBO),m y))
 endif
 
 ifeq ($(CONFIG_MTK_COMBO_BT_MT7668_SDIO),$(filter $(CONFIG_MTK_COMBO_BT_MT7668_SDIO),m y))
-    obj-$(CONFIG_MTK_COMBO_BT_MT7668_SDIO) += bt/mt76xx/sdio/
+    obj-$(CONFIG_MTK_COMBO_BT_MT7668_SDIO) += bt_mt7668_sdio/
 endif
 
 ifeq ($(CONFIG_MTK_WIFI_DEVICE),$(filter $(CONFIG_MTK_WIFI_DEVICE),m y))

@@ -35,7 +35,7 @@ ccflags-y += -DLINUX -D$(WLAN_CHIP_ID)
 
 #define log level
 CFG_DEFAULT_DBG_LEVEL=0xF
-CONFIG_MTK_WIFI_MCC_SUPPORT=y
+#CONFIG_MTK_WIFI_MCC_SUPPORT=y
 # Define maximum different channels supported for ieee80211_iface_combination setting.
 CFG_NUM_DIFFERENT_CHANNELS_STA=1
 CFG_NUM_DIFFERENT_CHANNELS_P2P=1
@@ -84,7 +84,7 @@ else
     ccflags-y += -DBUILD_QA_DBG=0
 endif
 
-ifeq ($(CONFIG_MTK_COMBO_WIFI),y)
+ifeq ($(CONFIG_MTK_WIFI_DEVICE),y)
     ccflags-y += -DCFG_BUILT_IN_DRIVER=1
     ccflags-y += -DCFG_WPS_DISCONNECT=1
 else
@@ -252,8 +252,7 @@ MGMT_OBJS := $(MGMT_DIR)ais_fsm.o \
              $(MGMT_DIR)hs20.o \
              $(MGMT_DIR)tdls.o
 
-CHIPS_OBJS := $(CHIPS)mt6632.o \
-			  $(CHIPS)mt7668.o
+CHIPS_OBJS := $(CHIPS)mt7668.o
 # ---------------------------------------------------
 # P2P Objects List
 # ---------------------------------------------------
@@ -283,7 +282,7 @@ MGMT_OBJS += $(MGMT_DIR)p2p_dev_fsm.o\
 MGMT_OBJS += $(MGMT_DIR)wapi.o
 
 ifeq ($(CONFIG_MTK_COMBO_WIFI_HIF), sdio)
-HIF_OBJS :=  $(HIF_DIR)arm.o \
+HIF_OBJS :=  $(HIF_DIR)x86.o \
              $(HIF_DIR)sdio.o \
              $(HIF_DIR)sdio_test_driver_core.o \
              $(HIF_DIR)sdio_test_driver_ops.o

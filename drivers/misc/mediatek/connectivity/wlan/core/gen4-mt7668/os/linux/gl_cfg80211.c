@@ -1103,9 +1103,10 @@ int mtk_cfg80211_auth(struct wiphy *wiphy, struct net_device *ndev,
 		DBGLOG(REQ, INFO, "[wlan] mtk_cfg80211_auth %p %zu\n",
 			req->sae_data, req->sae_data_len);
 #else
-	if (req->auth_data_len != 0)
+	if (req->auth_data_len != 0) {
 		DBGLOG(REQ, INFO, "[wlan] mtk_cfg80211_auth %p %zu\n",
 			req->auth_data, req->auth_data_len);
+	}
 #endif
 	DBGLOG(REQ, INFO, "auth to  BSS [" MACSTR "]\n",
 		MAC2STR((PUINT_8)req->bss->bssid));
@@ -1226,9 +1227,10 @@ int mtk_cfg80211_auth(struct wiphy *wiphy, struct net_device *ndev,
 		 * the max 4 wep key set prior via add key cmd
 		 */
 
-		if (!(prGlueInfo->rWpaInfo.u4AuthAlg & AUTH_TYPE_SHARED_KEY))
+		if (!(prGlueInfo->rWpaInfo.u4AuthAlg & AUTH_TYPE_SHARED_KEY)) {
 			DBGLOG(REQ, WARN, "Auth Algorithm : %ld with wep key\n",
 			prGlueInfo->rWpaInfo.u4AuthAlg);
+		}
 
 		prWepKey = (P_PARAM_WEP_T) wepBuf;
 
@@ -1276,8 +1278,9 @@ int mtk_cfg80211_auth(struct wiphy *wiphy, struct net_device *ndev,
 		/* [TODO] to consider if bssid/auth_alg changed
 		 * (need to update to AIS)
 		 */
-		if (fgNewAuthParam)
+		if (fgNewAuthParam) {
 			DBGLOG(REQ, WARN, "auth param update\n");
+		}
 
 		rStatus = kalIoctl(prGlueInfo, wlanoidSetConnect,
 				(void *)&rNewSsid, sizeof(PARAM_CONNECT_T),
@@ -1294,11 +1297,12 @@ int mtk_cfg80211_auth(struct wiphy *wiphy, struct net_device *ndev,
 		prStaRec = cnmGetStaRecByAddress(prGlueInfo->prAdapter,
 			prGlueInfo->prAdapter->prAisBssInfo->ucBssIndex,
 			rNewSsid.pucBssid);
-		if (prStaRec)
+		if (prStaRec) {
 			saaSendAuthAssoc(prGlueInfo->prAdapter, prStaRec);
-		else
+		} else {
 			DBGLOG(REQ, WARN,
 				"can't send auth since can't find StaRec\n");
+		}
 	}
 
 	return 0;
@@ -1973,8 +1977,14 @@ int mtk_cfg80211_deauth(struct wiphy *wiphy, struct net_device *ndev,
 		DBGLOG(REQ, INFO, "assoc timeout notify\n");
 		/* ops caller have already hold the mutex. */
 #if (KERNEL_VERSION(3, 11, 0) <= CFG80211_VERSION_CODE)
-		cfg80211_assoc_timeout(ndev,
-			prGlueInfo->prAdapter->rWifiVar.rConnSettings.bss);
+		/*cfg80211_assoc_timeout(ndev,
+			prGlueInfo->prAdapter->rWifiVar.rConnSettings.bss);*/
+
+		struct cfg80211_rx_assoc_resp_data assoc_resp = { .uapsd_queues = -1, };
+		assoc_resp.links[0].bss = prGlueInfo->prAdapter->rWifiVar.rConnSettings.bss;
+                assoc_resp.req_ies = req->ie;
+                assoc_resp.req_ies_len = req->ie_len;
+		cfg80211_rx_assoc_resp(ndev, &assoc_resp);
 #else
 		cfg80211_send_assoc_timeout(ndev,
 			prGlueInfo->prAdapter->rWifiVar.
@@ -3441,7 +3451,9 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev, struct cfg8
 	UINT_32 i, u4AkmSuite;
 	P_DOT11_RSNA_CONFIG_AUTHENTICATION_SUITES_ENTRY prEntry;
 	P_CONNECTION_SETTINGS_T prConnSettings = NULL;
+#if !CFG_SUPPORT_PASSPOINT
 	PUINT_8 prDesiredIE = NULL;
+#endif
 	PUINT_8 pucIEStart = NULL;
 	UINT_8 fgCarryWPSIE = FALSE;
 	RSN_INFO_T rRsnInfo;
@@ -3634,8 +3646,9 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev, struct cfg8
 	rStatus = kalIoctl(prGlueInfo, wlanoidSetEncryptionStatus, &eEncStatus,
 		sizeof(eEncStatus), FALSE, FALSE, FALSE, &u4BufLen);
 
-	if (rStatus != WLAN_STATUS_SUCCESS)
+	if (rStatus != WLAN_STATUS_SUCCESS) {
 		DBGLOG(REQ, WARN, "set encryption mode error:%x\n", rStatus);
+	}
 
 	/* 6. Fill AKM suites */
 	u4AkmSuite = 0;
@@ -3745,8 +3758,9 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev, struct cfg8
 	/* 6.1 Set auth mode*/
 	rStatus = kalIoctl(prGlueInfo, wlanoidSetAuthMode, &eAuthMode,
 			sizeof(eAuthMode), FALSE, FALSE, FALSE, &u4BufLen);
-	if (rStatus != WLAN_STATUS_SUCCESS)
+	if (rStatus != WLAN_STATUS_SUCCESS) {
 		DBGLOG(REQ, WARN, "set auth mode error:%x\n", rStatus);
+	}
 
 	/* 6.2 Enable the specific AKM suite only. */
 	for (i = 0; i < MAX_NUM_SUPPORTED_AKM_SUITES; i++) {
@@ -3777,9 +3791,10 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev, struct cfg8
 				   pucIEStart, req->ie_len,
 				   FALSE, FALSE, FALSE, &u4BufLen);
 
-		if (rStatus != WLAN_STATUS_SUCCESS)
+		if (rStatus != WLAN_STATUS_SUCCESS) {
 			DBGLOG(SEC, WARN,
 			"[wapi] set wapi assoc info error:%x\n", rStatus);
+		}
 #endif
 #if CFG_SUPPORT_WPS2
 		if (wextSrchDesiredWPSIE(pucIEStart, req->ie_len, 0xDD,
@@ -3790,10 +3805,11 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev, struct cfg8
 			rStatus = kalIoctl(prGlueInfo, wlanoidSetWSCAssocInfo,
 					   prDesiredIE, IE_SIZE(prDesiredIE),
 					   FALSE, FALSE, FALSE, &u4BufLen);
-			if (rStatus != WLAN_STATUS_SUCCESS)
+			if (rStatus != WLAN_STATUS_SUCCESS) {
 				DBGLOG(SEC, WARN,
 					"[WSC] set WSC assoc info error:%x\n",
 					rStatus);
+			}
 		}
 #endif
 #endif
@@ -3952,11 +3968,12 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev, struct cfg8
 			prGlueInfo->prAdapter->prAisBssInfo->ucBssIndex,
 			req->bss->bssid);
 
-		if (prStaRec)
+		if (prStaRec) {
 			saaSendAuthAssoc(prGlueInfo->prAdapter, prStaRec);
-		else
+		} else {
 			DBGLOG(REQ, WARN,
 				"can't send auth since can't find StaRec\n");
+		}
 	}
 #else
 	rStatus = kalIoctl(prGlueInfo, wlanoidSetBssid,

@@ -601,8 +601,10 @@ VOID kalUpdateMACAddress(IN P_GLUE_INFO_T prGlueInfo, IN PUINT_8 pucMacAddr)
 	ASSERT(prGlueInfo);
 	ASSERT(pucMacAddr);
 
-	if (UNEQUAL_MAC_ADDR(prGlueInfo->prDevHandler->dev_addr, pucMacAddr))
-		memcpy((char*)prGlueInfo->prDevHandler->dev_addr, pucMacAddr, PARAM_MAC_ADDR_LEN);
+	if (UNEQUAL_MAC_ADDR(prGlueInfo->prDevHandler->dev_addr, pucMacAddr)) {
+		//memcpy((char*)prGlueInfo->prDevHandler->dev_addr, pucMacAddr, PARAM_MAC_ADDR_LEN);
+		dev_addr_set(prGlueInfo->prDevHandler, pucMacAddr);
+	}
 
 }
 
@@ -4888,7 +4890,7 @@ void kalAcquireWDevMutex(IN struct net_device *pDev)
 	ASSERT(pDev);
 
 	DBGLOG(INIT, TEMP, "WDEV_LOCK Try to acquire\n");
-	mutex_lock(&(pDev->ieee80211_ptr)->mtx);
+	mutex_lock(&(pDev->ieee80211_ptr)->wiphy->mtx);
 	DBGLOG(INIT, TEMP, "WDEV_LOCK Acquired\n");
 }				/* end of kalAcquireWDevMutex() */
 
@@ -4906,7 +4908,7 @@ void kalReleaseWDevMutex(IN struct net_device *pDev)
 {
 	ASSERT(pDev);
 
-	mutex_unlock(&(pDev->ieee80211_ptr)->mtx);
+	mutex_unlock(&(pDev->ieee80211_ptr)->wiphy->mtx);
 	DBGLOG(INIT, TEMP, "WDEV_UNLOCK\n");
 }				/* end of kalReleaseWDevMutex() */
 
@@ -4953,8 +4955,9 @@ void cfg80211AddToPktQueue(struct net_device *prDevHandler, void *buf,
 				&prCfg80211Req->rQueEntry);
 	GLUE_RELEASE_SPIN_LOCK(prGlueInfo, SPIN_LOCK_CFG80211_QUE);
 
-	if (!schedule_delayed_work(&cfg80211_workq, 0))
+	if (!schedule_delayed_work(&cfg80211_workq, 0)) {
 		DBGLOG(REQ, INFO, "work is already in cfg80211_workq\n");
+	}
 }
 
 static void kalProcessCfg80211TxPkt(struct PARAM_CFG80211_REQ *prCfg80211Req)
@@ -4971,7 +4974,7 @@ static void kalProcessCfg80211TxPkt(struct PARAM_CFG80211_REQ *prCfg80211Req)
 	case MAC_FRAME_DEAUTH:
 		cfg80211_tx_mlme_mgmt(prCfg80211Req->prDevHandler,
 			(const u8 *)prCfg80211Req->prFrame,
-			prCfg80211Req->frameLen);
+			prCfg80211Req->frameLen, false);
 		break;
 #else
 	case MAC_FRAME_DISASSOC:
@@ -5030,11 +5033,14 @@ static void kalProcessCfg80211RxPkt(struct PARAM_CFG80211_REQ *prCfg80211Req)
 #endif
 	case MAC_FRAME_ASSOC_RSP:
 #if (KERNEL_VERSION(5, 1, 0) <= CFG80211_VERSION_CODE)
-		/* [TODO] Set uapsd_queues/req_ies/req_ies_len properly */
-		cfg80211_rx_assoc_resp(prCfg80211Req->prDevHandler,
-			prCfg80211Req->bss,
+		struct cfg80211_rx_assoc_resp_data assoc_resp = { .uapsd_queues = -1, };
+		assoc_resp.links[0].bss = prCfg80211Req->bss;
+                assoc_resp.buf = (const u8 *)prCfg80211Req->prFrame;
+                assoc_resp.len = prCfg80211Req->frameLen;
+		cfg80211_rx_assoc_resp(prCfg80211Req->prDevHandler, &assoc_resp);
+			/*prCfg80211Req->bss,
 			(const u8 *)prCfg80211Req->prFrame,
-			prCfg80211Req->frameLen, 0, NULL, 0);
+			prCfg80211Req->frameLen, 0, NULL, 0);*/
 #elif (KERNEL_VERSION(3, 18, 0) <= CFG80211_VERSION_CODE)
 		cfg80211_rx_assoc_resp(prCfg80211Req->prDevHandler,
 			prCfg80211Req->bss,

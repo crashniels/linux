@@ -74,6 +74,11 @@ static ssize_t conninfra_dev_read(struct file *filp, char __user *buf,
 static ssize_t conninfra_dev_write(struct file *filp,
 				const char __user *buf, size_t count,
 				loff_t *f_pos);
+				
+extern long wmt_detect_unlocked_ioctl(struct file *filp, unsigned int cmd, 
+		unsigned long arg);
+extern long WMT_compat_detect_ioctl(struct file *filp, unsigned int cmd, 
+		unsigned long arg);
 /*******************************************************************************
 *                            P U B L I C   D A T A
 ********************************************************************************
@@ -95,10 +100,10 @@ const struct file_operations gConninfraDevFops = {
 	.release = conninfra_dev_close,
 	.read = conninfra_dev_read,
 	.write = conninfra_dev_write,
-	//.unlocked_ioctl = wmt_detect_unlocked_ioctl,
-//#ifdef CONFIG_COMPAT
-//	.compat_ioctl = WMT_compat_detect_ioctl,
-//#endif
+	.unlocked_ioctl = wmt_detect_unlocked_ioctl,
+#ifdef CONFIG_COMPAT
+	.compat_ioctl = WMT_compat_detect_ioctl,
+#endif
 };
 
 
