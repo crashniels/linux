@@ -1,84 +1,47 @@
-/******************************************************************************
- *
- * This file is provided under a dual license.  When you use or
- * distribute this software, you may choose to be licensed under
- * version 2 of the GNU General Public License ("GPLv2 License")
- * or BSD License.
- *
- * GPLv2 License
- *
- * Copyright(C) 2016 MediaTek Inc.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
- *
- * BSD LICENSE
- *
- * Copyright(C) 2016 MediaTek Inc. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *  * Neither the name of the copyright holder nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *****************************************************************************/
+/* SPDX-License-Identifier: GPL-2.0 */
 /*
-** Id: //Department/DaVinci/BRANCHES/MT6620_WIFI_DRIVER_V2_3/include/precomp.h#2
-*/
+ * Copyright(C) 2016 MediaTek Inc.
+ */
 
 /*! \file   precomp.h
-*    \brief  Collection of most compiler flags are described here.
-*
-*    In this file we collect all compiler flags and detail the driver behavior if
-*    enable/disable such switch or adjust numeric parameters.
-*/
+ *    \brief  Collection of most compiler flags are described here.
+ *
+ *    In this file we collect all compiler flags and detail the driver behavior
+ * if enable/disable such switch or adjust numeric parameters.
+ */
 
 #ifndef _PRECOMP_H
 #define _PRECOMP_H
 
 /*******************************************************************************
-*                         C O M P I L E R   F L A G S
-********************************************************************************
-*/
+ *                         C O M P I L E R   F L A G S
+ *******************************************************************************
+ */
+
+//#define DBG    1
 
 #ifdef __GNUC__
+#ifdef DBG
 #if (DBG == 0)
 #pragma GCC diagnostic ignored "-Wformat"
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+#pragma GCC diagnostic ignored "-Wdeclaration-after-statement"
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+#pragma GCC diagnostic ignored "-Wcast-function-type"
+#pragma GCC diagnostic ignored "-Wstringop-overread"
+#pragma GCC diagnostic ignored "-Wenum-conversion"
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+#pragma GCC diagnostic ignored "-Wempty-body"
+#endif
 #endif
 #endif
 
 /*******************************************************************************
-*                    E X T E R N A L   R E F E R E N C E S
-********************************************************************************
-*/
-#include "gl_os.h"		/* Include "config.h" */
+ *                    E X T E R N A L   R E F E R E N C E S
+ *******************************************************************************
+ */
+
+#include "gl_os.h"  /* Include "config.h" */
 
 #if CFG_ENABLE_WIFI_DIRECT
 #include "gl_p2p_os.h"
@@ -152,7 +115,6 @@
 
 #include "wlan_lib.h"
 #include "wlan_oid.h"
-#include "wlan_bow.h"
 
 #if CFG_ENABLE_WIFI_DIRECT
 #include "wlan_p2p.h"
@@ -160,7 +122,7 @@
 
 #include "hal.h"
 
-#include "mt66xx_reg.h"
+#include "reg.h"
 
 #include "rlm.h"
 #include "rlm_domain.h"
@@ -177,21 +139,16 @@
 
 #include "que_mgt.h"
 
-#if CFG_ENABLE_BT_OVER_WIFI
-#include "bow.h"
-#include "bow_fsm.h"
-#endif
-
 #include "pwr_mgt.h"
 
 #include "cnm.h"
-/* Dependency:  aa_fsm.h (ENUM_AA_STATE_T), p2p_fsm.h (WPS_ATTRI_MAX_LEN_DEVICE_NAME) */
+/* Dependency:  aa_fsm.h (ENUM_AA_STATE_T), p2p_fsm.h
+ * (WPS_ATTRI_MAX_LEN_DEVICE_NAME) */
 #include "cnm_mem.h"
 #include "cnm_scan.h"
 
 #if CFG_ENABLE_WIFI_DIRECT
 #include "p2p_rlm_obss.h"
-#include "p2p_bss.h"
 #include "p2p.h"
 
 #include "p2p_rlm.h"
@@ -214,7 +171,7 @@
 
 #if CFG_SUPPORT_ROAMING
 #include "roaming_fsm.h"
-#endif /* CFG_SUPPORT_ROAMING */
+#endif
 
 #include "ais_fsm.h"
 
@@ -224,10 +181,6 @@
 #include "rftest.h"
 
 #include "rsn.h"
-
-#if CFG_SUPPORT_WAPI
-#include "wapi.h"
-#endif
 
 /*------------------------------------------------------------------------------
  * NVRAM structure
@@ -256,49 +209,42 @@
 #endif
 
 /*******************************************************************************
-*                              C O N S T A N T S
-********************************************************************************
-*/
+ *                              C O N S T A N T S
+ *******************************************************************************
+ */
 
 /*******************************************************************************
-*                             D A T A   T Y P E S
-********************************************************************************
-*/
+ *                             D A T A   T Y P E S
+ *******************************************************************************
+ */
 
 /*******************************************************************************
-*                            P U B L I C   D A T A
-********************************************************************************
-*/
+ *                            P U B L I C   D A T A
+ *******************************************************************************
+ */
 
 /*******************************************************************************
-*                           P R I V A T E   D A T A
-********************************************************************************
-*/
+ *                           P R I V A T E   D A T A
+ *******************************************************************************
+ */
 
 /*******************************************************************************
-*                                 M A C R O S
-********************************************************************************
-*/
+ *                                 M A C R O S
+ *******************************************************************************
+ */
 
 /*******************************************************************************
-*                  F U N C T I O N   D E C L A R A T I O N S
-********************************************************************************
-*/
+ *                  F U N C T I O N   D E C L A R A T I O N S
+ *******************************************************************************
+ */
 
 /*******************************************************************************
-*                              F U N C T I O N S
-********************************************************************************
-*/
-#ifdef _HIF_SDIO
-#if MTK_WCN_HIF_SDIO
-extern INT_32 mtk_sdio_probe(MTK_WCN_HIF_SDIO_CLTCTX cltCtx,
-		const MTK_WCN_HIF_SDIO_FUNCINFO * prFuncInfo);
-extern INT_32 mtk_sdio_remove(MTK_WCN_HIF_SDIO_CLTCTX cltCtx);
-#else
+ *                              F U N C T I O N S
+ *******************************************************************************
+ */
+
 extern int mtk_sdio_probe(struct sdio_func *func,
-				const struct sdio_device_id *id);
+                          const struct sdio_device_id *id);
 extern void mtk_sdio_remove(struct sdio_func *func);
-#endif
-#endif
 
-#endif /* _PRECOMP_H */
+#endif
