@@ -150,6 +150,7 @@ static void xhci_aeolia_remove_one(struct pci_dev *dev, int index)
 #define DRV_VERSION	"3.0"
 #define DRV_NAME	"ahci"
 static const struct ata_port_info ahci_port_info = {
+	AHCI_HFLAGS	(AHCI_HFLAG_31BIT_ONLY),
 	.flags		= AHCI_FLAG_COMMON,
 	.pio_mask	= ATA_PIO4,
 	.udma_mask	= ATA_UDMA6,
@@ -386,8 +387,7 @@ static int xhci_aeolia_probe(struct pci_dev *dev, const struct pci_device_id *id
 		pci_set_master(dev);
 	}
 
-	if (dma_set_mask(&dev->dev, DMA_BIT_MASK(31)) ||
-		dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(31))) {
+	if (dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(31))) {
 		return -ENODEV;
 	}
 
