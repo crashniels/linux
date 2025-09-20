@@ -197,6 +197,12 @@ static OSAL_UNSLEEPABLE_LOCK g_temp_query_spinlock;
 static OSAL_SLEEPABLE_LOCK g_aee_read_lock;
 static OSAL_SLEEPABLE_LOCK g_dump_info_read_lock;
 
+phys_addr_t gConEmiPhyBase;
+EXPORT_SYMBOL(gConEmiPhyBase);
+
+unsigned long long gConEmiSize;
+EXPORT_SYMBOL(gConEmiSize);
+
 #ifdef CONFIG_EARLYSUSPEND
 static VOID wmt_dev_early_suspend(struct early_suspend *h)
 {
@@ -1749,6 +1755,20 @@ UINT8 wmt_dev_is_close(VOID)
 
 static INT32 WMT_init(VOID)
 {
+#ifdef CONFIG_MTK_COMBO_COMM
+        char *ptr = NULL;
+
+        gConEmiSize = 0x400000;
+        ptr = kmalloc(gConEmiSize, GFP_KERNEL);
+        if (!ptr) {
+                WMT_PLAT_PR_DBG("initWlan try to allocate 0x%llu bytes memory error\n",
+                       gConEmiSize);
+                return -EINVAL;
+        }
+        memset(ptr, 0, gConEmiSize);
+        gConEmiPhyBase = (phys_addr_t)ptr;
+#endif
+
 	dev_t devID = MKDEV(gWmtMajor, 0);
 	INT32 cdevErr = -1;
 	INT32 ret = -1;
