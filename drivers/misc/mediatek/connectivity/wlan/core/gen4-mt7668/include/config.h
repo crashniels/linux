@@ -77,7 +77,7 @@
 #define CFG_MESON_G12A_PATCH            1
 #endif
 
-#define CFG_ENABLE_UNIFY_WIPHY          1
+#define CFG_ENABLE_UNIFY_WIPHY          0
 
 /* 2 Flags for OS capability */
 

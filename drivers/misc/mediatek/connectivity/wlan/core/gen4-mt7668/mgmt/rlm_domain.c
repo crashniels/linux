@@ -862,8 +862,7 @@ static void rlmSetEd_EU(P_ADAPTER_T prAdapter, u32 u4CountryCode)
         }
     } else {
         if ((prWifiVar->ucEd2GNonEU != 0) && (prWifiVar->ucEd5GNonEU != 0)) {
-            wlanSetEd(prAdapter, prWifiVar->ucEd2GNonEU, prWifiVar->ucEd5GNonEU,
-                      1);
+            wlanSetEd(prAdapter, prWifiVar->ucEd2GNonEU, prWifiVar->ucEd5GNonEU, 1);
             DBGLOG(RLM, INFO, "Ed 2G for non EU=%d, Ed 5G for non EU=%d\n",
                    prWifiVar->ucEd2GNonEU, prWifiVar->ucEd5GNonEU);
         }

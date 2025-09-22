@@ -2023,7 +2023,7 @@ static struct wireless_dev *wlanNetCreate(void *pvData, void *pvDriverData)
     QUEUE_INITIALIZE(&prGlueInfo->rTxQueue);
     glSetHifInfo(prGlueInfo, (unsigned long)pvData);
 
-    /* main thread is created in this function */
+    /* main_thread is created in this function */
     init_waitqueue_head(&prGlueInfo->waitq_rx);
     init_waitqueue_head(&prGlueInfo->waitq_hif);
 
@@ -2649,6 +2649,8 @@ s32 wlanProbe(struct sdio_func *pvData, void *pvDriverData)
                    (unsigned long)prGlueInfo);
         tasklet_init(&prGlueInfo->rTxCompleteTask, NULL,
                    (unsigned long)prGlueInfo);*/
+
+	prGlueInfo->main_thread = NULL;
 
         DBGLOG(INIT, STATE, "wlanAdapterStart\n");
         if (wlanAdapterStart(prAdapter, prRegInfo) != WLAN_STATUS_SUCCESS) {

@@ -3958,7 +3958,7 @@ DOMAIN_SEND_CMD:
      * Check if using customized regulatory rule
      */
     if (rlmDomainIsUsingLocalRegDomainDataBase() &&
-		   rlmDomainIsEfuseUsed()) {
+		    rlmDomainIsEfuseUsed()) {
         const struct ieee80211_regdomain *pRegdom;
         u32 country_code = rlmDomainGetCountryCode();
         char alpha2[4];

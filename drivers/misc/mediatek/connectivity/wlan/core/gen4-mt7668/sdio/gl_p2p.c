@@ -1605,7 +1605,7 @@ u8 glUnregisterP2P(P_GLUE_INFO_T prGlueInfo, u8 ucIdx)
             /* don't free the dev that share with the AIS */
             if (prP2PInfo->prDevHandler == gprWdev->netdev) {
                 gprP2pRoleWdev[ucRoleIdx] = NULL;
-            }else{
+            } else {
                 free_netdev(prP2PInfo->prDevHandler);
             }
             prP2PInfo->prDevHandler = NULL;

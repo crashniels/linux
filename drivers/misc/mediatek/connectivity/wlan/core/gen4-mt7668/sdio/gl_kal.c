@@ -2327,6 +2327,7 @@ kalIoctlTimeout(IN P_GLUE_INFO_T prGlueInfo,
     /* return WLAN_STATUS_ADAPTER_NOT_READY; */
     /* } */
 
+
     if (down_interruptible(&g_halt_sem)) {
 	    DBGLOG(INIT, INFO, "Halt semaphore is down.\n");
         return WLAN_STATUS_FAILURE;
@@ -2401,8 +2402,13 @@ kalIoctlTimeout(IN P_GLUE_INFO_T prGlueInfo,
      */
     completion_timeout = prIoReq->u4Timeout + 1000;
 
+    DBGLOG(INIT, WARN, "CHECK 1\n");
+
     ret2 = wait_for_completion_timeout(&prGlueInfo->rPendComp,
                                        MSEC_TO_JIFFIES(completion_timeout));
+
+    DBGLOG(INIT, WARN, "CHECK 2\n");
+
     if (ret2 == 0) {
         DBGLOG(INIT, ERROR, "exceed %d ms, force timeout\n",
                completion_timeout);
@@ -3074,7 +3080,7 @@ int rx_thread(void *data)
 int main_thread(void *data)
 {
     struct net_device *dev = data;
-    P_GLUE_INFO_T prGlueInfo = *((P_GLUE_INFO_T *)netdev_priv(dev));
+    P_GLUE_INFO_T prGlueInfo = ((P_NETDEV_PRIVATE_GLUE_INFO)netdev_priv(dev))->prGlueInfo;
     P_GL_IO_REQ_T prIoReq = NULL;
     int ret = 0;
     u8 fgNeedHwAccess = false;
@@ -3110,8 +3116,7 @@ int main_thread(void *data)
          */
         do {
             ret = wait_event_interruptible(
-                prGlueInfo->waitq,
-                ((prGlueInfo->ulFlag &
+                prGlueInfo->waitq, ((prGlueInfo->ulFlag &
                   GLUE_FLAG_MAIN_PROCESS) != 0));
         } while (ret != 0);
 
