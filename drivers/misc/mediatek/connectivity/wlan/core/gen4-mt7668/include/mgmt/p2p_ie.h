@@ -54,4 +54,8 @@ u32 p2pCalculate_IEForAssocReq(IN P_ADAPTER_T prAdapter,
 void p2pGenerate_IEForAssocReq(IN P_ADAPTER_T prAdapter,
                                IN P_MSDU_INFO_T prMsduInfo);
 
+u32 wfdFuncAppendAttriDevInfo(IN P_ADAPTER_T prAdapter, IN u8 fgIsAssocFrame,
+                              IN u16 *pu2Offset, IN u8 *pucBuf,
+                              IN u16 u2BufSize);
+
 #endif

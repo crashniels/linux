@@ -335,6 +335,8 @@ extern VOID wmt_lib_ps_set_sdio_psop(PF_WMT_SDIO_PSOP own_cb);
 extern VOID wmt_lib_sdio_deep_sleep_flag_set_cb_reg(PF_WMT_SDIO_DEEP_SLEEP flag_cb);
 #endif
 extern VOID wmt_lib_sdio_reg_rw_cb(PF_WMT_SDIO_DEBUG reg_rw_cb);
+extern UINT32 wmt_lib_wait_event_checker(P_OSAL_THREAD pThread);
+extern UINT32 wmt_lib_worker_wait_event_checker(P_OSAL_THREAD pThread);
 extern INT32 wmt_lib_register_thermal_ctrl_cb(thermal_query_ctrl_cb thermal_ctrl);
 extern INT32 wmt_lib_register_trigger_assert_cb(trigger_assert_cb trigger_assert);
 
@@ -346,6 +348,8 @@ extern MTK_WCN_BOOL wmt_lib_put_worker_op(P_OSAL_OP pOp);
 
 /* extern ENUM_WMTHWVER_TYPE_T wmt_lib_get_hwver (VOID); */
 extern UINT32 wmt_lib_get_icinfo(ENUM_WMT_CHIPINFO_TYPE_T type);
+extern PUINT8 wmt_lib_def_patch_name(VOID); 
+extern INT32 wmt_lib_utc_time_sync(VOID);
 
 extern MTK_WCN_BOOL wmt_lib_is_therm_ctrl_support(ENUM_WMTTHERM_TYPE_T eType);
 extern MTK_WCN_BOOL wmt_lib_is_dsns_ctrl_support(VOID);
@@ -377,7 +381,9 @@ MTK_WCN_BOOL wmt_lib_sw_rst(INT32 baudRst);
 MTK_WCN_BOOL wmt_lib_hw_rst(VOID);
 INT32 wmt_lib_reg_rw(UINT32 isWrite, UINT32 offset, PUINT32 pvalue, UINT32 mask);
 INT32 wmt_lib_efuse_rw(UINT32 isWrite, UINT32 offset, PUINT32 pvalue, UINT32 mask);
+VOID wmt_lib_state_init(VOID);
 INT32 wmt_lib_sdio_ctrl(UINT32 on);
+MTK_WCN_BOOL wmt_lib_rstmsg_snd(ENUM_WMTRSTMSG_TYPE_T msg);
 INT32 wmt_lib_met_ctrl(INT32 met_ctrl, INT32 log_ctrl);
 INT32 wmt_lib_gps_mcu_ctrl(PUINT8 p_tx_data_buf, UINT32 tx_data_len, PUINT8 p_rx_data_buf,
 			   UINT32 rx_data_buf_len, PUINT32 p_rx_data_len);

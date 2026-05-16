@@ -175,8 +175,7 @@ typedef enum _SDIO_PS_OP {
 
 typedef INT32(*PF_WMT_SDIO_PSOP) (SDIO_PS_OP);
 typedef INT32(*PF_WMT_SDIO_DEEP_SLEEP)(MTK_WCN_BOOL);
-typedef INT32(*PF_WMT_SDIO_DEBUG)(INT32, INT32, UINT32, UINT32);
-
+//typedef INT32(*PF_WMT_SDIO_DEBUG)(INT32, INT32, UINT32, UINT32);
 
 typedef enum _ENUM_WMTCHIN_TYPE_T {
 	WMTCHIN_CHIPID = 0x0,
@@ -258,6 +257,8 @@ typedef struct _MTK_WCN_WMT_EXP_CB_INFO_ {
 } MTK_WCN_WMT_EXP_CB_INFO, *P_MTK_WCN_WMT_EXP_CB_INFO;
 
 #endif
+
+typedef INT32(*PF_WMT_SDIO_DEBUG)(INT32, INT32, UINT32, UINT32);
 
 typedef enum _ENUM_WMTRSTMSG_TYPE_T {
 	WMTRSTMSG_RESET_START = 0x0,
@@ -355,7 +356,7 @@ extern wmt_wlan_is_wifi_drv_own_cb mtk_wcn_wlan_is_wifi_drv_own;
 ********************************************************************************
 */
 /*subsystem function ctrl APIs*/
-extern MTK_WCN_BOOL mtk_wcn_wmt_assert(ENUM_WMTDRV_TYPE_T type, UINT32 reason);
+//extern MTK_WCN_BOOL mtk_wcn_wmt_assert(ENUM_WMTDRV_TYPE_T type, UINT32 reason);
 
 #ifdef MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
 
@@ -372,6 +373,8 @@ extern MTK_WCN_BOOL mtk_wcn_wmt_assert_timeout(ENUM_WMTDRV_TYPE_T type, UINT32 r
 extern MTK_WCN_BOOL mtk_wcn_wmt_assert_keyword(ENUM_WMTDRV_TYPE_T type, PUINT8 keyword);
 
 extern MTK_WCN_BOOL mtk_wcn_wmt_do_reset(ENUM_WMTDRV_TYPE_T type);
+
+extern VOID mtk_wcn_wmt_set_wifi_ver(UINT32 Value);
 
 extern INT32 mtk_wcn_wmt_msgcb_reg(ENUM_WMTDRV_TYPE_T eType, PF_WMT_CB pCb);
 

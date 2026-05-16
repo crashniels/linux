@@ -36,4 +36,6 @@ int consys_reg_mng_deinit(void);
 int consys_hw_reg_readable(void);
 int consys_hw_is_connsys_reg(phys_addr_t addr);
 
+struct consys_reg_mng_ops* __weak get_consys_reg_mng_ops(void);
+
 #endif				/* _PLATFORM_CONSYS_REG_MNG_H_ */

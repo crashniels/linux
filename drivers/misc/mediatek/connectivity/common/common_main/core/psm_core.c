@@ -68,6 +68,10 @@ static INT32 _stp_psm_dbg_dmp_in(STP_PSM_RECORD_T *stp_psm_dbg, UINT32 flag, UIN
 static INT32 _stp_psm_dbg_out_printk(STP_PSM_RECORD_T *stp_psm_dbg);
 static INT32 _stp_psm_opid_dbg_dmp_in(P_STP_PSM_OPID_RECORD p_opid_dbg, UINT32 opid, UINT32 line_num);
 static INT32 _stp_psm_opid_dbg_out_printk(P_STP_PSM_OPID_RECORD p_opid_dbg);
+static P_OSAL_OP _stp_psm_get_free_op(MTKSTP_PSM_T *stp_psm);
+static INT32 _stp_psm_put_act_op(MTKSTP_PSM_T *stp_psm, P_OSAL_OP pOp);
+static INT32 _stp_psm_hold_data(MTKSTP_PSM_T *stp_psm, const PUINT8 buffer, const UINT32 len, const UINT8 type);
+static INT32 _stp_psm_has_pending_data(MTKSTP_PSM_T *stp_psm);
 
 
 static const PINT8 g_psm_state[STP_PSM_MAX_STATE] = {

@@ -337,9 +337,15 @@ extern VOID mtk_wcn_hif_sdio_get_dev(MTK_WCN_HIF_SDIO_CLTCTX ctx, struct device 
 
 extern INT32 mtk_wcn_hif_sdio_update_cb_reg(INT32(*ts_update)(VOID));
 
+extern INT32 mtk_wcn_hif_sdio_irq_flag_set(INT32 flag);
+
 extern VOID mtk_wcn_hif_sdio_enable_irq(MTK_WCN_HIF_SDIO_CLTCTX ctx, MTK_WCN_BOOL enable);
 
 extern INT32 mtk_wcn_hif_sdio_f0_writeb(MTK_WCN_HIF_SDIO_CLTCTX ctx, UINT32 offset, UINT8 vb);
+
+extern INT32 mtk_wcn_hif_sdio_drv_init(VOID);
+
+extern VOID mtk_wcn_hif_sdio_driver_exit(VOID);
 
 extern INT32 mtk_wcn_hif_sdio_f0_readb(MTK_WCN_HIF_SDIO_CLTCTX ctx, UINT32 offset, PUINT8 pvb);
 #ifdef CONFIG_MTK_COMBO_CHIP_DEEP_SLEEP_SUPPORT

@@ -101,6 +101,7 @@ WMT_FUNC_OPS wmt_func_gps_ops = {
 #if CFG_FUNC_WIFI_SUPPORT
 static INT32 wmt_func_wifi_on(P_WMT_IC_OPS pOps, P_WMT_GEN_CONF pConf);
 static INT32 wmt_func_wifi_off(P_WMT_IC_OPS pOps, P_WMT_GEN_CONF pConf);
+static INT32 wmt_func_wifi_ctrl(ENUM_FUNC_STATE funcState);
 
 WMT_FUNC_OPS wmt_func_wifi_ops = {
 	/* Wi-Fi subsystem function on/off */

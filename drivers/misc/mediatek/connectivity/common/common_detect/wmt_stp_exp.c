@@ -198,7 +198,6 @@ MTK_WCN_BOOL mtk_wcn_stp_is_ready(void)
 
 	return ret;
 }
-
 EXPORT_SYMBOL(mtk_wcn_stp_is_ready);
 
 void mtk_wcn_stp_set_bluez(MTK_WCN_BOOL flags)
@@ -248,7 +247,6 @@ INT32 mtk_wcn_stp_register_if_rx(MTK_WCN_STP_IF_RX func)
 
 	return ret;
 }
-
 EXPORT_SYMBOL(mtk_wcn_stp_register_if_rx);
 
 INT32 mtk_wcn_stp_register_event_cb(INT32 type, MTK_WCN_STP_EVENT_CB func)

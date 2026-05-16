@@ -76,14 +76,14 @@ typedef void (*MTK_WCN_STP_EVENT_CB)(void);
 typedef INT32 (*MTK_WCN_STP_IF_TX)(const PUINT8 data, const UINT32 size, PUINT32 written_size);
 typedef void (*MTK_WCN_STP_IF_RX)(const PUINT8 data, INT32 size);
 
-/*typedef enum {
+/*
+typedef enum {
     STP_UART_IF_TX = 0,
     STP_SDIO_IF_TX = 1,
     STP_BTIF_IF_TX = 2,
     STP_MAX_IF_TX
-}ENUM_STP_TX_IF_TYPE;*/
-
-
+} ENUM_STP_TX_IF_TYPE;
+*/
 
 typedef INT32 (*MTK_WCN_STP_SEND_DATA) (const PUINT8 buffer, const UINT32 length, const UINT8 type);
 typedef INT32 (*MTK_WCN_STP_PARSER_DATA)(PUINT8 buffer, UINT32 length);
@@ -112,9 +112,8 @@ typedef struct _MTK_WCN_STP_EXP_CB_INFO_{
 	MTK_WCN_STP_COREDUMP_START_GET stp_coredump_start_get_cb;
 }MTK_WCN_STP_EXP_CB_INFO,*P_MTK_WCN_STP_EXP_CB_INFO;
 
-
-
-/*typedef enum _ENUM_WMTDRV_TYPE_T {
+/*
+typedef enum _ENUM_WMTDRV_TYPE_T {
     WMTDRV_TYPE_BT = 0,
     WMTDRV_TYPE_FM = 1,
     WMTDRV_TYPE_GPS = 2,
@@ -130,7 +129,8 @@ typedef struct _MTK_WCN_STP_EXP_CB_INFO_{
     WMTDRV_TYPE_AUTOK = 11,
 #endif
     WMTDRV_TYPE_MAX
-} ENUM_WMTDRV_TYPE_T, *P_ENUM_WMTDRV_TYPE_T;*/
+} ENUM_WMTDRV_TYPE_T, *P_ENUM_WMTDRV_TYPE_T;
+*/
 
 /*typedef enum _ENUM_WMTDSNS_TYPE_T{
     WMTDSNS_FM_DISABLE = 0,
@@ -169,15 +169,17 @@ typedef struct _MTK_WCN_STP_EXP_CB_INFO_{
     WMTMSG_TYPE_MAX
 } ENUM_WMTMSG_TYPE_T, *P_ENUM_WMTMSG_TYPE_T;*/
 
-typedef void (*PF_WMT_CB)(ENUM_WMTDRV_TYPE_T, ENUM_WMTDRV_TYPE_T, ENUM_WMTMSG_TYPE_T, VOID *, UINT32);
+//typedef void (*PF_WMT_CB)(ENUM_WMTDRV_TYPE_T, ENUM_WMTDRV_TYPE_T, ENUM_WMTMSG_TYPE_T, VOID *, UINT32);
 
-/*typedef enum _SDIO_PS_OP{
+/*
+typedef enum _SDIO_PS_OP{
     OWN_SET = 0,
     OWN_CLR = 1,
     OWN_STATE = 2,
-} SDIO_PS_OP;*/
+} SDIO_PS_OP;
+*/
 
-typedef INT32 (*PF_WMT_SDIO_PSOP)(SDIO_PS_OP);
+//typedef INT32 (*PF_WMT_SDIO_PSOP)(SDIO_PS_OP);
 
 
 /*typedef enum _ENUM_WMTCHIN_TYPE_T{

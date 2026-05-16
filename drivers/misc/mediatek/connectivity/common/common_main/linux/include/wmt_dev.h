@@ -28,6 +28,7 @@ VOID wmt_dev_rx_event_cb(VOID);
 INT32 wmt_dev_rx_timeout(P_OSAL_EVENT pEvent);
 INT32 wmt_dev_patch_get(PUINT8 pPatchName, osal_firmware **ppPatch);
 INT32 wmt_dev_patch_put(osal_firmware **ppPatch);
+MTK_WCN_BOOL wmt_dev_is_file_exist(PUINT8 pFileName);
 VOID wmt_dev_patch_info_free(VOID);
 VOID wmt_dev_send_cmd_to_daemon(UINT32 cmd);
 MTK_WCN_BOOL wmt_dev_get_early_suspend_state(VOID);
@@ -38,15 +39,19 @@ INT32 wmt_dev_apo_ctrl(UINT32 enable);
 VOID wmt_dev_set_temp_threshold(INT32 val);
 UINT8 wmt_dev_is_close(VOID);
 extern LONG wmt_dev_tm_temp_query(VOID);
+extern INT32 wmt_dev_tra_bitf_update(VOID); 
+extern INT32 wmt_dev_tra_uart_update(VOID);
 
 INT32 mtk_wcn_common_drv_init(VOID);
 VOID mtk_wcn_common_drv_exit(VOID);
 
-int mtk_wcn_hif_sdio_drv_init(VOID);
-int mtk_wcn_stp_uart_drv_init(VOID);
-int mtk_wcn_stp_sdio_drv_init(VOID);
-int mtk_wcn_hif_sdio_driver_exit(VOID);
-int mtk_wcn_stp_sdio_drv_exit(VOID);
-int mtk_wcn_stp_uart_drv_exit(VOID);
+ssize_t WMT_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos);
+ssize_t WMT_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos);
+UINT32 WMT_poll(struct file *filp, poll_table *wait);
+LONG WMT_unlocked_ioctl(struct file *filp, UINT32 cmd, ULONG arg);
+LONG WMT_compat_ioctl(struct file *filp, UINT32 cmd, ULONG arg);
+
+VOID wmt_dev_bgw_desense_init(VOID);
+VOID wmt_dev_bgw_desense_deinit(VOID);
 
 #endif /*_WMT_DEV_H_*/

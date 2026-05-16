@@ -711,6 +711,9 @@ void cnmStaSendUpdateCmd(P_ADAPTER_T prAdapter,
                          P_TXBF_PFMU_STA_INFO prTxBfPfmuStaInfo,
                          u8 fgNeedResp);
 
+u8 *cnmStaRecGetTypeString(ENUM_STA_TYPE_T eStaType);
+u8 *cnmStaRecGetRoleString(ENUM_STA_TYPE_T eStaType);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

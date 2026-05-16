@@ -1769,6 +1769,19 @@ u8 nicTxGetWmmIdxByTc(u8 ucTC);
 extern const u8 arTcRemapTable[HW_WMM_NUM][TC3_INDEX + 1];
 #endif
 
+u8 nicTxProcessMngPacket(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo);
+void nicTxComposeDescAppend(IN P_ADAPTER_T prAdapter,
+                            IN P_MSDU_INFO_T prMsduInfo,
+                            OUT u8 *prTxDescBuffer);
+void nicTxComposeDesc(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo,
+                      IN u32 u4TxDescLength, IN u8 fgIsTemplate,
+                      OUT u8 *prTxDescBuffer);
+u8 nicTxIsTXDTemplateAllowed(IN P_ADAPTER_T prAdapter,
+                             IN P_MSDU_INFO_T prMsduInfo,
+                             IN P_STA_RECORD_T prStaRec);
+void nicTxCopyDesc(IN P_ADAPTER_T prAdapter, IN u8 *pucTarTxDesc,
+                   IN u8 *pucSrcTxDesc, OUT u8 *pucTxDescLength);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

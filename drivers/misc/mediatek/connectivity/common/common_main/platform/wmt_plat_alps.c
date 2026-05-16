@@ -107,6 +107,7 @@ static INT32 wmt_plat_sdio_pin_ctrl(ENUM_PIN_STATE state);
 static INT32 wmt_plat_gps_sync_ctrl(ENUM_PIN_STATE state);
 static INT32 wmt_plat_gps_lna_ctrl(ENUM_PIN_STATE state);
 static INT32 wmt_plat_uart_rx_ctrl(ENUM_PIN_STATE state);
+static irqreturn_t wmt_plat_bgf_irq_isr(INT32 irq, PVOID arg);
 #if CFG_WMT_LTE_COEX_HANDLING
 static INT32 wmt_plat_tdm_req_ctrl(ENUM_PIN_STATE state);
 #endif
@@ -429,11 +430,6 @@ INT32 wmt_plat_sdio_ctrl(WMT_SDIO_SLOT_NUM sdioPortType, ENUM_FUNC_STATE on)
 	return board_sdio_ctrl(sdioPortType, (on == FUNC_OFF) ? 0 : 1);
 }
 
-INT32 wmt_plat_irq_ctrl(ENUM_FUNC_STATE state)
-{
-	return -1;
-}
-
 static INT32 wmt_plat_dump_pin_conf(VOID)
 {
 	WMT_DBG_FUNC("[WMT-PLAT]=>dump wmt pin configuration start<=\n");
@@ -601,11 +597,6 @@ INT32 wmt_plat_pwr_ctrl(ENUM_FUNC_STATE state)
 	}
 
 	return ret;
-}
-
-INT32 wmt_plat_ps_ctrl(ENUM_FUNC_STATE state)
-{
-	return -1;
 }
 
 INT32 wmt_plat_eirq_ctrl(ENUM_PIN_ID id, ENUM_PIN_STATE state)
@@ -1606,11 +1597,6 @@ INT32 wmt_plat_merge_if_flag_ctrl(UINT32 enable)
 	return gWmtMergeIfSupport;
 }
 
-INT32 wmt_plat_merge_if_flag_get(VOID)
-{
-	return gWmtMergeIfSupport;
-}
-
 INT32 wmt_plat_set_comm_if_type(ENUM_STP_TX_IF_TYPE type)
 {
 	gCommIfType = type;
@@ -1618,10 +1604,18 @@ INT32 wmt_plat_set_comm_if_type(ENUM_STP_TX_IF_TYPE type)
 	return 0;
 }
 
+#ifdef MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT 
+INT32 wmt_plat_merge_if_flag_get(VOID)
+{
+        return gWmtMergeIfSupport;
+}
+
+
 ENUM_STP_TX_IF_TYPE wmt_plat_get_comm_if_type(VOID)
 {
 	return gCommIfType;
 }
+#endif
 
 INT32 wmt_plat_soc_paldo_ctrl(ENUM_PALDO_TYPE ePt, ENUM_PALDO_OP ePo)
 {

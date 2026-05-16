@@ -1124,4 +1124,12 @@ WLAN_STATUS nicRxProcessActionFrame(IN P_ADAPTER_T prAdapter,
 
 u8 nicRxGetRcpiValueFromRxv(IN u8 ucRcpiMode, IN P_SW_RFB_T prSwRfb);
 
+#if CFG_SUPPORT_SNIFFER
+void nicRxFillRadiotapMCS(IN OUT P_MONITOR_RADIOTAP_T prMonitorRadiotap,
+                          IN P_HW_MAC_RX_STS_GROUP_3_T prRxStatusGroup3);
+#endif
+
+void nicRxFillRadiotapVHT(IN OUT P_MONITOR_RADIOTAP_T prMonitorRadiotap,
+                          IN P_HW_MAC_RX_STS_GROUP_3_T prRxStatusGroup3);
+
 #endif

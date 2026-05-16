@@ -155,6 +155,8 @@ int consys_hw_bt_power_ctl(unsigned int enable);
 int consys_hw_gps_power_ctl(unsigned int enable);
 int consys_hw_fm_power_ctl(unsigned int enable);
 
+struct consys_hw_ops_struct* __weak get_consys_platform_ops(void);
+
 /*******************************************************************************
 * tempoary for STEP
 ********************************************************************************

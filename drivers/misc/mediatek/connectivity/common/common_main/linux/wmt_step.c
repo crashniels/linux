@@ -1943,7 +1943,7 @@ static bool wmt_step_reg_readable(struct step_reigster_info *p_reg_info)
 	return 1;
 }
 
-int _wmt_step_do_register_action(struct step_reigster_info *p_reg_info, STEP_DO_EXTRA func_do_extra)
+static int _wmt_step_do_register_action(struct step_reigster_info *p_reg_info, STEP_DO_EXTRA func_do_extra)
 {
 	int ret = 0;
 	bool is_wakeup = g_step_env.is_keep_wakeup;

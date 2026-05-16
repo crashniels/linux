@@ -113,6 +113,11 @@ extern unsigned int wmt_plat_get_soc_chipid(void);
  */
 extern unsigned int mtk_uart_pdn_enable(char *port, int enable);
 #endif
+#ifdef CONFIG_COMPAT
+extern long WMT_compat_detect_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+#endif
 extern int wmt_detect_set_chip_type(int chip_id);
 extern ENUM_WMT_CHIP_TYPE wmt_detect_get_chip_type(void);
+extern long wmt_detect_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+extern ssize_t wmt_detect_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos);
 #endif

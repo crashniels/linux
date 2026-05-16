@@ -263,6 +263,8 @@ void mboxDestroy(IN P_ADAPTER_T prAdapter);
 
 void mboxDummy(IN P_ADAPTER_T prAdapter, P_MSG_HDR_T prMsgHdr);
 
+void mboxInitMsgMap(void);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

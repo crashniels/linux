@@ -364,4 +364,22 @@ void p2pFuncModifyChandef(IN P_ADAPTER_T prAdapter,
 u8 p2pFuncSwitchSapChannel(IN P_ADAPTER_T prAdapter);
 #endif
 
+WLAN_STATUS
+p2pFuncGenerateBeaconProbeRsp(IN P_ADAPTER_T prAdapter,
+                              IN P_BSS_INFO_T prBssInfo,
+                              IN P_MSDU_INFO_T prMsduInfo, IN u8 fgIsProbeRsp);
+
+WLAN_STATUS
+p2pFuncComposeBeaconProbeRspTemplate(
+    IN P_ADAPTER_T prAdapter, IN P_BSS_INFO_T prP2pBssInfo, IN u8 *pucBcnBuffer,
+    IN u32 u4BcnBufLen, IN u8 fgIsProbeRsp,
+    IN P_P2P_PROBE_RSP_UPDATE_INFO_T prP2pProbeRspInfo, IN u8 fgSynToFW);
+
+void p2pFuncComposeNoaAttribute(IN P_ADAPTER_T prAdapter, IN u8 ucBssIndex,
+                                OUT u8 *aucNoaAttrArray, OUT u32 *pu4Len);
+
+WLAN_STATUS
+p2pFunMgmtFrameTxDone(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo,
+                      IN ENUM_TX_RESULT_CODE_T rTxDoneStatus);
+
 #endif

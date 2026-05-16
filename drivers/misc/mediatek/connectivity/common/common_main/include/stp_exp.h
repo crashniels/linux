@@ -292,24 +292,135 @@ extern INT32 mtk_stp_dbg_poll_cpupcr(UINT32 times, UINT32 sleep, UINT32 cmd);
 ********************************************************************************
 */
 
+extern INT32 mtk_wcn_stp_uart_drv_init(VOID);
+extern VOID mtk_wcn_stp_uart_drv_exit(VOID);
+
 #else
+#define CFG_WMT_LTE_COEX_HANDLING 0
+
+#define BT_TASK_INDX        (0)
+#define FM_TASK_INDX        (1)
+#define GPS_TASK_INDX       (2)
+#define WIFI_TASK_INDX      (3)
+#define WMT_TASK_INDX       (4)
+#define STP_TASK_INDX       (5)
+#define INFO_TASK_INDX      (6)
+#define ANT_TASK_INDX       (7)
+#if CFG_WMT_LTE_COEX_HANDLING
+#define COEX_TASK_INDX          (8)
+#define MTKSTP_MAX_TASK_NUM (9)
+#else
+#define MTKSTP_MAX_TASK_NUM     (8)
+#endif
+
+typedef enum _SDIO_PS_OP{
+    OWN_SET = 0,
+    OWN_CLR = 1,
+    OWN_STATE = 2,
+} SDIO_PS_OP;
+
+typedef enum _ENUM_WMTMSG_TYPE_T {
+    WMTMSG_TYPE_POWER_ON = 0,
+    WMTMSG_TYPE_POWER_OFF = 1,
+    WMTMSG_TYPE_RESET = 2,
+    WMTMSG_TYPE_STP_RDY= 3,
+    WMTMSG_TYPE_HW_FUNC_ON= 4,
+    WMTMSG_TYPE_MAX
+} ENUM_WMTMSG_TYPE_T, *P_ENUM_WMTMSG_TYPE_T;
+
+typedef enum {
+    STP_UART_IF_TX = 0,
+    STP_SDIO_IF_TX = 1,
+    STP_BTIF_IF_TX = 2,
+    STP_MAX_IF_TX
+} ENUM_STP_TX_IF_TYPE;
+
+typedef enum _ENUM_WMTDRV_TYPE_T {
+    WMTDRV_TYPE_BT = 0,
+    WMTDRV_TYPE_FM = 1,
+    WMTDRV_TYPE_GPS = 2,
+    WMTDRV_TYPE_WIFI = 3,
+    WMTDRV_TYPE_WMT = 4,
+    WMTDRV_TYPE_ANT = 5,
+    WMTDRV_TYPE_STP = 6,
+    WMTDRV_TYPE_SDIO1 = 7,
+    WMTDRV_TYPE_SDIO2 = 8,
+    WMTDRV_TYPE_LPBK = 9,
+    WMTDRV_TYPE_COREDUMP = 10,
+#if MTK_WCN_CMB_FOR_SDIO_1V_AUTOK
+    WMTDRV_TYPE_AUTOK = 11,
+#endif
+    WMTDRV_TYPE_MAX
+} ENUM_WMTDRV_TYPE_T, *P_ENUM_WMTDRV_TYPE_T;
+
+typedef enum _ENUM_WMTCHIN_TYPE_T {
+        WMTCHIN_CHIPID = 0x0,
+        WMTCHIN_HWVER = WMTCHIN_CHIPID + 1,
+        WMTCHIN_MAPPINGHWVER = WMTCHIN_HWVER + 1,
+        WMTCHIN_FWVER = WMTCHIN_MAPPINGHWVER + 1,
+        WMTCHIN_IPVER = WMTCHIN_FWVER + 1,
+        WMTCHIN_MAX,
+
+} ENUM_WMT_CHIPINFO_TYPE_T, *P_ENUM_WMT_CHIPINFO_TYPE_T;
+
+typedef enum _ENUM_WMTTHERM_TYPE_T{
+    WMTTHERM_ZERO = 0,
+    WMTTHERM_ENABLE = WMTTHERM_ZERO + 1,
+    WMTTHERM_READ = WMTTHERM_ENABLE + 1,
+    WMTTHERM_DISABLE = WMTTHERM_READ + 1,
+    WMTTHERM_MAX
+}ENUM_WMTTHERM_TYPE_T, *P_ENUM_WMTTHERM_TYPE_T;
+
+typedef enum _ENUM_WMT_FLASH_PATCH_SEQ_T {
+        WMT_FLASH_PATCH_HEAD_PKT = 0,
+        WMT_FLASH_PATCH_START_PKT = WMT_FLASH_PATCH_HEAD_PKT + 1,
+        WMT_FLASH_PATCH_CONTINUE_PKT = WMT_FLASH_PATCH_START_PKT + 1,
+        WMT_FLASH_PATCH_END_PKT = WMT_FLASH_PATCH_CONTINUE_PKT + 1,
+        WMT_FLASH_PATCH_SEQ_MAX,
+} ENUM_WMT_FLASH_PATCH_SEQ, *P_ENUM_WMT_FLASH_PATCH_SEQ;
+
+typedef enum _ENUM_WMTHWVER_TYPE_T {
+        WMTHWVER_E1 = 0x0,
+        WMTHWVER_E2 = 0x1,
+        WMTHWVER_E3 = 0x2,
+        WMTHWVER_E4 = 0x3,
+        WMTHWVER_E5 = 0x4,
+        WMTHWVER_E6 = 0x5,
+        WMTHWVER_E7 = 0x6,
+        WMTHWVER_MAX,
+        WMTHWVER_INVALID = 0xff
+} ENUM_WMTHWVER_TYPE_T, *P_ENUM_WMTHWVER_TYPE_T;
+
+typedef void (*MTK_WCN_STP_EVENT_CB)(void);
+typedef INT32 (*PF_WMT_SDIO_PSOP)(SDIO_PS_OP);
+typedef void (*PF_WMT_CB)(ENUM_WMTDRV_TYPE_T, ENUM_WMTDRV_TYPE_T, ENUM_WMTMSG_TYPE_T, VOID *, UINT32);
+typedef INT32 (*MTK_WCN_STP_IF_TX) (const PUINT8 data, const UINT32 size, PUINT32 written_size);
+typedef INT32 (*MTK_WCN_STP_RX_HAS_PENDING_DATA) (VOID);
+typedef INT32 (*MTK_WCN_STP_TX_HAS_PENDING_DATA) (VOID);
+
+extern INT32 mtk_wcn_stp_receive_data(PUINT8 buffer, UINT32 length, UINT8 type);
 extern INT32 _mtk_wcn_stp_receive_data(PUINT8 buffer, UINT32 length, UINT8 type);
 extern INT32 _mtk_wcn_stp_send_data_raw(const PUINT8 buffer, const UINT32 length, const UINT8 type);
+extern INT32 mtk_wcn_stp_send_data(const PUINT8 buffer, const UINT32 length, const UINT8 type);
 extern INT32 _mtk_wcn_stp_send_data(const PUINT8 buffer, const UINT32 length, const UINT8 type);
 extern MTK_WCN_BOOL _mtk_wcn_stp_is_rxqueue_empty(UINT8 type);
+extern MTK_WCN_BOOL mtk_wcn_stp_is_ready(VOID);
 extern MTK_WCN_BOOL _mtk_wcn_stp_is_ready(VOID);
+extern INT32 mtk_wcn_stp_parser_data(PUINT8 buffer, UINT32 length);
 extern INT32 _mtk_wcn_stp_parser_data(PUINT8 buffer, UINT32 length);
 extern VOID _mtk_wcn_stp_set_bluez(MTK_WCN_BOOL sdio_flag);
-extern INT32 _mtk_wcn_stp_register_tx_event_cb(INT32 type, MTK_WCN_STP_EVENT_CB func);
-extern INT32 _mtk_wcn_stp_register_event_cb(INT32 type, MTK_WCN_STP_EVENT_CB func);
-extern INT32 _mtk_wcn_stp_register_if_tx(ENUM_STP_TX_IF_TYPE stp_if, MTK_WCN_STP_IF_TX func);
-extern INT32 _mtk_wcn_stp_register_if_rx(MTK_WCN_STP_IF_RX func);
+//extern INT32 _mtk_wcn_stp_register_tx_event_cb(INT32 type, MTK_WCN_STP_EVENT_CB func);
+extern INT32 mtk_wcn_stp_register_event_cb(INT32 type, MTK_WCN_STP_EVENT_CB func);
+//extern INT32 _mtk_wcn_stp_register_if_tx(ENUM_STP_TX_IF_TYPE stp_if, MTK_WCN_STP_IF_TX func);
+//extern INT32 _mtk_wcn_stp_register_if_rx(MTK_WCN_STP_IF_RX func);
 extern INT32 _mtk_wcn_stp_coredump_start_get(VOID);
-extern INT32 _mtk_wcn_stp_register_rx_has_pending_data(ENUM_STP_TX_IF_TYPE stp_if,
-						       MTK_WCN_STP_RX_HAS_PENDING_DATA func);
-extern INT32 _mtk_wcn_stp_register_tx_has_pending_data(ENUM_STP_TX_IF_TYPE stp_if,
-						       MTK_WCN_STP_TX_HAS_PENDING_DATA func);
-extern INT32 _mtk_wcn_stp_register_rx_thread_get(ENUM_STP_TX_IF_TYPE stp_if, MTK_WCN_STP_RX_THREAD_GET func);
+//extern INT32 _mtk_wcn_stp_register_rx_has_pending_data(ENUM_STP_TX_IF_TYPE stp_if,
+//						       MTK_WCN_STP_RX_HAS_PENDING_DATA func);
+//extern INT32 _mtk_wcn_stp_register_tx_has_pending_data(ENUM_STP_TX_IF_TYPE stp_if,
+//						       MTK_WCN_STP_TX_HAS_PENDING_DATA func);
+//extern INT32 _mtk_wcn_stp_register_rx_thread_get(ENUM_STP_TX_IF_TYPE stp_if, MTK_WCN_STP_RX_THREAD_GET func);
+extern VOID mtk_wcn_wmt_func_ctrl_for_plat(UINT32 on, ENUM_WMTDRV_TYPE_T type);
+extern VOID mtk_wcn_wmt_exp_init(VOID);
 
 #endif /* MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT */
 

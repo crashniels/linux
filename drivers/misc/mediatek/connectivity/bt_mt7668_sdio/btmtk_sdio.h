@@ -424,5 +424,10 @@ static inline int is_mt7663(struct btmtk_sdio_card *data)
 extern int sdio_reset_comm(struct mmc_card *card);
 extern int btmtk_print_buffer_conent(u8 *buf, u32 Datalen);
 int btmtk_sdio_reset_dongle(void);
+void btmtk_sdio_stop_wait_wlan_remove_tsk(void);
+int btmtk_sdio_notify_wlan_remove_start(void);
+int btmtk_sdio_notify_wlan_remove_end(void);
+int btmtk_sdio_bt_trigger_core_dump(int trigger_dump);
+void btmtk_sdio_notify_wlan_toggle_rst_end(void);
 #endif
 

@@ -93,6 +93,8 @@ int pmic_mng_bt_power_ctrl(unsigned int enable);
 int pmic_mng_gps_power_ctrl(unsigned int enable);
 int pmic_mng_fm_power_ctrl(unsigned int enable);
 
+P_CONSYS_PLATFORM_PMIC_OPS __weak get_consys_platform_pmic_ops(void);
+
 /*******************************************************************************
 *                              F U N C T I O N S
 ********************************************************************************

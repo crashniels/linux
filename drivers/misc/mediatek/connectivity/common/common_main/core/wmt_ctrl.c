@@ -68,6 +68,7 @@ static INT32 wmt_ctrl_stp_conf_ex(WMT_STP_CONF_TYPE type, UINT32 value);
 
 static INT32 wmt_ctrl_hw_pwr_off(P_WMT_CTRL_DATA);
 static INT32 wmt_ctrl_hw_pwr_on(P_WMT_CTRL_DATA);
+static INT32 wmt_ctrl_ul_cmd(P_DEV_WMT pWmtDev, const PUINT8 pCmdStr);
 static INT32 wmt_ctrl_hw_rst(P_WMT_CTRL_DATA);
 static INT32 wmt_ctrl_stp_close(P_WMT_CTRL_DATA);
 static INT32 wmt_ctrl_stp_open(P_WMT_CTRL_DATA);

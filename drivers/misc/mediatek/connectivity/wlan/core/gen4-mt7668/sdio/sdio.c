@@ -320,7 +320,7 @@ static int mtk_sdio_suspend(struct device *pDev, pm_message_t state)
     return mtk_sdio_pm_suspend(pDev);
 }
 
-int mtk_sdio_resume(struct device *pDev)
+static int mtk_sdio_resume(struct device *pDev)
 {
     return mtk_sdio_pm_resume(pDev);
 }

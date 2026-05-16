@@ -881,6 +881,16 @@ enum ENUM_WF_PATH_FAVOR_T {
     ENUM_WF_0_1_DUP_STREAM_PATH_FAVOR = 3,
 };
 
+struct WLAN_CFG_PARSE_STATE_S {
+    s8 *ptr;
+    s8 *text;
+#if CFG_SUPPORT_EASY_DEBUG
+    u32 textsize;
+#endif
+    s32 nexttoken;
+    u32 maxSize;
+};
+
 /*******************************************************************************
  *                            P U B L I C   D A T A
  *******************************************************************************
@@ -1453,5 +1463,45 @@ int wlanSuspendRekeyOffload(P_GLUE_INFO_T prGlueInfo, IN u8 ucRekeyMode);
 void wlanDisTrafficReport(P_GLUE_INFO_T prGlueInfo);
 void wlanSuspendPmHandle(P_GLUE_INFO_T prGlueInfo);
 void wlanResumePmHandle(P_GLUE_INFO_T prGlueInfo);
+void wlanTxCmdDoneCb(IN P_ADAPTER_T prAdapter, IN P_CMD_INFO_T prCmdInfo);
+void wlanClearTxOidCommand(IN P_ADAPTER_T prAdapter);
+void wlanImageSectionGetFwInfo(IN P_ADAPTER_T prAdapter,
+                               IN void *pvFwImageMapFile,
+                               IN u32 u4FwImageFileLength, IN u8 ucTotSecNum,
+                               IN u8 ucCurSecNum, IN ENUM_IMG_DL_IDX_T eDlIdx,
+                               OUT u32 *pu4StartOffset, OUT u32 *pu4Addr,
+                               OUT u32 *pu4Len, OUT u32 *pu4DataMode);
+void wlanImageSectionGetPatchInfo(IN P_ADAPTER_T prAdapter,
+                                  IN void *pvFwImageMapFile,
+                                  IN u32 u4FwImageFileLength, IN u8 ucTotSecNum,
+                                  IN u8 ucCurSecNum,
+                                  IN ENUM_IMG_DL_IDX_T eDlIdx,
+                                  OUT u32 *pu4StartOffset, OUT u32 *pu4Addr,
+                                  OUT u32 *pu4Len, OUT u32 *pu4DataMode);
+void wlanImageSectionGetInfo(IN P_ADAPTER_T prAdapter,
+                             IN void *pvFwImageMapFile,
+                             IN u32 u4FwImageFileLength, IN u8 ucTotSecNum,
+                             IN u8 ucCurSecNum, IN ENUM_IMG_DL_IDX_T eDlIdx,
+                             OUT u32 *pu4StartOffset, OUT u32 *pu4Addr,
+                             OUT u32 *pu4Len, OUT u32 *pu4DataMode);
+WLAN_STATUS wlanPatchRecvSemaResp(IN P_ADAPTER_T prAdapter, IN u8 ucCmdSeqNum, OUT u8 *pucPatchStatus);
+WLAN_STATUS wlanPatchSendSemaControl(IN P_ADAPTER_T prAdapter, OUT u8 *pucSeqNum);
+u8 wlanPatchIsDownloaded(IN P_ADAPTER_T prAdapter);
+WLAN_STATUS wlanPatchSendComplete(IN P_ADAPTER_T prAdapter);
+
+WLAN_STATUS wlanLoadManufactureData_5G(IN P_ADAPTER_T prAdapter, IN P_REG_INFO_T prRegInfo);
+void wlanDumpAllBssStatistics(IN P_ADAPTER_T prAdapter);
+void wlanSetNicResourceParameters(IN P_ADAPTER_T prAdapter);
+
+void wlanCfgRecordValue(IN P_ADAPTER_T prAdapter, const s8 *pucKey, s32 u4Value);
+s32 wlanCfgFindNextToken(struct WLAN_CFG_PARSE_STATE_S *state);
+WLAN_STATUS wlanCfgParseAddEntry(IN P_ADAPTER_T prAdapter, u8 *pucKeyHead, u8 *pucKeyTail, u8 *pucValueHead, u8 *pucValueTail);
+s8 atoi(u8 ch);
+WLAN_STATUS wlanCfgParseToFW(s8 **args, s8 *args_size, u8 nargs, s8 *buffer, u8 times);
+void wlanTxLifetimeUpdateStaStats(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo);
+u8 wlanTxLifetimeIsProfilingEnabled(IN P_ADAPTER_T prAdapter);
+u8 wlanTxLifetimeIsTargetMsdu(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo);
+void wlanTxLifetimeTagPacket(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo, IN ENUM_TX_PROFILING_TAG_T eTag);
+u8 wlanAntPathFavorSelect(enum ENUM_WF_PATH_FAVOR_T eWfPathFavor);
 
 void disconnect_sta(P_ADAPTER_T prAdapter, P_STA_RECORD_T prStaRec);

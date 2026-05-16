@@ -360,5 +360,10 @@ u8 nicSerIsTxStop(IN P_ADAPTER_T prAdapter);
 u8 nicSerIsRxStop(IN P_ADAPTER_T prAdapter);
 
 void nicDumpMsduInfo(IN P_MSDU_INFO_T prMsduInfo);
+u8 nicGetChipHwVer(void);
+u8 nicGetChipFactoryVer(void);
+WLAN_STATUS nicSetAutoTxPowerControl(IN P_ADAPTER_T prAdapter,
+                                     IN P_CMD_TX_PWR_T prTxPwrParam);
+void nicHifInit(IN P_ADAPTER_T prAdapter);
 
 #endif

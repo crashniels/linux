@@ -1668,7 +1668,7 @@ INT32 mtk_wcn_stp_psm_enable(INT32 idle_time_to_sleep)
 *****************************************************************************/
 INT32 mtk_wcn_stp_psm_disable(VOID)
 {
-	if (mtk_wcn_stp_is_ready() && mtk_wcn_stp_is_enable() && (mtk_wcn_stp_is_uart_fullset_mode()
+        if (mtk_wcn_stp_is_ready() && mtk_wcn_stp_is_enable() && (mtk_wcn_stp_is_uart_fullset_mode()
 		|| mtk_wcn_stp_is_sdio_mode() || mtk_wcn_stp_is_btif_fullset_mode()))
 		return stp_psm_disable(STP_PSM_CORE(stp_core_ctx));
 

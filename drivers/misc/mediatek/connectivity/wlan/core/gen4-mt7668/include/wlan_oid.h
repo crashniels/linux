@@ -3008,6 +3008,9 @@ u32 wlanoidIndicateBssInfo(IN P_ADAPTER_T prAdapter,
                            IN u32 u4SetBufferLen,
                            OUT u32 *pu4SetInfoLen);
 
+WLAN_STATUS batchSetCmd(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer, IN u32 u4SetBufferLen, OUT u32 *pu4WritenLen);
+WLAN_STATUS batchGetCmd(IN P_ADAPTER_T prAdapter, OUT void *pvQueryBuffer, IN u32 u4QueryBufferLen, OUT u32 *pu4QueryInfoLen);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

@@ -37,7 +37,6 @@
 #include <linux/err.h>
 #include <linux/kfifo.h>
 
-
 #include "stp_exp.h"
 
 #define N_MTKSTP              (15 + 1)	/* refer to linux tty.h use N_HCI. */

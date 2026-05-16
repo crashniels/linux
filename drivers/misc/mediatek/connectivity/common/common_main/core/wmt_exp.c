@@ -183,11 +183,13 @@ static MTK_WCN_BOOL mtk_wcn_wmt_func_ctrl(ENUM_WMTDRV_TYPE_T type, ENUM_WMT_OPID
 	return bRet;
 }
 
+/*
 INT32 mtk_wcn_wmt_psm_ctrl(MTK_WCN_BOOL flag)
 {
 	return -EFAULT;
 }
 EXPORT_SYMBOL(mtk_wcn_wmt_psm_ctrl);
+*/
 
 MTK_WCN_BOOL mtk_wcn_wmt_func_off(ENUM_WMTDRV_TYPE_T type)
 {
@@ -238,6 +240,7 @@ VOID mtk_wcn_wmt_func_ctrl_for_plat(UINT32 on, ENUM_WMTDRV_TYPE_T type)
 
 	WMT_INFO_FUNC("on=%d type=%d ret=%d\n", on, type, ret);
 }
+EXPORT_SYMBOL(mtk_wcn_wmt_func_ctrl_for_plat);
 
 INT8 mtk_wcn_wmt_therm_ctrl(ENUM_WMTTHERM_TYPE_T eType)
 {

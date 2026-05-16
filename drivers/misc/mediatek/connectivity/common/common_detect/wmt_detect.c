@@ -72,6 +72,7 @@ ssize_t wmt_detect_write(struct file *filp, const char __user *buf, size_t count
 
 	return 0;
 }
+EXPORT_SYMBOL(wmt_detect_write);
 
 long wmt_detect_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {

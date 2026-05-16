@@ -2785,8 +2785,7 @@ WLAN_STATUS wlanImageSectionDownloadStage(IN P_ADAPTER_T prAdapter,
  *         WLAN_STATUS_FAILURE
  */
 /*----------------------------------------------------------------------------*/
-WLAN_STATUS wlanPatchRecvSemaResp(IN P_ADAPTER_T prAdapter, IN u8 ucCmdSeqNum,
-                                  OUT u8 *pucPatchStatus)
+WLAN_STATUS wlanPatchRecvSemaResp(IN P_ADAPTER_T prAdapter, IN u8 ucCmdSeqNum, OUT u8 *pucPatchStatus)
 {
     u8 aucBuffer[sizeof(INIT_HIF_RX_HEADER_T) +
                  sizeof(INIT_EVENT_CMD_RESULT)];
@@ -2841,8 +2840,7 @@ WLAN_STATUS wlanPatchRecvSemaResp(IN P_ADAPTER_T prAdapter, IN u8 ucCmdSeqNum,
  * @return (none)
  */
 /*----------------------------------------------------------------------------*/
-WLAN_STATUS wlanPatchSendSemaControl(IN P_ADAPTER_T prAdapter,
-                                     OUT u8 *pucSeqNum)
+WLAN_STATUS wlanPatchSendSemaControl(IN P_ADAPTER_T prAdapter, OUT u8 *pucSeqNum)
 {
     P_CMD_INFO_T prCmdInfo;
     P_INIT_HIF_TX_HEADER_T prInitHifTxHeader;
@@ -5355,8 +5353,7 @@ static s32 wlanCal6628EfuseForm(IN P_ADAPTER_T prAdapter, s32 au4Input)
 #endif
 
 #if CFG_SUPPORT_NVRAM_5G
-WLAN_STATUS wlanLoadManufactureData_5G(IN P_ADAPTER_T prAdapter,
-                                       IN P_REG_INFO_T prRegInfo)
+WLAN_STATUS wlanLoadManufactureData_5G(IN P_ADAPTER_T prAdapter, IN P_REG_INFO_T prRegInfo)
 {
     P_BANDEDGE_5G_T pr5GBandEdge;
 
@@ -7788,8 +7785,7 @@ WLAN_STATUS wlanCfgGet(IN P_ADAPTER_T prAdapter, const s8 *pucKey, s8 *pucValue,
     return WLAN_STATUS_FAILURE;
 }
 
-void wlanCfgRecordValue(IN P_ADAPTER_T prAdapter, const s8 *pucKey,
-                        s32 u4Value)
+void wlanCfgRecordValue(IN P_ADAPTER_T prAdapter, const s8 *pucKey, s32 u4Value)
 {
     P_WLAN_CFG_ENTRY_T prWlanCfgEntry;
     u8 aucBuf[WLAN_CFG_VALUE_LEN_MAX];
@@ -7804,8 +7800,7 @@ void wlanCfgRecordValue(IN P_ADAPTER_T prAdapter, const s8 *pucKey,
     wlanCfgSet(prAdapter, pucKey, aucBuf, 1);
 }
 
-u32 wlanCfgGetUint32(IN P_ADAPTER_T prAdapter, const s8 *pucKey,
-                     u32 u4ValueDef)
+u32 wlanCfgGetUint32(IN P_ADAPTER_T prAdapter, const s8 *pucKey, u32 u4ValueDef)
 {
     P_WLAN_CFG_ENTRY_T prWlanCfgEntry;
     P_WLAN_CFG_T prWlanCfg;
@@ -8020,16 +8015,6 @@ enum {
     STATE_EOF     = 0,
     STATE_TEXT    = 1,
     STATE_NEWLINE = 2
-};
-
-struct WLAN_CFG_PARSE_STATE_S {
-    s8 *ptr;
-    s8 *text;
-#if CFG_SUPPORT_EASY_DEBUG
-    u32 textsize;
-#endif
-    s32 nexttoken;
-    u32 maxSize;
 };
 
 s32 wlanCfgFindNextToken(struct WLAN_CFG_PARSE_STATE_S *state)
@@ -8270,9 +8255,7 @@ exit:
 }
 #endif
 
-WLAN_STATUS
-wlanCfgParseAddEntry(IN P_ADAPTER_T prAdapter, u8 *pucKeyHead, u8 *pucKeyTail,
-                     u8 *pucValueHead, u8 *pucValueTail)
+WLAN_STATUS wlanCfgParseAddEntry(IN P_ADAPTER_T prAdapter, u8 *pucKeyHead, u8 *pucKeyTail, u8 *pucValueHead, u8 *pucValueTail)
 {
     u8 aucKey[WLAN_CFG_KEY_LEN_MAX];
     u8 aucValue[WLAN_CFG_VALUE_LEN_MAX];
@@ -8343,8 +8326,7 @@ s8 atoi(u8 ch)
     return 0;
 }
 
-WLAN_STATUS wlanCfgParseToFW(s8 **args, s8 *args_size, u8 nargs, s8 *buffer,
-                             u8 times)
+WLAN_STATUS wlanCfgParseToFW(s8 **args, s8 *args_size, u8 nargs, s8 *buffer, u8 times)
 {
     u8 *data = NULL;
     char ch;
@@ -9207,8 +9189,7 @@ void wlanChipRstPreAct(IN P_ADAPTER_T prAdapter)
 }
 
 #if CFG_ENABLE_PER_STA_STATISTICS
-void wlanTxLifetimeUpdateStaStats(IN P_ADAPTER_T prAdapter,
-                                  IN P_MSDU_INFO_T prMsduInfo)
+void wlanTxLifetimeUpdateStaStats(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo)
 {
     P_STA_RECORD_T prStaRec;
     u32 u4DeltaTime;
@@ -9250,15 +9231,12 @@ u8 wlanTxLifetimeIsProfilingEnabled(IN P_ADAPTER_T prAdapter)
     return fgEnabled;
 }
 
-u8 wlanTxLifetimeIsTargetMsdu(IN P_ADAPTER_T prAdapter,
-                              IN P_MSDU_INFO_T prMsduInfo)
+u8 wlanTxLifetimeIsTargetMsdu(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo)
 {
     return true;
 }
 
-void wlanTxLifetimeTagPacket(IN P_ADAPTER_T prAdapter,
-                             IN P_MSDU_INFO_T prMsduInfo,
-                             IN ENUM_TX_PROFILING_TAG_T eTag)
+void wlanTxLifetimeTagPacket(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo, IN ENUM_TX_PROFILING_TAG_T eTag)
 {
     P_PKT_PROFILE_T prPktProfile = &prMsduInfo->rPktProfile;
 

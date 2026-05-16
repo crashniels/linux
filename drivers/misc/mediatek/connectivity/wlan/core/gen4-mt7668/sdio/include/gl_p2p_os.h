@@ -291,5 +291,6 @@ void p2pSetSuspendMode(P_GLUE_INFO_T prGlueInfo, u8 fgEnable);
 u8 glP2pCreateWirelessDevice(P_GLUE_INFO_T prGlueInfo);
 void glP2pDestroyWirelessDevice(void);
 void p2pUpdateChannelTableByDomain(P_GLUE_INFO_T prGlueInfo);
+u8 p2PAllocInfo(IN P_GLUE_INFO_T prGlueInfo, IN u8 ucIdex);
 
 #endif

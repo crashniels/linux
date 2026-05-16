@@ -299,6 +299,9 @@ VOID stp_sdio_txdbg_dump(VOID);
 #endif
 
 extern INT32 mtk_wcn_stp_sdio_do_own_clr(VOID);
+extern INT32 mtk_wcn_stp_sdio_wake_up_ctrl(MTK_WCN_HIF_SDIO_CLTCTX ctx);
+extern INT32 mtk_wcn_stp_sdio_drv_init(VOID); 
+extern VOID mtk_wcn_stp_sdio_drv_exit(VOID);
 #ifdef CONFIG_MTK_COMBO_CHIP_DEEP_SLEEP_SUPPORT
 INT32 stp_sdio_deep_sleep_flag_set(MTK_WCN_BOOL flag);
 #endif
@@ -317,6 +320,13 @@ INT32 stp_sdio_wake_up_ctrl(MTK_WCN_HIF_SDIO_CLTCTX ctx);
 VOID stp_sdio_dump_register(VOID);
 INT32 stp_sdio_issue_fake_coredump(UINT8 *str);
 VOID stp_sdio_dump_info(MTK_WCN_STP_SDIO_HIF_INFO *p_info);
-
+INT32 stp_sdio_own_ctrl(SDIO_PS_OP op);
+INT32 stp_sdio_tx(const PUINT8 data, const UINT32 size, PUINT32 written_size);
+INT32 stp_sdio_rxdbg_setup(VOID);
+INT32 stp_sdio_rxdbg_remove(VOID);
+INT32 stp_sdio_txdbg_setup(VOID);
+INT32 stp_sdio_txdbg_remove(VOID);
+INT32 stp_sdio_owndbg_setup(VOID);
+INT32 stp_sdio_owndbg_remove(VOID);
 
 #endif				/* _STP_SDIO_H */

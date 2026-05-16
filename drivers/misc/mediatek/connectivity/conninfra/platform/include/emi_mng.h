@@ -144,6 +144,7 @@ int emi_mng_set_region_protection(void);
 int emi_mng_set_remapping_reg(void);
 struct consys_emi_addr_info* emi_mng_get_phy_addr(void);
 
+struct consys_platform_emi_ops* __weak get_consys_platform_emi_ops(void);
 
 /*******************************************************************************
 *                              F U N C T I O N S

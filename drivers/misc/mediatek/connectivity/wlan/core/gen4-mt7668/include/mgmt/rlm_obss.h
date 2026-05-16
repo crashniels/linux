@@ -90,6 +90,8 @@ void rlmObssScanDone(P_ADAPTER_T prAdapter, P_MSG_HDR_T prMsgHdr);
 
 void rlmObssTriggerScan(P_ADAPTER_T prAdapter, P_BSS_INFO_T prBssInfo);
 
+u8 rlmObssUpdateChnlLists(P_ADAPTER_T prAdapter, P_SW_RFB_T prSwRfb);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

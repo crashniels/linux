@@ -896,6 +896,8 @@ extern int glRegisterEarlySuspend(struct early_suspend *prDesc,
 extern int glUnregisterEarlySuspend(struct early_suspend *prDesc);
 #endif
 
+u8 glIsReadClearReg(u32 u4Address);
+
 #if CFG_MET_PACKET_TRACE_SUPPORT
 void kalMetTagPacket(IN P_GLUE_INFO_T prGlueInfo,
                      IN P_NATIVE_PACKET prPacket,
@@ -916,5 +918,15 @@ int set_p2p_mode_handler(struct net_device *netdev,
 #if CFG_ENABLE_UNIFY_WIPHY
 const struct net_device_ops *wlanGetNdevOps(void);
 #endif
+
+s32 wlanProbe(struct sdio_func *pvData, void *pvDriverData);
+void wlanRemove(void);
+WLAN_STATUS wlanDownloadBufferBin(P_ADAPTER_T prAdapter);
+void wlanGetParseConfig(P_ADAPTER_T prAdapter);
+struct net_device_stats *wlanGetStats(IN struct net_device *prDev);
+void wlanMonWorkHandler(struct work_struct *work);
+void wlanSchedScanStoppedWorkQueue(struct work_struct *work);
+void wlanSchedWDevLockWorkQueue(struct work_struct *work);
+int wlanDoIOCTL(struct net_device *prDev, struct ifreq *prIfReq, int i4Cmd);
 
 #endif  /* _GL_OS_H */

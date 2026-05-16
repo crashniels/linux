@@ -58,8 +58,7 @@
 
 #if CFG_SUPPORT_AAA
 
-void aaaFsmRunEventTxReqTimeOut(IN P_ADAPTER_T prAdapter,
-                                IN unsigned long plParamPtr)
+void aaaFsmRunEventTxReqTimeOut(IN P_ADAPTER_T prAdapter, IN unsigned long plParamPtr)
 {
     P_STA_RECORD_T prStaRec = (P_STA_RECORD_T)plParamPtr;
     P_BSS_INFO_T prBssInfo;

@@ -590,8 +590,24 @@ int mtk_cfg_set_txpower(struct wiphy *wiphy,
 int mtk_cfg_get_txpower(struct wiphy *wiphy,
                         struct wireless_dev *wdev,
                         int *dbm);
+
 #endif  /* (CFG_ENABLE_WIFI_DIRECT_CFG_80211 != 0) */
 #endif  /* CFG_ENABLE_UNIFY_WIPHY */
+
+#if CFG_SUPPORT_NFC_BEAM_PLUS
+int mtk_cfg80211_testmode_get_scan_done(IN struct wiphy *wiphy, IN void *data,
+                                        IN int len,
+                                        IN P_GLUE_INFO_T prGlueInfo);
+#endif
+
+enum regd_state regd_state_machine(IN struct regulatory_request *pRequest);
+void mtk_apply_custom_regulatory(IN struct wiphy *pWiphy,
+                                 IN const struct ieee80211_regdomain *pRegdom);
+
+u8 mtk_p2p_cfg80211func_channel_sco_switch(IN enum nl80211_channel_type channel_type, IN P_ENUM_CHNL_EXT_T prChnlSco);
+u8 mtk_p2p_cfg80211func_channel_format_switch(
+    IN struct cfg80211_chan_def *channel_def,
+    IN struct ieee80211_channel *channel, IN P_RF_CHANNEL_INFO_T prRfChnlInfo);
 
 /*******************************************************************************
  *                              F U N C T I O N S

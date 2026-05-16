@@ -186,6 +186,8 @@ aaaFsmRunEventTxDone(IN P_ADAPTER_T prAdapter,
                      IN P_MSDU_INFO_T prMsduInfo,
                      IN ENUM_TX_RESULT_CODE_T rTxDoneStatus);
 
+void aaaFsmRunEventTxReqTimeOut(IN P_ADAPTER_T prAdapter, IN unsigned long plParamPtr);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

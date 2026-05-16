@@ -124,6 +124,16 @@ struct PARAM_CUSTOM_P2P_SET_STRUCT {
 };
 typedef int32_t(*set_p2p_mode) (struct net_device *netdev, struct PARAM_CUSTOM_P2P_SET_STRUCT p2pmode);
 
+void register_set_p2p_mode_handler(set_p2p_mode handler);
+void update_driver_loaded_status(uint8_t loaded);
+void set_low_latency_mode(const char *mode);
+uint32_t get_low_latency_mode(void);
+typedef uint8_t(*file_buf_handler)(void *ctx, const char __user *buf, uint16_t length);
+extern void register_file_buf_handler(file_buf_handler handler, void *handler_ctx, uint8_t ucType);
+int32_t wifi_reset_start(void);
+int32_t wifi_reset_end(enum ENUM_RESET_STATUS status);
+ssize_t WIFI_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos);
+
 static set_p2p_mode pf_set_p2p_mode;
 void register_set_p2p_mode_handler(set_p2p_mode handler)
 {
@@ -181,7 +191,7 @@ enum ENUM_WLAN_DRV_BUF_TYPE_T {
 	BUF_TYPE_NUM
 };
 
-typedef uint8_t(*file_buf_handler)(void *ctx, const char __user *buf, uint16_t length);
+//typedef uint8_t(*file_buf_handler)(void *ctx, const char __user *buf, uint16_t length);
 static file_buf_handler buf_handler[BUF_TYPE_NUM];
 static void *buf_handler_ctx[BUF_TYPE_NUM];
 void register_file_buf_handler(file_buf_handler handler, void *handler_ctx, uint8_t ucType)

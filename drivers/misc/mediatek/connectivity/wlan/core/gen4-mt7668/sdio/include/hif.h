@@ -282,6 +282,13 @@ void halGetMailbox(IN P_ADAPTER_T prAdapter,
 void halDeAggRxPkt(P_ADAPTER_T prAdapter, P_SDIO_RX_COALESCING_BUF_T prRxBuf);
 void halPrintMailbox(IN P_ADAPTER_T prAdapter);
 void halPollDbgCr(IN P_ADAPTER_T prAdapter, IN u32 u4LoopCount);
+u8 halDeAggRxPktProc(P_ADAPTER_T prAdapter, P_SDIO_RX_COALESCING_BUF_T prRxBuf);
+void halTxInterruptSanityCheck(IN P_ADAPTER_T prAdapter, IN u16 *au2TxRlsCnt);
+void halPrintFirmwareAssertInfo(IN P_ADAPTER_T prAdapter);
+u8 halTxCalculateResource(IN P_ADAPTER_T prAdapter, IN u16 *au2TxRlsCnt,
+                          OUT u16 *au2FreeTcResource);
+u8 halTxReleaseResource(IN P_ADAPTER_T prAdapter, IN u16 *au2TxRlsCnt);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

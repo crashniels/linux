@@ -1202,6 +1202,31 @@ WLAN_STATUS kalUpdateBssChannel(IN P_GLUE_INFO_T prGlueInfo,
                                 IN u8 aucBSSID[],
                                 IN u8 ucChannelNum);
 
+#if CFG_WOW_SUPPORT
+void kalWowCmdEventSetCb(IN P_ADAPTER_T prAdapter,
+                         IN P_CMD_INFO_T prCmdInfo,
+                         IN u8 *pucEventBuf, IN u32 u4EventBufLen);
+#endif
+
+void kalSetNetAddress(IN P_GLUE_INFO_T prGlueInfo, IN u8 ucBssIdx,
+                      IN u8 *pucIPv4Addr, IN u32 u4NumIPv4Addr,
+                      IN u8 *pucIPv6Addr, IN u32 u4NumIPv6Addr);
+
+u32 kalProcessTxPacket(P_GLUE_INFO_T prGlueInfo, struct sk_buff *prSkb);
+void kalProcessTxReq(P_GLUE_INFO_T prGlueInfo, u8 *pfgNeedHwAccess);
+u32 kalFileWrite(struct file *file, unsigned long long offset,
+                 unsigned char *data, unsigned int size);
+void kalQueryRegistryMacAddr(IN P_GLUE_INFO_T prGlueInfo,
+                             OUT u8 *paucMacAddr);
+u8 kalIPv4FrameClassifier(IN P_GLUE_INFO_T prGlueInfo,
+                          IN P_NATIVE_PACKET prPacket, IN u8 *pucIpHdr,
+                          OUT P_TX_PACKET_INFO prTxPktInfo);
+
+#if CFG_MET_PACKET_TRACE_SUPPORT
+u8 kalMetCheckProfilingPacket(IN P_GLUE_INFO_T prGlueInfo,
+                              IN P_NATIVE_PACKET prPacket);
+#endif
+
 static inline void kal_eth_hw_addr_set(struct net_device *dev,
                                        const u8 *addr)
 {

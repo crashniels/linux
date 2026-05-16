@@ -305,6 +305,9 @@ PUINT8 mtk_wcn_consys_emi_virt_addr_get(UINT32 ctrl_state_offset);
 P_CONSYS_EMI_ADDR_INFO mtk_wcn_consys_soc_get_emi_phy_add(VOID);
 UINT32 mtk_wcn_consys_read_cpupcr(VOID);
 PUINT32 mtk_wcn_consys_read_dump_info_reg(VOID);
+INT32 mtk_wcn_consys_hw_reg_ctrl(UINT32 on, UINT32 co_clock_type);
+INT32 mtk_wcn_consys_hw_gpio_ctrl(UINT32 on);
+INT32 mtk_wcn_consys_hw_restore(struct device *device);
 VOID mtk_wcn_force_trigger_assert_debug_pin(VOID);
 INT32 mtk_wcn_consys_read_irq_info_from_dts(PINT32 irq_num, PUINT32 irq_flag);
 INT32 mtk_wcn_consys_reg_ctrl(UINT32 is_write, enum CONSYS_BASE_ADDRESS_INDEX index, UINT32 offset,

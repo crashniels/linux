@@ -131,6 +131,14 @@ int msg_thread_send_wait_2(struct msg_thread_ctx *ctx, int opid,
 ********************************************************************************
 */
 
+int msg_evt_put_op_to_free_queue(struct msg_thread_ctx *ctx, struct msg_op *op);
+struct msg_op *msg_evt_get_free_op(struct msg_thread_ctx *ctx);
+int msg_evt_put_op_to_active(struct msg_thread_ctx *ctx, struct msg_op *op);
+void msg_op_history_save(struct osal_op_history *log_history, struct msg_op *op);
+unsigned int msg_evt_wait_event_checker(P_OSAL_THREAD thread);
+int msg_evt_set_current_op(struct msg_thread_ctx *ctx, struct msg_op *op);
+int msg_evt_opid_handler(struct msg_thread_ctx *ctx, struct msg_op_data *op);
+
 /*******************************************************************************
 *                              F U N C T I O N S
 ********************************************************************************

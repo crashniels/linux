@@ -173,18 +173,13 @@ static INT32 mtk_wcn_sys_check_function_status(UINT8 type, UINT8 op)
 	return STATUS_OP_INVALID;
 }
 
-#if STP_EXP_HID_API_EXPORT
-INT32 _mtk_wcn_stp_register_if_rx(MTK_WCN_STP_IF_RX func)
-#else
+#ifdef MTK_WCN_WMT_STP_EXP_SYMBOL_ABSTRACT
 INT32 mtk_wcn_stp_register_if_rx(MTK_WCN_STP_IF_RX func)
-#endif
 {
 	stp_if_rx = func;
 
 	return 0;
 }
-#if !STP_EXP_HID_API_EXPORT
-EXPORT_SYMBOL(mtk_wcn_stp_register_if_rx);
 #endif
 
 VOID mtk_wcn_stp_set_if_tx_type(ENUM_STP_TX_IF_TYPE stp_if_type)

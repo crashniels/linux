@@ -156,9 +156,7 @@ wlanoidSendSetQueryP2PCmd(IN P_ADAPTER_T prAdapter, IN u8 ucCID, IN u8 ucBssIdx,
  * \return WLAN_STATUS_INVALID_LENGTH
  */
 /*----------------------------------------------------------------------------*/
-WLAN_STATUS
-wlanoidSetP2pNetworkAddress(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer,
-                            IN u32 u4SetBufferLen, OUT u32 *pu4SetInfoLen)
+WLAN_STATUS wlanoidSetP2pNetworkAddress(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer, IN u32 u4SetBufferLen, OUT u32 *pu4SetInfoLen)
 {
     WLAN_STATUS rStatus = WLAN_STATUS_SUCCESS;
     u32 i, j;

@@ -184,9 +184,9 @@ static struct timespec64 old = {0};
 static ssize_t stp_sdio_rxdbg_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos);
 static ssize_t stp_sdio_rxdbg_write(struct file *filp, const char __user *buf, size_t count,
 			     loff_t *f_pos);
-static const struct file_operations stp_sdio_rxdbg_fops = {
-	.read = stp_sdio_rxdbg_read,
-	.write = stp_sdio_rxdbg_write,
+static const struct proc_ops stp_sdio_rxdbg_fops = {
+	.proc_read = stp_sdio_rxdbg_read,
+	.proc_write = stp_sdio_rxdbg_write,
 };
 
 #endif
@@ -197,9 +197,9 @@ static struct proc_dir_entry *gStpSdioOwnEntry;
 static ssize_t stp_sdio_own_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos);
 static ssize_t stp_sdio_own_write(struct file *filp, const char __user *buf, size_t count,
 			   loff_t *f_pos);
-static const struct file_operations stp_sdio_own_fops = {
-	.read = stp_sdio_own_read,
-	.write = stp_sdio_own_write,
+static const struct proc_ops stp_sdio_own_fops = {
+	.proc_read = stp_sdio_own_read,
+	.proc_write = stp_sdio_own_write,
 };
 
 #endif
@@ -211,9 +211,9 @@ static struct proc_dir_entry *gStpSdioTxDbgEntry;
 static ssize_t stp_sdio_txdbg_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos);
 static ssize_t stp_sdio_txdbg_write(struct file *filp, const char __user *buf, size_t count,
 			     loff_t *f_pos);
-static const struct file_operations stp_sdio_txdbg_fops = {
-	.read = stp_sdio_txdbg_read,
-	.write = stp_sdio_txdbg_write,
+static const struct proc_ops stp_sdio_txdbg_fops = {
+	.proc_read = stp_sdio_txdbg_read,
+	.proc_write = stp_sdio_txdbg_write,
 };
 
 #if STP_SDIO_TXDBG
@@ -3561,8 +3561,8 @@ static VOID stp_sdio_exit(VOID)
 
 	/* 4 <1.2> stop Tx tasklet/Rx work queue of the host */
 	//flush_scheduled_work();
-	flush_delayed_work(&gp_info->rx_work);
-	flush_delayed_work(&gp_info->tx_work);
+	flush_work(&gp_info->rx_work);
+	flush_work(&gp_info->tx_work);
 	STPSDIO_PR_DBG("flush scheduled work end\n");
 
 	/* 4 <1.3> return ownership to firmware of the host */

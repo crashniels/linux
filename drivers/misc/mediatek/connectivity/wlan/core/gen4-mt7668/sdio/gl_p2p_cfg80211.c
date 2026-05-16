@@ -1362,8 +1362,7 @@ int mtk_p2p_cfg80211_set_txpower(struct wiphy *wiphy, struct wireless_dev *wdev,
     return -EINVAL;
 }
 
-int mtk_p2p_cfg80211_get_txpower(struct wiphy *wiphy, struct wireless_dev *wdev,
-                                 int *dbm)
+int mtk_p2p_cfg80211_get_txpower(struct wiphy *wiphy, struct wireless_dev *wdev, unsigned int link_id, int *dbm)
 {
     P_GLUE_INFO_T prGlueInfo = NULL;
 

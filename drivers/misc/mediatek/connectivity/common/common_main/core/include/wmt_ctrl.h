@@ -22,6 +22,7 @@
 #define _WMT_CTRL_H_
 
 //#include "osal.h"
+#include "wmt_stp_exp.h"
 #include "stp_exp.h"
 /*******************************************************************************
 *                         C O M P I L E R   F L A G S

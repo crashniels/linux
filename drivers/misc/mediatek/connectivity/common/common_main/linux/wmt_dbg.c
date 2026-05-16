@@ -1553,10 +1553,9 @@ ssize_t wmt_dbg_write(struct file *filp, const char __user *buffer, size_t count
 
 INT32 wmt_dev_dbg_setup(VOID)
 {
-	static const struct file_operations wmt_dbg_fops = {
-		.owner = THIS_MODULE,
-		.read = wmt_dbg_read,
-		.write = wmt_dbg_write,
+	static const struct proc_ops wmt_dbg_fops = {
+		.proc_read = wmt_dbg_read,
+		.proc_write = wmt_dbg_write,
 	};
 	INT32 i_ret = 0;
 

@@ -250,6 +250,8 @@ u32 wlanoidAbortP2pScan(IN P_ADAPTER_T prAdapter,
                         IN u32 u4QueryBufferLen,
                         OUT u32 *pu4QueryInfoLen);
 
+WLAN_STATUS wlanoidSetP2pNetworkAddress(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer, IN u32 u4SetBufferLen, OUT u32 *pu4SetInfoLen);
+
 /*--------------------------------------------------------------*/
 /* Callbacks for event indication                               */
 /*--------------------------------------------------------------*/

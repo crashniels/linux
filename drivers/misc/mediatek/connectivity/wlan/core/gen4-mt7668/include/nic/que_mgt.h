@@ -953,6 +953,31 @@ void qmFuncChangeBmcTcIdx(u8 ucTc);
 u8 qmFuncGetBmcTcIdx(u8 ucWmmIdx);
 #endif
 
+P_SW_RFB_T qmFlushStaRxQueue(IN P_ADAPTER_T prAdapter, IN u32 u4StaRecIdx,
+                             IN u32 u4Tid);
+
+P_STA_RECORD_T qmDetermineStaToBeDequeued(IN P_ADAPTER_T prAdapter,
+                                          IN u32 u4StartStaRecIndex);
+
+P_QUE_T qmDequeueStaTxPackets(IN P_ADAPTER_T prAdapter);
+
+void qmAllocateResidualTcResource(IN P_ADAPTER_T prAdapter,
+                                  IN s32 *ai4TcResDemand,
+                                  IN u32 *pu4ResidualResource,
+                                  IN u32 *pu4ShareCount);
+
+void qmCalAveQLen(P_QUE_MGT_T prQM, u8 u4Tc, u32 u4CurrQueLen);
+
+void mqmParseAssocReqWmmIe(IN P_ADAPTER_T prAdapter, IN u8 *pucIE,
+                           IN P_STA_RECORD_T prStaRec);
+
+void mqmParseAssocRspWmmIe(IN u8 *pucIE, IN P_STA_RECORD_T prStaRec);
+
+u8 mqmUpdateEdcaParameters(IN P_BSS_INFO_T prBssInfo, IN u8 *pucIE,
+                           IN u8 fgForceOverride);
+
+u8 isProbeResponse(IN P_MSDU_INFO_T prMgmtTxMsdu);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

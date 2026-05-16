@@ -215,6 +215,11 @@ int btmtk_prepare_command(struct btmtk_private *priv);
 int btmtk_enable_hs(struct btmtk_private *priv);
 void btmtk_firmware_dump(struct btmtk_private *priv);
 
+ssize_t btmtk_fops_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos);
+ssize_t btmtk_fops_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos);
+unsigned int btmtk_fops_poll(struct file *filp, poll_table *wait);
+long btmtk_fops_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+
 #define META_BUFFER_SIZE (1024*50)
 
 struct _OSAL_UNSLEEPABLE_LOCK_ {

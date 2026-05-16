@@ -418,6 +418,168 @@ int priv_ate_set(IN struct net_device *prNetDev,
                  IN char *pcExtra);
 #endif
 
+int wext_get_priv(IN struct net_device *prNetDev, OUT struct iw_point *prData);
+
+int priv_driver_get_chip_config(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_ap_start(IN struct net_device *prNetDev, IN char *pcCommand,
+                             IN int i4TotalLen);
+
+int priv_driver_get_linkspeed(IN struct net_device *prNetDev,
+                              IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_band(IN struct net_device *prNetDev, IN char *pcCommand,
+                         IN int i4TotalLen);
+
+int priv_driver_set_txpower(IN struct net_device *prNetDev, IN char *pcCommand,
+                            IN int i4TotalLen);
+
+#if CFG_SUPPORT_DBDC_TC6
+int priv_driver_set_csa(IN struct net_device *prNetDev, IN char *pcCommand,
+                        IN int i4TotalLen);
+#endif
+
+int priv_driver_set_country(IN struct net_device *prNetDev, IN char *pcCommand,
+                            IN int i4TotalLen);
+
+int priv_driver_get_country(IN struct net_device *prNetDev, IN char *pcCommand,
+                            IN int i4TotalLen);
+
+int priv_driver_set_suspend_mode(IN struct net_device *prNetDev,
+                                 IN char *pcCommand, IN int i4TotalLen);
+
+#if CFG_SUPPORT_SNIFFER
+int priv_driver_set_monitor(IN struct net_device *prNetDev, IN char *pcCommand,
+                            IN int i4TotalLen);
+#endif
+
+#if CFG_SUPPORT_DBDC
+int priv_driver_set_dbdc(IN struct net_device *prNetDev, IN char *pcCommand,
+                         IN int i4TotalLen);
+#endif
+
+int priv_driver_set_p2p_ps(IN struct net_device *prNetDev, IN char *pcCommand,
+                           IN int i4TotalLen);
+
+int priv_driver_get_channels(IN struct net_device *prNetDev, IN char *pcCommand,
+                             IN int i4TotalLen);
+
+int priv_driver_get_ap_channels(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+
+#if (CFG_SUPPORT_DFS_MASTER == 1)
+int priv_driver_show_dfs_state(IN struct net_device *prNetDev,
+                               IN char *pcCommand, IN int i4TotalLen);
+#endif
+
+int priv_driver_show_dfs_abd123_param(IN struct net_device *prNetDev,
+                                      IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_show_dfs_help(IN struct net_device *prNetDev,
+                              IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_show_dfs_cac_time(IN struct net_device *prNetDev,
+                                  IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_rdd_report(IN struct net_device *prNetDev,
+                               IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_clean_dfs_abd123_param(IN struct net_device *prNetDev,
+                                       IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_abd123_detect_mode(IN struct net_device *prNetDev,
+                                       IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_miracast(IN struct net_device *prNetDev, IN char *pcCommand,
+                             IN int i4TotalLen);
+
+void priv_driver_get_chip_config_16(u8 *pucStartAddr, u32 u4Length, u32 u4Line,
+                                    int i4TotalLen, s32 i4BytesWritten,
+                                    char *pcCommand);
+
+void priv_driver_get_chip_config_4(u32 *pu4StartAddr, u32 u4Length, u32 u4Line,
+                                   int i4TotalLen, s32 i4BytesWritten,
+                                   char *pcCommand);
+
+int priv_driver_set_drv_mcr(IN struct net_device *prNetDev, IN char *pcCommand,
+                            IN int i4TotalLen);
+
+int priv_driver_set_sw_ctrl(IN struct net_device *prNetDev, IN char *pcCommand,
+                            IN int i4TotalLen);
+
+int priv_driver_set_fixed_rate(IN struct net_device *prNetDev,
+                               IN char *pcCommand, IN int i4TotalLen);
+
+#ifdef CFG_SUPPORT_MULTICAST_ENHANCEMENT
+int priv_driver_set_fixed_mrate(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+#endif
+
+int priv_driver_set_dup_mpacket(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_get_dup_mpacket(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_mcast_burst(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_get_mcast_burst(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_txop(IN struct net_device *prNetDev, IN char *pcCommand,
+                         IN int i4TotalLen);
+
+int priv_driver_get_txop(IN struct net_device *prNetDev, IN char *pcCommand,
+                         IN int i4TotalLen);
+
+int priv_driver_set_11mc_type(IN struct net_device *prNetDev,
+                              IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_get_11mc_type(IN struct net_device *prNetDev,
+                              IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_unicast_burst(IN struct net_device *prNetDev,
+                                  IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_get_unicast_burst(IN struct net_device *prNetDev,
+                                  IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_unicast_burst_timeout(IN struct net_device *prNetDev,
+                                          IN char *pcCommand,
+                                          IN int i4TotalLen);
+
+int priv_driver_get_unicast_burst_timeout(IN struct net_device *prNetDev,
+                                          IN char *pcCommand,
+                                          IN int i4TotalLen);
+
+int priv_driver_set_mrm_clinet(IN struct net_device *prNetDev,
+                               IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_get_mrm_client(IN struct net_device *prNetDev,
+                               IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_audio_tos(IN struct net_device *prNetDev,
+                              IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_get_audio_tos(IN struct net_device *prNetDev,
+                              IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_set_chip_config(IN struct net_device *prNetDev,
+                                IN char *pcCommand, IN int i4TotalLen);
+
+int priv_driver_get_cfg(IN struct net_device *prNetDev, IN char *pcCommand,
+                        IN int i4TotalLen);
+
+int priv_driver_set_mcr(IN struct net_device *prNetDev, IN char *pcCommand,
+                        IN int i4TotalLen);
+
+int priv_driver_get_dbg_level(IN struct net_device *prNetDev,
+                              IN char *pcCommand, IN int i4TotalLen);
+
+u32 batchChannelNum2Freq(u32 u4ChannelNum);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

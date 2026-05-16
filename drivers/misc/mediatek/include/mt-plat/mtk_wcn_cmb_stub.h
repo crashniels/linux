@@ -159,6 +159,7 @@ extern int mt_combo_plt_exit_deep_idle(COMBO_IF src);
  */
 extern void mtk_wcn_cmb_stub_func_ctrl(unsigned int type, unsigned int on);
 extern int mtk_wcn_cmb_stub_query_ctrl(void);
+extern void mtk_wcn_cmb_stub_clock_fail_dump(void);
 extern int board_sdio_ctrl(unsigned int sdio_port_num, unsigned int on);
 extern int mtk_wcn_sdio_irq_flag_set(int falg);
 
@@ -168,6 +169,7 @@ extern int mtk_wcn_cmb_stub_1vautok_for_dvfs(void);
 
 extern int mtk_wcn_wmt_chipid_query(void);
 extern void mtk_wcn_wmt_set_chipid(int chipid);
+extern int mtk_wcn_cmb_stub_do_reset(unsigned int type);
 
 /* mtk_uart_pdn_enable -- request uart port enter/exit deep idle mode, this API is defined in uart driver
  *

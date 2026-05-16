@@ -3,6 +3,7 @@
  * Copyright(C) 2016 MediaTek Inc.
  */
 #include "precomp.h"
+#include "p2p_role_state.h"
 
 void p2pRoleStateInit_IDLE(IN P_ADAPTER_T prAdapter,
                            IN P_P2P_ROLE_FSM_INFO_T prP2pRoleFsmInfo,

@@ -407,6 +407,7 @@ int mtk_p2p_cfg80211_set_txpower(struct wiphy *wiphy,
 
 int mtk_p2p_cfg80211_get_txpower(struct wiphy *wiphy,
                                  struct wireless_dev *wdev,
+				 unsigned int link_id,
                                  int *dbm);
 
 int mtk_p2p_cfg80211_remain_on_channel(struct wiphy *wiphy,

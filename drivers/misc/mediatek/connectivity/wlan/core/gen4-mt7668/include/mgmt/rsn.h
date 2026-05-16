@@ -258,6 +258,15 @@ u32 rsnCalRSNXELen(IN P_ADAPTER_T prAdapter,
                    P_STA_RECORD_T prStaRec);
 #endif
 
+void rsnApStopSaQuery(IN P_ADAPTER_T prAdapter, IN P_STA_RECORD_T prStaRec);
+void rsnApSaQueryRequest(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prSwRfb);
+void rsnGenMicErrorEvent(IN P_ADAPTER_T prAdapter, IN u8 fgFlags);
+u8 rsnApCheckSaQueryTimeout(IN P_ADAPTER_T prAdapter,
+                            IN P_STA_RECORD_T prStaRec);
+void rsnApStartSaQueryTimer(IN P_ADAPTER_T prAdapter,
+                            /* IN P_STA_RECORD_T prStaRec,*/
+                            IN unsigned long ulParamPtr);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

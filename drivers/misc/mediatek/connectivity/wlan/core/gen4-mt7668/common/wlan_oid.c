@@ -9861,9 +9861,7 @@ wlanoidSetStopSchedScan(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer,
 #define PARAM_CHANNEL "CHANNEL"
 #define PARAM_RTT "RTT"
 
-WLAN_STATUS
-batchSetCmd(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer,
-            IN u32 u4SetBufferLen, OUT u32 *pu4WritenLen)
+WLAN_STATUS batchSetCmd(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer, IN u32 u4SetBufferLen, OUT u32 *pu4WritenLen)
 {
     P_CHANNEL_INFO_T prRfChannelInfo;
     CMD_BATCH_REQ_T rCmdBatchReq;
@@ -10045,9 +10043,7 @@ batchSetCmd(IN P_ADAPTER_T prAdapter, IN void *pvSetBuffer,
     return rStatus;
 }
 
-WLAN_STATUS
-batchGetCmd(IN P_ADAPTER_T prAdapter, OUT void *pvQueryBuffer,
-            IN u32 u4QueryBufferLen, OUT u32 *pu4QueryInfoLen)
+WLAN_STATUS batchGetCmd(IN P_ADAPTER_T prAdapter, OUT void *pvQueryBuffer, IN u32 u4QueryBufferLen, OUT u32 *pu4QueryInfoLen)
 {
     CMD_BATCH_REQ_T rCmdBatchReq;
     WLAN_STATUS rStatus = WLAN_STATUS_SUCCESS;

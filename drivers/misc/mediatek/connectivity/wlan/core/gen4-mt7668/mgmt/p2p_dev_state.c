@@ -3,6 +3,7 @@
  * Copyright(C) 2016 MediaTek Inc.
  */
 #include "precomp.h"
+#include "p2p_dev_state.h"
 
 u8 p2pDevStateInit_IDLE(IN P_ADAPTER_T prAdapter,
                         IN P_P2P_CHNL_REQ_INFO_T prChnlReqInfo,

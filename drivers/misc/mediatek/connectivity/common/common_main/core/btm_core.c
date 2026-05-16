@@ -284,7 +284,7 @@ static INT32 _stp_btm_put_op(MTKSTP_BTM_T *stp_btm, P_OSAL_OP_Q pOpQ, P_OSAL_OP 
 	return ret ? 0 : 1;
 }
 
-P_OSAL_OP _stp_btm_get_free_op(MTKSTP_BTM_T *stp_btm)
+static P_OSAL_OP _stp_btm_get_free_op(MTKSTP_BTM_T *stp_btm)
 {
 	P_OSAL_OP pOp;
 
@@ -299,7 +299,7 @@ P_OSAL_OP _stp_btm_get_free_op(MTKSTP_BTM_T *stp_btm)
 		return NULL;
 }
 
-INT32 _stp_btm_put_act_op(MTKSTP_BTM_T *stp_btm, P_OSAL_OP pOp)
+static INT32 _stp_btm_put_act_op(MTKSTP_BTM_T *stp_btm, P_OSAL_OP pOp)
 {
 	INT32 bRet = 0;
 	INT32 wait_ret = -1;

@@ -229,4 +229,14 @@ void swCrDebugQuery(IN P_ADAPTER_T prAdapter,
 void swCrDebugQueryTimeout(IN P_ADAPTER_T prAdapter, IN P_CMD_INFO_T prCmdInfo);
 #endif
 
+void dumpQueue(P_ADAPTER_T prAdapter);
+void dumpSTA(P_ADAPTER_T prAdapter, P_STA_RECORD_T prStaRec);
+void dumpBss(P_ADAPTER_T prAdapter, P_BSS_INFO_T prBssInfo);
+void testPsSendQoSNullFrame(IN P_ADAPTER_T prAdapter,
+                            IN P_STA_RECORD_T prStaRec, IN u8 ucUP,
+                            IN u8 ucBssIndex, IN u8 fgBMC, IN u8 fgIsBurstEnd,
+                            IN u8 ucPacketType, IN u8 ucPsSessionID,
+                            IN u8 fgSetEOSP);
+void testPsSetupBss(IN P_ADAPTER_T prAdapter, IN u8 ucBssIndex);
+
 #endif

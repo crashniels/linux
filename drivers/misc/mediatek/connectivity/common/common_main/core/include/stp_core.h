@@ -22,6 +22,7 @@
 #define _STP_CORE_H
 //#include "osal_typedef.h"
 //#include "osal.h"
+#include "wmt_stp_exp.h"
 #include "stp_exp.h"
 #include "psm_core.h"
 #include "btm_core.h"

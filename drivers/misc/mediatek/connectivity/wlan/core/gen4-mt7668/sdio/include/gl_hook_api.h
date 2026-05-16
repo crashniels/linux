@@ -260,6 +260,8 @@ s32 TxBfPfmuMemAlloc(struct net_device *prNetDev, u8 ucSuMuMode, u8 ucWlanIdx);
 
 s32 TxBfPfmuMemRelease(struct net_device *prNetDev, u8 ucWlanId);
 
+s32 TxBfBssInfoUpdate(struct net_device *prNetDev, u8 ucOwnMacIdx, u8 ucBssIdx, u8 ucBssId[MAC_ADDR_LEN]);
+
 s32 DevInfoUpdate(struct net_device *prNetDev,
                   u8 ucOwnMacIdx,
                   u8 fgBand,
@@ -280,7 +282,6 @@ s32 StaRecBfUpdate(struct net_device *prNetDev,
                    STA_REC_BF_UPD_ARGUMENT rStaRecBfUpdArg,
                    u8 aucMemRow[4],
                    u8 aucMemCol[4]);
-
-#endif
-#endif
-#endif
+#endif // CFG_SUPPORT_TX_BF
+#endif // CFG_SUPPORT_QA_TOOL
+#endif // _GL_HOOK_API_H

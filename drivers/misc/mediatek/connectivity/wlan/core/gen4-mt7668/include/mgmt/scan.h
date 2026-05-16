@@ -745,5 +745,8 @@ static inline bool is_valid_scan_chnl_cnt(u8 num)
 #endif
 
 u8 scnFsmIsScanning(IN P_ADAPTER_T prAdapter);
+void scnFreeAllPendingScanRquests(IN P_ADAPTER_T prAdapter);
+u8 scanByPassRemoveBssDesc(IN P_ADAPTER_T prAdapter, IN P_BSS_DESC_T prBssDesc);
+u8 scanCheckBssIsLegal(IN P_ADAPTER_T prAdapter, P_BSS_DESC_T prBssDesc);
 
 #endif

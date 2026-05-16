@@ -94,6 +94,7 @@ int mtk_wcn_cmb_stub_query_ctrl(void)
 	} else
 		return bridge.thermal_query_cb();
 }
+EXPORT_SYMBOL(mtk_wcn_cmb_stub_query_ctrl);
 
 void mtk_wcn_cmb_stub_clock_fail_dump(void)
 {
@@ -103,6 +104,7 @@ void mtk_wcn_cmb_stub_clock_fail_dump(void)
 	else
 		bridge.clock_fail_dump_cb();
 }
+EXPORT_SYMBOL(mtk_wcn_cmb_stub_clock_fail_dump);
 
 /*******************************************************************************
  * SDIO integration with platform MMC driver

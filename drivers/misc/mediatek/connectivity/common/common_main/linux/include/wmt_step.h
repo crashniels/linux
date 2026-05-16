@@ -366,6 +366,7 @@ int wmt_step_do_condition_emi_action(struct step_action *p_act, STEP_DO_EXTRA fu
 int wmt_step_do_condition_register_action(struct step_action *p_act, STEP_DO_EXTRA func_do_extra);
 void wmt_step_remove_action(struct step_action *p_act);
 void wmt_step_print_version(void);
+void wmt_step_setup(void);
 
 #endif /* end of _WMT_STEP_H_ */
 

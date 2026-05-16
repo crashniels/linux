@@ -326,6 +326,17 @@ int osal_timer_stop_sync(P_OSAL_TIMER pTimer);
 int osal_timer_modify(P_OSAL_TIMER, unsigned int);
 int osal_timer_delete(P_OSAL_TIMER);
 
+int _osal_fifo_init(OSAL_FIFO *pFifo, unsigned char *buf, unsigned int size);
+int _osal_fifo_deinit(OSAL_FIFO *pFifo);
+int _osal_fifo_size(OSAL_FIFO *pFifo);
+int _osal_fifo_avail_size(OSAL_FIFO *pFifo);
+int _osal_fifo_len(OSAL_FIFO *pFifo);
+int _osal_fifo_is_empty(OSAL_FIFO *pFifo);
+int _osal_fifo_is_full(OSAL_FIFO *pFifo);
+int _osal_fifo_data_in(OSAL_FIFO *pFifo, const void *buf, unsigned int len);
+int _osal_fifo_data_out(OSAL_FIFO *pFifo, void *buf, unsigned int len);
+int _osal_fifo_reset(OSAL_FIFO *pFifo);
+
 int osal_fifo_init(P_OSAL_FIFO pFifo, unsigned char *buffer, unsigned int size);
 void osal_fifo_deinit(P_OSAL_FIFO pFifo);
 int osal_fifo_reset(P_OSAL_FIFO pFifo);

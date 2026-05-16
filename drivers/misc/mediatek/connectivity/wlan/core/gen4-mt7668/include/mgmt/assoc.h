@@ -88,6 +88,12 @@ WLAN_STATUS assocSendReAssocRespFrame(IN P_ADAPTER_T prAdapter,
 u16 assocBuildCapabilityInfo(IN P_ADAPTER_T prAdapter,
                              IN P_STA_RECORD_T prStaRec);
 
+void assocComposeReAssocReqFrameHeaderAndFF(IN P_ADAPTER_T prAdapter,
+                                            IN P_STA_RECORD_T prStaRec,
+                                            IN u8 *pucBuffer,
+                                            IN u8 aucMACAddress[],
+                                            IN OUT u16 *pu2PayloadLen);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************

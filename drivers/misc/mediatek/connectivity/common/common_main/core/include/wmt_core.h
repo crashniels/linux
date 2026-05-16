@@ -22,9 +22,11 @@
 #ifndef _WMT_CORE_H_
 #define _WMT_CORE_H_
 
+#include "wmt_plat.h"
 #include "wmt_ctrl.h"
 #include "wmt_exp.h"
-#include "wmt_plat.h"
+//#include "wmt_stp_exp.h"
+//#include "wmt_plat.h"
 
 /*******************************************************************************
 *                         C O M P I L E R   F L A G S
@@ -488,6 +490,10 @@ extern INT32 wmt_core_init_script_retry(struct init_script *script, INT32 count,
 extern INT32 wmt_core_init_script(struct init_script *script, INT32 count);
 
 extern INT32 wmt_core_rx(PUINT8 pBuf, UINT32 bufLen, PUINT32 readSize);
+
+extern INT32 wmt_core_rx_flush(UINT32 type);
+
+extern INT32 wmt_core_opid_handler(P_WMT_OP pWmtOp);
 
 extern INT32
 wmt_core_tx(const PUINT8 pData, UINT32 size, PUINT32 writtenSize, MTK_WCN_BOOL bRawFlag);

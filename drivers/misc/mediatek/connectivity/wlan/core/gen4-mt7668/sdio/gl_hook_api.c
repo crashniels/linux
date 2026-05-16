@@ -22,6 +22,7 @@
 #include "gl_cfg80211.h"
 #include "gl_ate_agent.h"
 #include "gl_qa_agent.h"
+#include "gl_hook_api.h"
 
 #include <uapi/linux/nl80211.h>
 
@@ -3763,8 +3764,7 @@ s32 TxBfPfmuMemRelease(struct net_device *prNetDev, u8 ucWlanId)
     return i4Status;
 }
 
-s32 TxBfBssInfoUpdate(struct net_device *prNetDev, u8 ucOwnMacIdx, u8 ucBssIdx,
-                      u8 ucBssId[MAC_ADDR_LEN])
+s32 TxBfBssInfoUpdate(struct net_device *prNetDev, u8 ucOwnMacIdx, u8 ucBssIdx, u8 ucBssId[MAC_ADDR_LEN])
 {
     s32 i4Status = 0;
     P_GLUE_INFO_T prGlueInfo = NULL;

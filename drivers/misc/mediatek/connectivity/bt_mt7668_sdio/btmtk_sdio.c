@@ -119,10 +119,10 @@ static int print_dump_data_counter;
 	static int fw_dump_file;
 #endif
 
-const struct file_operations BT_proc_fops = {
-	.open = btmtk_proc_open,
-	.read = seq_read,
-	.release = single_release,
+const struct proc_ops BT_proc_fops = {
+	.proc_open = btmtk_proc_open,
+	.proc_read = seq_read,
+	.proc_release = single_release,
 };
 
 static const struct btmtk_sdio_card_reg btmtk_reg_6630 = {
@@ -4726,8 +4726,7 @@ static int btmtk_fops_close(struct inode *inode, struct file *file)
 	return 0;
 }
 
-ssize_t btmtk_fops_write(struct file *filp, const char __user *buf,
-			size_t count, loff_t *f_pos)
+ssize_t btmtk_fops_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
 {
 	int retval = 0;
 	struct sk_buff *skb = NULL;
@@ -4893,8 +4892,7 @@ OUT:
 	return retval;
 }
 
-ssize_t btmtk_fops_read(struct file *filp, char __user *buf,
-			size_t count, loff_t *f_pos)
+ssize_t btmtk_fops_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {
 	struct sk_buff *skb = NULL;
 	int copyLen = 0;
@@ -5036,8 +5034,7 @@ unsigned int btmtk_fops_poll(struct file *filp, poll_table *wait)
 	return mask;
 }
 
-long btmtk_fops_unlocked_ioctl(struct file *filp,
-				unsigned int cmd, unsigned long arg)
+long btmtk_fops_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	u32 retval = 0;
 

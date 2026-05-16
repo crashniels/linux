@@ -88,6 +88,7 @@ void ring_dump_segment(const char *title, struct ring_segment *seg);
 
 /* ring Buffer Internal API */
 void _ring_segment_prepare(unsigned int from, struct ring_segment *seg, struct ring *ring);
+void __ring_segment_prepare(unsigned int from, unsigned int sz, struct ring_segment *seg, struct ring *ring);
 void _ring_segment_prepare_item(unsigned int from, struct ring_segment *seg, struct ring *ring);
 void _ring_read_commit(struct ring_segment *seg, struct ring *ring);
 void _ring_write_commit(struct ring_segment *seg, struct ring *ring);

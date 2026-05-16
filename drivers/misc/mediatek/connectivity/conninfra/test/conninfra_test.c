@@ -297,10 +297,9 @@ ssize_t conninfra_test_write(struct file *filp, const char __user *buffer, size_
 
 int conninfra_test_setup(void)
 {
-	static const struct file_operations conninfra_test_fops = {
-		.owner = THIS_MODULE,
-		.read = conninfra_test_read,
-		.write = conninfra_test_write,
+	static const struct proc_ops conninfra_test_fops = {
+		.proc_read = conninfra_test_read,
+		.proc_write = conninfra_test_write,
 	};
 	int i_ret = 0;
 

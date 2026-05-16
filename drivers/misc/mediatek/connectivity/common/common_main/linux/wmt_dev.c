@@ -62,6 +62,7 @@
 #include "psm_core.h"
 #include "stp_core.h"
 #include "stp_exp.h"
+#include "stp_sdio.h"
 #include "bgw_desense.h"
 #include "wmt_idc.h"
 #include "wmt_detect.h"
@@ -438,12 +439,11 @@ static ssize_t wmt_dev_proc_for_aee_write(struct file *filp, const char __user *
 	return 0;
 }
 
-INT32 wmt_dev_proc_for_aee_setup(VOID)
+static INT32 wmt_dev_proc_for_aee_setup(VOID)
 {
-	static const struct file_operations wmt_aee_fops = {
-		.owner = THIS_MODULE,
-		.read = wmt_dev_proc_for_aee_read,
-		.write = wmt_dev_proc_for_aee_write,
+	static const struct proc_ops wmt_aee_fops = {
+		.proc_read = wmt_dev_proc_for_aee_read,
+		.proc_write = wmt_dev_proc_for_aee_write,
 	};
 
 	gWmtAeeEntry = proc_create(WMT_AEE_PROCNAME, 0664, NULL, &wmt_aee_fops);
@@ -455,7 +455,7 @@ INT32 wmt_dev_proc_for_aee_setup(VOID)
 	return 0;
 }
 
-INT32 wmt_dev_proc_for_aee_remove(VOID)
+static INT32 wmt_dev_proc_for_aee_remove(VOID)
 {
 	if (gWmtAeeEntry != NULL)
 		remove_proc_entry(WMT_AEE_PROCNAME, NULL);
@@ -530,12 +530,11 @@ static ssize_t wmt_dev_proc_for_dump_info_write(struct file *filp, const char __
 	return 0;
 }
 
-INT32 wmt_dev_proc_for_dump_info_setup(VOID)
+static INT32 wmt_dev_proc_for_dump_info_setup(VOID)
 {
-	static const struct file_operations wmt_dump_info_fops = {
-		.owner = THIS_MODULE,
-		.read = wmt_dev_proc_for_dump_info_read,
-		.write = wmt_dev_proc_for_dump_info_write,
+	static const struct proc_ops wmt_dump_info_fops = {
+		.proc_read = wmt_dev_proc_for_dump_info_read,
+		.proc_write = wmt_dev_proc_for_dump_info_write,
 	};
 
 	gWmtdumpinfoEntry = proc_create(WMT_DUMP_INFO_PROCNAME, 0664, NULL, &wmt_dump_info_fops);
@@ -547,7 +546,7 @@ INT32 wmt_dev_proc_for_dump_info_setup(VOID)
 	return 0;
 }
 
-INT32 wmt_dev_proc_for_dump_info_remove(VOID)
+static INT32 wmt_dev_proc_for_dump_info_remove(VOID)
 {
 	if (gWmtdumpinfoEntry != NULL)
 		remove_proc_entry(WMT_DUMP_INFO_PROCNAME, NULL);
@@ -677,21 +676,23 @@ static INT32 wmt_dev_tra_sdio_update(VOID)
 	return 0;
 }
 
-extern INT32 wmt_dev_tra_bitf_update(VOID)
+INT32 wmt_dev_tra_bitf_update(VOID)
 {
 	count_last_access_btif += 1;
 	/* WMT_INFO_FUNC("jiffies_last_access_btif: jiffies = %ul\n", jiffies); */
 
 	return 0;
 }
+EXPORT_SYMBOL(wmt_dev_tra_bitf_update);
 
-extern INT32 wmt_dev_tra_uart_update(VOID)
+INT32 wmt_dev_tra_uart_update(VOID)
 {
 	count_last_access_uart += 1;
 	/* WMT_INFO_FUNC("jiffies_last_access_btif: jiffies = %ul\n", jiffies); */
 
 	return 0;
 }
+EXPORT_SYMBOL(wmt_dev_tra_uart_update);
 
 static UINT32 wmt_dev_tra_poll(VOID)
 {

@@ -238,6 +238,68 @@
  *******************************************************************************
  */
 
+void rlmDomainBuildCmdByDefaultTable(
+    P_CMD_SET_COUNTRY_CHANNEL_POWER_LIMIT_T prCmd, u16 u2DefaultTableIndex);
+void rlmDomainBuildCmdByConfigTable(
+    P_ADAPTER_T prAdapter, P_CMD_SET_COUNTRY_CHANNEL_POWER_LIMIT_T prCmd);
+u8 rlmDomainGetTxPwrLimit(u32 country_code, P_GLUE_INFO_T prGlueInfo,
+                          P_CMD_SET_COUNTRY_CHANNEL_POWER_LIMIT_V2_T pSetCmd_2g,
+                          P_CMD_SET_COUNTRY_CHANNEL_POWER_LIMIT_V2_T pSetCmd_5g);
+s8 rlmDomainTxPwrLimitGetChIdx(struct TX_PWR_LIMIT_DATA *pTxPwrLimit,
+                               u8 ucChannel);
+u8 rlmDomainTxPwrLimitLoadChannelSetting(u8 *pucBuf, u32 *pu4Pos, u32 u4BufEnd,
+                                         struct TX_PWR_LIMIT_DATA *pTxPwrLimit,
+                                         u8 ucSectionIdx);
+u8 rlmDomainTxPwrLimitLoad(P_ADAPTER_T prAdapter, u8 *pucBuf, u32 u4BufLen,
+                           u32 u4CountryCode,
+                           struct TX_PWR_LIMIT_DATA *pTxPwrLimit);
+void rlmDomainTxPwrLimitSetChValues(P_CMD_CHANNEL_POWER_LIMIT_V2 pCmd,
+                                    struct CHANNEL_TX_PWR_LIMIT *pChTxPwrLimit);
+void rlmDomainTxPwrLimitSetValues(
+    P_CMD_SET_COUNTRY_CHANNEL_POWER_LIMIT_V2_T pSetCmd,
+    struct TX_PWR_LIMIT_DATA *pTxPwrLimit);
+u8 rlmDomainTxPwrLimitLoadFromFile(P_ADAPTER_T prAdapter, u32 u4CountryCode,
+                                   struct TX_PWR_LIMIT_DATA *pTxPwrLimit);
+void saaSendAuthSeq3(IN P_ADAPTER_T prAdapter, IN P_STA_RECORD_T prStaRec);
+void tkipMicB(IN OUT u32 *pu4L, IN OUT u32 *pu4R);
+void tkipMicGen(IN u8 *pucMickey, IN u8 *pucData, IN u32 u4DataLen,
+                IN u8 *pucSa, IN u8 *pucDa, IN u8 ucPriority, OUT u8 *pucMic);
+void tkipMicEncapsulate(IN u8 *pucDa, IN u8 *pucSa, IN u8 ucPriority,
+                        IN u16 u2PayloadLen, IN u8 *pucPayload, IN u8 *pucMic,
+                        IN u8 *pucMicKey);
+
+#if CFG_SUPPORT_LAST_SEC_MCS_INFO
+s32 priv_driver_last_sec_mcs_info(IN P_ADAPTER_T prAdapter, IN char *pcCommand,
+                                  IN int i4TotalLen,
+                                  P_PARAM_HW_WLAN_INFO_T prHwWlanInfo,
+                                  struct PARAM_TX_MCS_INFO *prTxMcsInfo);
+#endif
+
+s32 priv_driver_tx_rate_info(IN char *pcCommand, IN int i4TotalLen,
+                             u8 fgDumpAll, P_PARAM_HW_WLAN_INFO_T prHwWlanInfo,
+                             P_PARAM_GET_STA_STATISTICS prQueryStaStatistics);
+
+s32 priv_driver_last_rx_rssi(P_ADAPTER_T prAdapter, IN char *pcCommand,
+                             IN int i4TotalLen, IN u8 ucWlanIdx);
+
+s32 priv_driver_rx_rate_info(P_ADAPTER_T prAdapter, IN char *pcCommand,
+                             IN int i4TotalLen, IN u8 ucWlanIdx);
+
+s32 priv_driver_tx_vector_info(IN char *pcCommand, IN int i4TotalLen,
+                               IN P_TX_VECTOR_BBP_LATCH_T prTxV);
+
+s32 priv_driver_rate_to_string(IN char *pcCommand, IN int i4TotalLen, u8 TxRx,
+                               P_PARAM_HW_WLAN_INFO_T prHwWlanInfo);
+
+void parseNoiseHistogramReport(s32 *i4BytesWritten, s8 *pcCommand,
+                               int *i4TotalLen,
+                               IN struct CMD_NOISE_HISTOGRAM_REPORT *cmd);
+
+WLAN_STATUS
+batchConvertResult(IN P_EVENT_BATCH_RESULT_T prEventBatchResult,
+                   OUT void *pvBuffer, IN u32 u4MaxBufferLen,
+                   OUT u32 *pu4RetLen);
+
 /*******************************************************************************
  *                              F U N C T I O N S
  *******************************************************************************
@@ -246,5 +308,6 @@
 extern int mtk_sdio_probe(struct sdio_func *func,
                           const struct sdio_device_id *id);
 extern void mtk_sdio_remove(struct sdio_func *func);
+int mtk_sdio_async_irq_enable(struct sdio_func *func);
 
 #endif

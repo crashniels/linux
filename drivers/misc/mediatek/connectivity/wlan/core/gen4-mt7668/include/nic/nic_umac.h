@@ -78,4 +78,20 @@
 OUT u8 halUmacInfoGetMiscStatus(IN P_ADAPTER_T prAdapter,
                                 IN P_UMAC_STAT2_GET_T pUmacStat2Get);
 
+OUT u16 halUmacPbufCtrlTotalPageNum(IN P_ADAPTER_T prAdapter,
+                                    IN u16 fgPsePleFlag);
+
+OUT u16 halUmacWrapFfaCnt(IN P_ADAPTER_T prAdapter, IN u8 fgPsePleFlag);
+
+OUT u16 halUmacWrapFrePageCnt(IN P_ADAPTER_T prAdapter, IN u8 fgPsePleFlag);
+
+OUT u16 halUmacWrapSrcPgCnt(IN P_ADAPTER_T prAdapter, IN u8 fgPsePleFlag,
+                            IN u8 ucPageGroupID);
+
+OUT u8 halUmacWrapSourcePortSanityCheck(IN u8 fgPsePleFlag,
+                                        IN u8 ucPageGroupID);
+
+OUT u16 halUmacWrapRsvPgCnt(IN P_ADAPTER_T prAdapter, IN u8 fgPsePleFlag,
+                            IN u8 ucPageGroupID);
+
 #endif

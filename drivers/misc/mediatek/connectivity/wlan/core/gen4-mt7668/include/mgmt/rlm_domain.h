@@ -738,6 +738,28 @@ u32 rlmDomainGetCountryCode(void);
 u32 rlmDomainGetTempCountryCode(void);
 void rlmDomainAssert(u8 cond);
 void rlmDomainOverridePwrLimitFileName(const char *);
+void rlmDomainSendPwrLimitCmd_V2(P_ADAPTER_T prAdapter);
+void rlmDomainGetChnlList_V2(P_ADAPTER_T prAdapter, ENUM_BAND_T eSpecificBand,
+                             u8 fgNoDfs, u8 ucMaxChannelNum,
+                             u8 *pucNumOfChannel,
+                             P_RF_CHANNEL_INFO_T paucChannelList);
+void rlmDomainSendDomainInfoCmd_V2(P_ADAPTER_T prAdapter, u8 fgIsOid);
+u8 rlmDomainIsLegalChannel_V2(P_ADAPTER_T prAdapter, ENUM_BAND_T eBand,
+                              u8 ucChannel);
+u32 rlmDomainAlpha2ToU32(s8 *pcAlpha2, u8 ucAlpha2Size);
+u8 rlmDomainIsLegalChannel_V2(P_ADAPTER_T prAdapter, ENUM_BAND_T eBand,
+                              u8 ucChannel);
+u8 rlmDomainTxPwrLimitSearchSection(const char *pSectionName, s8 *pucBuf,
+                                    u32 *pu4Pos, u32 u4BufEnd);
+u8 rlmDomainTxPwrLimitGetCountryRange(u32 u4CountryCode, u8 *pucBuf,
+                                      u32 u4BufLen, u32 *pu4CountryStart,
+                                      u32 *pu4CountryEnd);
+u8 rlmDomainTxPwrLimitSectionEnd(u8 *pucBuf, const char *pSectionName,
+                                 u32 *pu4Pos, u32 u4BufEnd);
+void rlmDomainTxPwrLimitRemoveComments(u8 *pucBuf, u32 u4BufLen);
+void rlmDomainResetActiveChannel(void);
+void rlmDomainSetTempCountryCode(char *alpha2, u8 size_of_alpha2);
+void rlmDomainChannelFlagString(u32 flags, char *buf, size_t buf_size);
 
 /*******************************************************************************
  *                              F U N C T I O N S

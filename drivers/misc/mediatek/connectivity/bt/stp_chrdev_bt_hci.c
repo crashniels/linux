@@ -85,6 +85,16 @@ static INT32 flag;
 /* Reset flag for whole chip reset senario */
 static volatile INT32 rstflag;
 
+ssize_t BT_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos);
+ssize_t BT_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos);
+long BT_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+long BT_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+
+#if REMOVE_MK_NODE
+int mtk_wcn_stpbt_drv_init(void);
+void mtk_wcn_stpbt_drv_exit(void);
+#endif
+
 #ifdef MTK_BT_HCI
 /*static int hci_reassembly(struct hci_dev *hdev, int type, void *data,
 	int count, __u8 index)
@@ -280,7 +290,7 @@ static struct hci_stp_init_cmd init_table[] =
     hci_stp_init_entry(bt_set_coex_adjust),
 };
 
-void hci_stp_dev_init_rx_cb(const UINT8 *data, INT32 count)
+static void hci_stp_dev_init_rx_cb(UINT8 * const data, INT32 count)
 {
     struct hci_stp *hu;
     unsigned int idx;
@@ -348,7 +358,8 @@ void hci_stp_dev_init_rx_cb(const UINT8 *data, INT32 count)
     spin_unlock(&hu->init_lock);
 }
 
-void
+/*
+static void
 hex_dump(char *prefix, char *p, int len)
 {
 	int i;
@@ -358,6 +369,7 @@ hex_dump(char *prefix, char *p, int len)
 		pr_err("%02x ", (*p++ & 0xff));
 	pr_err("\n");
 }
+*/
 
 static int
 mtk_bt_hci_open(struct hci_dev *hdev)
@@ -541,7 +553,7 @@ static VOID bt_cdev_rst_cb(ENUM_WMTDRV_TYPE_T src,
 	}
 }
 
-VOID BT_event_cb(VOID)
+static VOID BT_event_cb(VOID)
 {
 	BT_DBG_FUNC("BT_event_cb()\n");
 
@@ -554,7 +566,7 @@ VOID BT_event_cb(VOID)
 	wake_up(&BT_wq);
 }
 
-unsigned int BT_poll(struct file *filp, poll_table *wait)
+static unsigned int BT_poll(struct file *filp, poll_table *wait)
 {
 	UINT32 mask = 0;
 
@@ -817,8 +829,6 @@ const struct file_operations BT_fops = {
 struct class *stpbt_class = NULL;
 #endif
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
 static int BT_init(void)
 {
 	dev_t dev = MKDEV(BT_major, 0);
@@ -907,7 +917,6 @@ error:
 
 	return -1;
 }
-#pragma GCC diagnostic pop
 
 static void BT_exit(void)
 {

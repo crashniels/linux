@@ -60,7 +60,7 @@
 ********************************************************************************
 */
 static INT32 mtk_wmt_probe(struct platform_device *pdev);
-static INT32 mtk_wmt_remove(struct platform_device *pdev);
+static void mtk_wmt_remove(struct platform_device *pdev);
 static INT32 mtk_wmt_suspend(struct platform_device *pdev, pm_message_t state);
 static INT32 mtk_wmt_resume(struct platform_device *pdev);
 
@@ -267,7 +267,7 @@ static INT32 mtk_wmt_probe(struct platform_device *pdev)
 	return 0;
 }
 
-static INT32 mtk_wmt_remove(struct platform_device *pdev)
+static void mtk_wmt_remove(struct platform_device *pdev)
 {
 	if (wmt_consys_ic_ops->consys_ic_need_store_pdev) {
 		if (wmt_consys_ic_ops->consys_ic_need_store_pdev() == MTK_WCN_BOOL_TRUE)
@@ -281,8 +281,6 @@ static INT32 mtk_wmt_remove(struct platform_device *pdev)
 
 	if (g_pdev)
 		g_pdev = NULL;
-
-	return 0;
 }
 
 static INT32 mtk_wmt_suspend(struct platform_device *pdev, pm_message_t state)

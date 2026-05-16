@@ -89,4 +89,9 @@ void p2pRoleStatePrepare_To_REQING_CHANNEL_STATE(IN P_ADAPTER_T prAdapter,
                                                  OUT P_P2P_CHNL_REQ_INFO_T
                                                  prChnlReqInfo);
 
+void p2pRoleFsmScanTargetBss(IN P_ADAPTER_T prAdapter,
+                             IN P_P2P_ROLE_FSM_INFO_T prP2pRoleFsmInfo,
+                             IN u8 ucChannelNum, IN ENUM_BAND_T eBand,
+                             IN P_P2P_SSID_STRUCT_T prSsid);
+
 #endif

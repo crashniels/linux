@@ -2107,7 +2107,7 @@ MTK_WCN_BOOL wmt_lib_btm_cb(MTKSTP_BTM_WMT_OP_T op)
 	return bRet;
 }
 
-MTK_WCN_BOOL wmt_cdev_rstmsg_snd(ENUM_WMTRSTMSG_TYPE_T msg)
+MTK_WCN_BOOL wmt_lib_rstmsg_snd(ENUM_WMTRSTMSG_TYPE_T msg)
 {
 
 	INT32 i = 0;
@@ -2359,7 +2359,7 @@ ENUM_WMTRSTRET_TYPE_T wmt_lib_cmb_rst(ENUM_WMTRSTSRC_TYPE_T src)
 	}
 
 	/* <3> RESET_START notification */
-	bRet = wmt_cdev_rstmsg_snd(WMTRSTMSG_RESET_START);
+	bRet = wmt_lib_rstmsg_snd(WMTRSTMSG_RESET_START);
 	if (bRet == MTK_WCN_BOOL_FALSE) {
 		WMT_ERR_FUNC("[whole chip reset] fail at wmt_lib_rstmsg_snd!\n");
 		retval = WMTRSTRET_FAIL;
@@ -2401,7 +2401,7 @@ ENUM_WMTRSTRET_TYPE_T wmt_lib_cmb_rst(ENUM_WMTRSTSRC_TYPE_T src)
 
 
 	/* <5> RESET_END notification */
-	bRet = wmt_cdev_rstmsg_snd(rstMsg);
+	bRet = wmt_lib_rstmsg_snd(rstMsg);
 	if (bRet == MTK_WCN_BOOL_FALSE) {
 		WMT_ERR_FUNC("[whole chip reset] fail at wmt_lib_rstmsg_snd!\n");
 		retval = WMTRSTRET_FAIL;

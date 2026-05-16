@@ -166,7 +166,7 @@ static void connlog_set_ring_ready(void);
 * RETURNS
 *  void*  buffer pointer
 *****************************************************************************/
-void *connlog_cache_allocate(size_t size)
+static void *connlog_cache_allocate(size_t size)
 {
 	void *pBuffer = NULL;
 
