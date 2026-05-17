@@ -154,9 +154,11 @@ void secInit(IN P_ADAPTER_T prAdapter, IN u8 ucBssIndex)
                       (PFN_MGMT_TIMEOUT_FUNC)rsnIndicatePmkidCand,
                       (unsigned long)NULL);
 
+#if CFG_SUPPORT_802_11W
     cnmTimerInitTimer(prAdapter, &prAisSpecBssInfo->rSaQueryTimer,
                       (PFN_MGMT_TIMEOUT_FUNC)rsnStartSaQueryTimer,
                       (unsigned long)NULL);
+#endif
 
     prAisSpecBssInfo->fgCounterMeasure = false;
     prAdapter->prAisBssInfo->ucBcDefaultKeyIdx = 0xff;

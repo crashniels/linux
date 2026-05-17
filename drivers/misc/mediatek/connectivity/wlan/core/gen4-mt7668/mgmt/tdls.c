@@ -609,6 +609,7 @@ TdlsDataFrameSend_SETUP_REQ(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
     }
     /* check */
 
+#if CFG_SUPPORT_802_11W
     /* 3. Frame Formation - (12) Timeout interval element (TPK Key Lifetime)
      */
     TIMEOUT_INTERVAL_IE(pPkt)->ucId = ELEM_ID_TIMEOUT_INTERVAL;
@@ -624,6 +625,7 @@ TdlsDataFrameSend_SETUP_REQ(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
     u4IeLen = IE_SIZE(pPkt);
     pPkt += u4IeLen;
     u4PktLen += u4IeLen;
+#endif
 
     if (ucActionCode != TDLS_FRM_ACTION_TEARDOWN) {
         /*
@@ -832,6 +834,7 @@ TdlsDataFrameSend_SETUP_RSP(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
         u4PktLen += u4IeLen;
     }
 
+#if CFG_SUPPORT_802_11W
     /* 3. Frame Formation - (12) Timeout interval element (TPK Key Lifetime)
      */
     TIMEOUT_INTERVAL_IE(pPkt)->ucId = ELEM_ID_TIMEOUT_INTERVAL;
@@ -846,6 +849,7 @@ TdlsDataFrameSend_SETUP_RSP(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
     u4IeLen = IE_SIZE(pPkt);
     pPkt += u4IeLen;
     u4PktLen += u4IeLen;
+#endif
 
     if (ucActionCode != TDLS_FRM_ACTION_TEARDOWN) {
         /*
@@ -1005,6 +1009,7 @@ TdlsDataFrameSend_CONFIRM(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
     pPkt += AppendIeLen;
     u4PktLen += AppendIeLen;
 
+#if CFG_SUPPORT_802_11W
     /* 3. Frame Formation - (12) Timeout interval element (TPK Key Lifetime)
      */
     TIMEOUT_INTERVAL_IE(pPkt)->ucId = ELEM_ID_TIMEOUT_INTERVAL;
@@ -1018,6 +1023,7 @@ TdlsDataFrameSend_CONFIRM(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
     u4IeLen = IE_SIZE(pPkt);
     pPkt += u4IeLen;
     u4PktLen += u4IeLen;
+#endif
 
     if (ucActionCode != TDLS_FRM_ACTION_TEARDOWN) {
         /*
@@ -1506,6 +1512,7 @@ TdlsDataFrameSend_DISCOVERY_RSP(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
         prStaRec->flgTdlsIsInitiator = false;
     }
 
+#if CFG_SUPPORT_802_11W
     /* 3. Frame Formation - (12) Timeout interval element (TPK Key Lifetime)
      */
     TIMEOUT_INTERVAL_IE(pPkt)->ucId = ELEM_ID_TIMEOUT_INTERVAL;
@@ -1520,6 +1527,7 @@ TdlsDataFrameSend_DISCOVERY_RSP(ADAPTER_T *prAdapter, STA_RECORD_T *prStaRec,
     u4IeLen = IE_SIZE(pPkt);
     pPkt += u4IeLen;
     u4PktLen += u4IeLen;
+#endif
 
     /*
      *  bit0 = 1: The Information Request field is used to indicate that a

@@ -809,7 +809,9 @@ u8 rsnPerformPolicySelection(IN P_ADAPTER_T prAdapter, IN P_BSS_DESC_T prBss)
     prBss->u4RsnSelectedAKMSuite = 0;
     prBss->ucEncLevel = 0;
 
+#if CFG_SUPPORT_802_11W
     prAdapter->rWifiVar.rAisSpecificBssInfo.fgMgmtProtection = false;
+#endif
 
 #if CFG_SUPPORT_WPS
     fgIsWpsActive = kalWSCGetActiveState(prAdapter->prGlueInfo);
@@ -1078,7 +1080,9 @@ u8 rsnPerformPolicySelection(IN P_ADAPTER_T prAdapter, IN P_BSS_DESC_T prBss)
                 break;
             }
         }
+#if CFG_SUPPORT_802_11W
     }
+#endif
 
     if (u4AkmSuite == 0) {
         DBGLOG(RSN, TRACE, "Cannot support any AKM suites\n");
@@ -1498,8 +1502,11 @@ void rsnGenerateRSNIE(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo)
         DBGLOG(
             RSN, TRACE, "Gen RSN IE = %x\n",
             GET_BSS_INFO_BY_INDEX(prAdapter, ucBssIndex)->u2RsnSelectedCapInfo);
+
+#if CFG_SUPPORT_802_11W
         if (GET_BSS_INFO_BY_INDEX(prAdapter, ucBssIndex)->eNetworkType ==
             NETWORK_TYPE_AIS) {
+	/* MFP Capabilities */
             if (kalGetRsnIeMfpCap(prAdapter->prGlueInfo) ==
                 RSN_AUTH_MFP_REQUIRED) {
                 WLAN_SET_FIELD_16(cp, ELEM_WPA_CAP_MFPC |
@@ -1522,29 +1529,30 @@ void rsnGenerateRSNIE(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo)
             /* AP PMF */
             /* for AP mode, keep origin RSN IE content w/o update */
         }
+#endif
 
-        if (GET_BSS_INFO_BY_INDEX(prAdapter, ucBssIndex)->eNetworkType ==
-            NETWORK_TYPE_AIS) {
-            /* MFP Capabilities */
-            if (kalGetRsnIeMfpCap(prAdapter->prGlueInfo) ==
-                RSN_AUTH_MFP_REQUIRED) {
-                WLAN_SET_FIELD_16(cp, ELEM_WPA_CAP_MFPC | ELEM_WPA_CAP_MFPR);
-                DBGLOG(RSN, TRACE, "RSN_AUTH_MFP - MFPC & MFPR\n");
-            } else if (kalGetRsnIeMfpCap(prAdapter->prGlueInfo) ==
-                       RSN_AUTH_MFP_OPTIONAL) {
-                WLAN_SET_FIELD_16(cp, ELEM_WPA_CAP_MFPC);
-                DBGLOG(RSN, TRACE, "RSN_AUTH_MFP - MFPC\n");
-            } else {
-                DBGLOG(RSN, TRACE, "!RSN_AUTH_MFP- No MFPC!\n");
-            }
-        } else if ((GET_BSS_INFO_BY_INDEX(prAdapter,
-                                          ucBssIndex)->eNetworkType ==
-                    NETWORK_TYPE_P2P) &&
-                   (GET_BSS_INFO_BY_INDEX(prAdapter, ucBssIndex)
-                    ->eCurrentOPMode == (u8)OP_MODE_ACCESS_POINT)) {
+        //if (GET_BSS_INFO_BY_INDEX(prAdapter, ucBssIndex)->eNetworkType ==
+        //    NETWORK_TYPE_AIS) {
+	/* MFP Capabilities */
+        //    if (kalGetRsnIeMfpCap(prAdapter->prGlueInfo) ==
+        //        RSN_AUTH_MFP_REQUIRED) {
+        //        WLAN_SET_FIELD_16(cp, ELEM_WPA_CAP_MFPC | ELEM_WPA_CAP_MFPR);
+        //        DBGLOG(RSN, TRACE, "RSN_AUTH_MFP - MFPC & MFPR\n");
+        //    } else if (kalGetRsnIeMfpCap(prAdapter->prGlueInfo) ==
+        //               RSN_AUTH_MFP_OPTIONAL) {
+        //        WLAN_SET_FIELD_16(cp, ELEM_WPA_CAP_MFPC);
+        //        DBGLOG(RSN, TRACE, "RSN_AUTH_MFP - MFPC\n");
+        //    } else {
+        //        DBGLOG(RSN, TRACE, "!RSN_AUTH_MFP- No MFPC!\n");
+        //    }
+        //} else if ((GET_BSS_INFO_BY_INDEX(prAdapter,
+        //                                  ucBssIndex)->eNetworkType ==
+        //            NETWORK_TYPE_P2P) &&
+        //           (GET_BSS_INFO_BY_INDEX(prAdapter, ucBssIndex)
+        //            ->eCurrentOPMode == (u8)OP_MODE_ACCESS_POINT)) {
             /* AP PMF */
             /* for AP mode, keep origin RSN IE content w/o update */
-        }
+        //}
 
         cp += 2;
 
@@ -1569,9 +1577,11 @@ void rsnGenerateRSNIE(IN P_ADAPTER_T prAdapter, IN P_MSDU_INFO_T prMsduInfo)
 
             cp += (prConnSettings->rRsnInfo.u2PmkidCnt * RSN_PMKID_LEN);
 
+#if CFG_SUPPORT_802_11W
             /* Fill Group Management Cipher field */
             u4GroupMgmt = prAdapter->prGlueInfo->rWpaInfo.u4CipherGroupMgmt;
             WLAN_SET_FIELD_32(cp, u4GroupMgmt);
+#endif
         }
         prMsduInfo->u2FrameLength += IE_SIZE(pucBuffer);
     }
@@ -2635,7 +2645,7 @@ void rsnSaQueryAction(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prSwRfb)
 
     rsnStopSaQuery(prAdapter);
 }
-#endif
+#endif // CFG_SUPPORT_802_11W
 
 #if CFG_SUPPORT_AAA
 #define WPS_DEV_OUI_WFA 0x0050f204
@@ -3135,7 +3145,7 @@ void rsnApSaQueryAction(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prSwRfb)
     }
 }
 
-#endif
+#endif // CFG_SUPPORT_802_11W
 
 #if CFG_SUPPORT_H2E
 /*----------------------------------------------------------------------------*/

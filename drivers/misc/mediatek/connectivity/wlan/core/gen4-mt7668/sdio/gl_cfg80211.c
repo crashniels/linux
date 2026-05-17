@@ -2919,10 +2919,12 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev,
     prGlueInfo->rWpaInfo.u4KeyMgmt = 0;
     prGlueInfo->rWpaInfo.u4CipherGroup = IW_AUTH_CIPHER_NONE;
     prGlueInfo->rWpaInfo.u4CipherPairwise = IW_AUTH_CIPHER_NONE;
+#if CFG_SUPPORT_802_11W
     prGlueInfo->rWpaInfo.u4CipherGroupMgmt = IW_AUTH_CIPHER_NONE;
     prGlueInfo->rWpaInfo.u4Mfp = IW_AUTH_MFP_DISABLED;
     prGlueInfo->rWpaInfo.ucRSNMfpCap = RSN_AUTH_MFP_DISABLED;
-    prGlueInfo->rWpaInfo.ucRSNMfpCap = RSN_AUTH_MFP_DISABLED;
+    //prGlueInfo->rWpaInfo.ucRSNMfpCap = RSN_AUTH_MFP_DISABLED;
+#endif
 
     /* 2.Fill WPA version */
     if (req->crypto.wpa_versions & NL80211_WPA_VERSION_1) {
@@ -3197,6 +3199,7 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev,
                                  (u8 **)&prDesiredIE)) {
             if (rsnParseRsnIE(prGlueInfo->prAdapter,
                               (P_RSN_INFO_ELEM_T)prDesiredIE, &rRsnInfo)) {
+#if CFG_SUPPORT_802_11W
                 /* Fill RSNE MFP Cap */
                 if (rRsnInfo.u2RsnCap & ELEM_WPA_CAP_MFPC) {
                     prGlueInfo->rWpaInfo.u4CipherGroupMgmt =
@@ -3209,6 +3212,7 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev,
                 } else {
                     prGlueInfo->rWpaInfo.ucRSNMfpCap = RSN_AUTH_MFP_DISABLED;
                 }
+#endif
 
                 prGlueInfo->rWpaInfo.ucRsneLen = rRsnInfo.ucRsneLen;
 
@@ -3272,6 +3276,7 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev,
      * for prGlueInfo->rWpaInfo.ucRSNMfpCap assignment
      */
 
+#if CFG_SUPPORT_802_11W
     prGlueInfo->rWpaInfo.u4Mfp = IW_AUTH_MFP_DISABLED;
     if (req->use_mfp) {
         prGlueInfo->rWpaInfo.u4Mfp = IW_AUTH_MFP_REQUIRED;
@@ -3288,6 +3293,7 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev,
                    "mfp parameter(DISABLED) conflict with mfp cap(REQUIRED)\n");
         }
     }
+#endif
 
     prConnSettings->fgIsSendAssoc = true;
     if (!prConnSettings->fgIsConnInitialized) {

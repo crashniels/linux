@@ -1427,7 +1427,7 @@ WLAN_STATUS saaFsmRunEventRxDeauth(IN P_ADAPTER_T prAdapter,
 
                     prAisSpecBssInfo =
                         &(prAdapter->rWifiVar.rAisSpecificBssInfo);
-
+#if CFG_SUPPORT_802_11W
                     DBGLOG(
                         RSN, INFO,
                         "QM RX MGT: Deauth frame, P=%d Sec=%d CM=%d BC=%d fc=%02x\n",
@@ -1436,6 +1436,7 @@ WLAN_STATUS saaFsmRunEventRxDeauth(IN P_ADAPTER_T prAdapter,
                         HAL_RX_STATUS_IS_CIPHER_MISMATCH(prSwRfb->prRxStatus),
                         IS_BMCAST_MAC_ADDR(prDeauthFrame->aucDestAddr),
                         prDeauthFrame->u2FrameCtrl);
+
                     if (prAisSpecBssInfo->fgMgmtProtection &&
                         prStaRec->fgIsTxAllowed &&
                         HAL_RX_STATUS_IS_CIPHER_MISMATCH(prSwRfb->prRxStatus)
@@ -1449,6 +1450,7 @@ WLAN_STATUS saaFsmRunEventRxDeauth(IN P_ADAPTER_T prAdapter,
                         }
                         return WLAN_STATUS_SUCCESS;
                     }
+#endif
 
                     DBGLOG(SAA, INFO,
                            "notification of RX deauthentication %d\n",
@@ -1545,8 +1547,10 @@ void saaChkDeauthfrmParamHandler(IN P_ADAPTER_T prAdapter,
             (prStaRec->u2ReasonCode == REASON_CODE_CLASS_2_ERR ||
              prStaRec->u2ReasonCode == REASON_CODE_CLASS_3_ERR)) {
             DBGLOG(RSN, INFO, "QM RX MGT: rsnStartSaQuery\n");
+#if CFG_SUPPORT_802_11W
             /* MFP test plan 5.3.3.5 */
             rsnStartSaQuery(prAdapter);
+#endif
         } else {
             DBGLOG(RSN, INFO, "RXM: Drop unprotected Mgmt frame\n");
             DBGLOG(
@@ -1710,7 +1714,7 @@ WLAN_STATUS saaFsmRunEventRxDisassoc(IN P_ADAPTER_T prAdapter,
                         &prStaRec->u2ReasonCode) == WLAN_STATUS_SUCCESS) {
                     P_AIS_SPECIFIC_BSS_INFO_T
                         prAisSpecBssInfo;
-
+#if CFG_SUPPORT_802_11W
                     prAisSpecBssInfo =
                         &(prAdapter->rWifiVar.rAisSpecificBssInfo);
 
@@ -1735,6 +1739,8 @@ WLAN_STATUS saaFsmRunEventRxDisassoc(IN P_ADAPTER_T prAdapter,
                             prAdapter, prDisassocFrame, prStaRec, prSwRfb);
                         return WLAN_STATUS_SUCCESS;
                     }
+#endif
+
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 0, 0))
 #define CONNECTED_BSS(wdev) wdev->current_bss
 #else
@@ -1833,9 +1839,11 @@ void saaChkDisassocfrmParamHandler(IN P_ADAPTER_T prAdapter,
     if (!IS_BMCAST_MAC_ADDR(prDisassocFrame->aucDestAddr) &&
         (prStaRec->u2ReasonCode == REASON_CODE_CLASS_2_ERR ||
          prStaRec->u2ReasonCode == REASON_CODE_CLASS_3_ERR)) {
+#if CFG_SUPPORT_802_11W
         /* MFP test plan 5.3.3.5 */
         DBGLOG(RSN, INFO, "QM RX MGT: rsnStartSaQuery\n");
         rsnStartSaQuery(prAdapter);
+#endif
     } else {
         DBGLOG(RSN, INFO, "RXM: Drop unprotected Mgmt frame\n");
         DBGLOG(RSN, INFO,

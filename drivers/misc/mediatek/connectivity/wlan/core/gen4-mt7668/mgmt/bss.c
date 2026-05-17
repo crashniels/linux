@@ -1852,7 +1852,7 @@ void ibssInitForAdHoc(IN P_ADAPTER_T prAdapter, IN P_BSS_INFO_T prBssInfo)
     nicTxUpdateBssDefaultRate(prBssInfo);
 }
 
-#endif
+#endif // CFG_SUPPORT_ADHOC
 
 #if CFG_SUPPORT_AAA
 

@@ -1055,6 +1055,7 @@ authSendDeauthFrame(IN P_ADAPTER_T prAdapter, IN P_BSS_INFO_T prBssInfo,
                  WLAN_MAC_MGMT_HEADER_LEN + REASON_CODE_FIELD_LEN,
                  pfTxDoneHandler, MSDU_RATE_MODE_AUTO);
 
+#if CFG_SUPPORT_802_11W
     /* AP PMF */
     /* caution: access prStaRec only if true */
     if (rsnCheckBipKeyInstalled(prAdapter, prStaRec)) {
@@ -1068,6 +1069,7 @@ authSendDeauthFrame(IN P_ADAPTER_T prAdapter, IN P_BSS_INFO_T prBssInfo,
 
         prStaRec->rPmfCfg.fgRxDeauthResp = false;
     }
+#endif
 
     {
         P_WLAN_DEAUTH_FRAME_T prDeauthFrame;

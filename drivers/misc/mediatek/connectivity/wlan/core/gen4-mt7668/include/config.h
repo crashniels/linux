@@ -810,7 +810,7 @@
 #define RUNNING_P2P_AP_MODE             3
 #define RUNNING_P2P_MODE_NUM                4
 
-#define CFG_DRIVER_INITIAL_RUNNING_MODE     RUNNING_P2P_AP_MODE 
+#define CFG_DRIVER_INITIAL_RUNNING_MODE     RUNNING_DUAL_AP_MODE 
 /*------------------------------------------------------------------------------
  * Flags of MSP SUPPORT
  *------------------------------------------------------------------------------
