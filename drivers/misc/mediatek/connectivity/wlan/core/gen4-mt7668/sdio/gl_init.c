@@ -1259,10 +1259,18 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
         return WLAN_STATUS_INVALID_DATA;
     }
 
+    sa = (struct sockaddr *)addr;
+
+    if (!is_valid_ether_addr(sa->sa_data)) {
+        DBGLOG(INIT, ERROR, "Rejecting completely invalid MAC address\n");
+        return WLAN_STATUS_INVALID_DATA;
+    }
+
     /**********************************************************************
      * Block mac address changing if this setting is not for connection   *
      **********************************************************************
      */
+    if (is_local_ether_addr(sa->sa_data)) {
     wdev = ndev->ieee80211_ptr;
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 0, 0))
     if (wdev->ssid_len > 0 || (wdev->current_bss)) {
@@ -1278,6 +1286,7 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
         return WLAN_STATUS_NOT_ACCEPTED;
     }
 #endif
+    }
 
     /**********************************************************************
      * 1. Change OwnMacAddr which will be updated to FW through           *
@@ -1286,7 +1295,7 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
      *    mac addr has been changed and what the new value is.            *
      **********************************************************************
      */
-    sa = (struct sockaddr *)addr;
+    //sa = (struct sockaddr *)addr;
     prGlueInfo = *((P_GLUE_INFO_T *)netdev_priv(ndev));
     prAdapter = prGlueInfo->prAdapter;
 

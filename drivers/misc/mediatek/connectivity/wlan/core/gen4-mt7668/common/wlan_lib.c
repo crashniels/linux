@@ -7322,11 +7322,11 @@ void wlanInitFeatureOption(IN P_ADAPTER_T prAdapter)
     prWifiVar->ucListenDtimInterval =
         (u8)wlanCfgGetUint32(prAdapter, "ListenDtimInt",
                              DEFAULT_LISTEN_INTERVAL_BY_DTIM_PERIOD);
-    prWifiVar->ucEapolOffload = (u8) wlanCfgGetUint32(prAdapter,
-    "EapolOffload", FEATURE_ENABLED);
+    //prWifiVar->ucEapolOffload = (u8) wlanCfgGetUint32(prAdapter,
+    //"EapolOffload", FEATURE_ENABLED);
 
     /* ucEapolOffload: only offload eapol rekey as suspen/resume case. */
-    //prWifiVar->ucEapolOffload = FEATURE_DISABLED;
+    prWifiVar->ucEapolOffload = FEATURE_DISABLED;
 #ifdef SUPPORT_ENFORCE_PWR_MODE
     /* Support new enforce power mode. */
     prWifiVar->ucEnforce2G = (u8)wlanCfgGetUint32(prAdapter, "Enforce2G",

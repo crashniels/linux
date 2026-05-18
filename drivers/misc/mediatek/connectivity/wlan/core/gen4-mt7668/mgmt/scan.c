@@ -704,21 +704,29 @@ scanSearchExistingBssDescWithSsid(IN P_ADAPTER_T prAdapter,
 /*----------------------------------------------------------------------------*/
 u8 scanByPassRemoveBssDesc(IN P_ADAPTER_T prAdapter, IN P_BSS_DESC_T prBssDesc)
 {
+    P_LINK_T prBSSDescList;
+    P_BSS_DESC_T prBssDescScan;
+    P_BSS_DESC_T prBSSDescNext;
     P_SCAN_INFO_T prScanInfo;
-    P_SCAN_PARAM_T prScanParam;
-    u8 ucIndex = 0;
+    //P_SCAN_PARAM_T prScanParam;
+    //u8 ucIndex = 0;
     u8 fgIsByPassRemove = false;
 
     prScanInfo = &(prAdapter->rWifiVar.rScanInfo);
-    prScanParam = &prScanInfo->rScanParam;
+    prBSSDescList = &prScanInfo->rBSSDescList;
+    //prScanParam = &prScanInfo->rScanParam;
 
+#if 0
     for (ucIndex = 0; ucIndex < prScanParam->ucSSIDNum; ucIndex++) {
         if (EQUAL_SSID(prBssDesc->aucSSID, prBssDesc->ucSSIDLen,
                        prScanParam->aucSpecifiedSSID[ucIndex],
                        prScanParam->ucSpecifiedSSIDLen[ucIndex])) {
+#endif
+    LINK_FOR_EACH_ENTRY_SAFE(prBssDescScan, prBSSDescNext, prBSSDescList, rLinkEntry, BSS_DESC_T){
+	if(EQUAL_SSID(MAC2STR(prBssDesc->aucBSSID), MAC_ADDR_LEN, MAC2STR(prBssDescScan), MAC_ADDR_LEN)) {
             fgIsByPassRemove = true;
             DBGLOG(INIT, INFO, "scanByPassRemoveBssDesc %s | %s\n",
-                   prBssDesc->aucSSID, prScanParam->aucSpecifiedSSID[ucIndex]);
+                   prBssDesc->aucSSID, prBssDescScan->aucSSID /*prScanParam->aucSpecifiedSSID[ucIndex]*/);
             break;
         }
     }
