@@ -5639,6 +5639,7 @@ int mtk_cfg_set_txpower(struct wiphy *wiphy,
 
 int mtk_cfg_get_txpower(struct wiphy *wiphy,
                         struct wireless_dev *wdev,
+			unsigned int link_id,
                         int *dbm)
 {
     P_GLUE_INFO_T prGlueInfo = NULL;
@@ -5657,7 +5658,7 @@ int mtk_cfg_get_txpower(struct wiphy *wiphy,
         return -EFAULT;
     }
 
-    return mtk_p2p_cfg80211_get_txpower(wiphy, wdev, dbm);
+    return mtk_p2p_cfg80211_get_txpower(wiphy, wdev, link_id, dbm);
 }
 #endif  /* (CFG_ENABLE_WIFI_DIRECT_CFG_80211 != 0) */
 #endif  /* CFG_ENABLE_UNIFY_WIPHY */

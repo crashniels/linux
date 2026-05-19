@@ -589,6 +589,7 @@ int mtk_cfg_set_txpower(struct wiphy *wiphy,
 
 int mtk_cfg_get_txpower(struct wiphy *wiphy,
                         struct wireless_dev *wdev,
+			unsigned int link_id,
                         int *dbm);
 
 #endif  /* (CFG_ENABLE_WIFI_DIRECT_CFG_80211 != 0) */
@@ -608,6 +609,14 @@ u8 mtk_p2p_cfg80211func_channel_sco_switch(IN enum nl80211_channel_type channel_
 u8 mtk_p2p_cfg80211func_channel_format_switch(
     IN struct cfg80211_chan_def *channel_def,
     IN struct ieee80211_channel *channel, IN P_RF_CHANNEL_INFO_T prRfChnlInfo);
+
+#if CFG_ENABLE_UNIFY_WIPHY
+int mtk_IsP2PNetDevice(P_GLUE_INFO_T prGlueInfo, struct net_device *ndev);
+int mtk_init_sta_role(P_ADAPTER_T prAdapter, struct net_device *ndev);
+int mtk_uninit_sta_role(P_ADAPTER_T prAdapter, struct net_device *ndev);
+int mtk_init_ap_role(P_GLUE_INFO_T prGlueInfo, struct net_device *ndev);
+int mtk_uninit_ap_role(P_GLUE_INFO_T prGlueInfo, struct net_device *ndev);
+#endif
 
 /*******************************************************************************
  *                              F U N C T I O N S

@@ -1299,7 +1299,7 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
     prGlueInfo = *((P_GLUE_INFO_T *)netdev_priv(ndev));
     prAdapter = prGlueInfo->prAdapter;
 
-    COPY_MAC_ADDR(prAdapter->prAisBssInfo->aucOwnMacAddr, sa->sa_data);
+    COPY_MAC_ADDR(prAdapter->prAisBssInfo->aucBSSID, sa->sa_data);
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0)
     COPY_MAC_ADDR(prGlueInfo->prDevHandler->dev_addr, sa->sa_data);
 #else
@@ -1314,7 +1314,7 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
     prGlueInfo->prDevHandler->mtu = 1408;
 #endif
     DBGLOG(INIT, STATE, "Set connect random macaddr to " MACSTR ".\n",
-           MAC2STR(prAdapter->prAisBssInfo->aucOwnMacAddr));
+           MAC2STR(prAdapter->prAisBssInfo->aucBSSID));
 
     return WLAN_STATUS_SUCCESS;
 }

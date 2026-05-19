@@ -2112,8 +2112,7 @@ int mtk_p2p_cfg80211_change_beacon(struct wiphy *wiphy, struct net_device *dev,
 
 int mtk_p2p_cfg80211_stop_ap(struct wiphy *wiphy, struct net_device *dev
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 0, 0))
-                             ,
-                             unsigned int link_id
+                             ,unsigned int link_id
 #endif
                              )
 {
