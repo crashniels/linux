@@ -587,6 +587,8 @@
 
 #define CFG_ENABLE_HOTSPOT_PRIVACY_CHECK        1
 
+//  WARNINNG !!!
+
 #define CFG_MGMT_FRAME_HANDLING             1
 
 #define CFG_MGMT_HW_ACCESS_REPLACEMENT          0
@@ -638,7 +640,7 @@
 #define CFG_SUPPORT_TDLS                1
 
 #define CFG_SUPPORT_QOS                 1  /* Enable/disable QoS TX, AMPDU */
-#define CFG_SUPPORT_AMPDU_TX                1
+#define CFG_SUPPORT_AMPDU_TX            1
 #define CFG_SUPPORT_AMPDU_RX                1
 #define CFG_SUPPORT_TSPEC \
     0  /* Enable/disable TS-related Action frames handling */
@@ -662,8 +664,8 @@
  */
 
 #define CFG_SUPPORT_802_11K             1
-#define CFG_SUPPORT_802_11V             1
-#define CFG_SUPPORT_802_11V_BSS_TRANSITION_MGT      1
+#define CFG_SUPPORT_802_11V             0 //1
+#define CFG_SUPPORT_802_11V_BSS_TRANSITION_MGT      0 //1
 
 #define CFG_SUPPORT_ROAMING_SKIP_ONE_AP         1
 #if CFG_SUPPORT_ROAMING_SKIP_ONE_AP
@@ -881,7 +883,7 @@
  *------------------------------------------------------------------------------
  */
 
-#define CFG_SUPPORT_DBDC                1
+#define CFG_SUPPORT_DBDC                 1
 
 /*------------------------------------------------------------------------------
  * Flags for Using TC4 Resource in ROM code stage

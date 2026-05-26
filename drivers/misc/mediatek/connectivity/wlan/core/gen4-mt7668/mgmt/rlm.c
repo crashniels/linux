@@ -809,6 +809,7 @@ static void rlmFillHtCapIE(P_ADAPTER_T prAdapter, P_BSS_INFO_T prBssInfo,
     }
 
     prHtCap->u4TxBeamformingCap = TX_BEAMFORMING_CAP_DEFAULT_VAL;
+#if CFG_SUPPORT_DBDC
     if ((prAdapter->rWifiVar.ucDbdcMode == DBDC_MODE_DISABLED) ||
         (prBssInfo->eBand == BAND_5G)) {
         if (IS_FEATURE_ENABLED(prAdapter->rWifiVar.ucStaHtBfee)) {
@@ -818,6 +819,7 @@ static void rlmFillHtCapIE(P_ADAPTER_T prAdapter, P_BSS_INFO_T prBssInfo,
             prHtCap->u4TxBeamformingCap |= TX_BEAMFORMING_CAP_BFER;
         }
     }
+#endif
 
     prHtCap->ucAselCap = ASEL_CAP_DEFAULT_VAL;
 
@@ -1134,9 +1136,11 @@ void rlmReqGenerateVhtOpNotificationIE(P_ADAPTER_T prAdapter,
      * frames without STBC
      * Enable the Operating Notification IE only for DBDC enable case.
      */
+#if CFG_SUPPORT_DBDC
     if (!prAdapter->rWifiVar.fgDbDcModeEn) {
         return;
     }
+#endif
 
     prStaRec = cnmGetStaRecByIndex(prAdapter, prMsduInfo->ucStaRecIndex);
 
@@ -4486,6 +4490,7 @@ void rlmCsaTimeout(IN P_ADAPTER_T prAdapter, unsigned long ulParamPtr)
         prBssInfo->ucVhtChannelFrequencyS1 = prCSAParams->ucVhtS1;
         prBssInfo->ucVhtChannelFrequencyS2 = prCSAParams->ucVhtS2;
 
+#if CFG_SUPPORT_DBDC
         if (prBssInfo->fgIsOpChangeChannelWidth &&
             rlmGetVhtOpBwByBssOpBw(prBssInfo->ucOpChangeChannelWidth) <
             prBssInfo->ucVhtChannelWidth) {
@@ -4496,6 +4501,7 @@ void rlmCsaTimeout(IN P_ADAPTER_T prAdapter, unsigned long ulParamPtr)
                    prBssInfo->ucVhtChannelFrequencyS1,
                    prBssInfo->ucVhtChannelFrequencyS2);
         }
+#endif
     }
 
     if (HAS_SCO_PARAMS(prCSAParams)) {

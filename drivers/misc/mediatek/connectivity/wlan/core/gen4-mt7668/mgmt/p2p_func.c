@@ -4256,6 +4256,7 @@ void p2pFuncModifyChandef(IN P_ADAPTER_T prAdapter,
     }
     return;
 }
+#else
 u8 p2pFuncSwitchSapChannel(IN P_ADAPTER_T prAdapter)
 {
     u8 fgDbDcModeEn = false;

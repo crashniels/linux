@@ -1307,6 +1307,7 @@ int mtk_cfg80211_connect(struct wiphy *wiphy, struct net_device *ndev,
                 u4AkmSuite = RSN_AKM_SUITE_802_1X;
                 break;
 
+	    case WLAN_AKM_SUITE_FT_PSK:
             case WLAN_AKM_SUITE_PSK:
                 eAuthMode = AUTH_MODE_WPA2_PSK;
                 u4AkmSuite = RSN_AKM_SUITE_PSK;
@@ -1564,13 +1565,41 @@ int mtk_cfg80211_disconnect(struct wiphy *wiphy, struct net_device *ndev,
     prGlueInfo = (P_GLUE_INFO_T)wiphy_priv(wiphy);
     ASSERT(prGlueInfo);
 
-    rStatus = kalIoctl(prGlueInfo, wlanoidSetDisassociate, NULL, 0, false,
-                       false, true, &u4BufLen);
+    P_ADAPTER_T prAdapter = prGlueInfo->prAdapter;
+
+    if (prAdapter->rWifiVar.rConnSettings.fgIsConnInitialized != true) {
+        P_MSG_AIS_ABORT_T prAbortMsg = NULL;
+
+        DBGLOG(REQ, INFO, "Device still negotiating link. Dispatching explicit MSG_AIS_ABORT_T.\n");
+
+        prAbortMsg = (P_MSG_AIS_ABORT_T)cnmMemAlloc(
+            prAdapter, RAM_TYPE_MSG, sizeof(MSG_AIS_ABORT_T));
+
+        if (prAbortMsg == NULL) {
+            DBGLOG(REQ, ERROR, "Failed to allocate memory structure for AIS Abort Message\n");
+            return -ENOMEM;
+        }
+
+        prAbortMsg->rMsgHdr.eMsgId = MID_OID_AIS_FSM_ABORT;
+
+        prAbortMsg->ucReasonOfDisconnect = 4;
+        prAbortMsg->fgDelayIndication = false;
+
+        mboxSendMsg(prAdapter, MBOX_ID_0, (P_MSG_HDR_T)prAbortMsg, MSG_SEND_METHOD_BUF);
+
+        rStatus = WLAN_STATUS_SUCCESS;
+    } else {
+        rStatus = kalIoctl(prGlueInfo, wlanoidSetDisassociate, NULL, 0, false, false, true, &u4BufLen);
+    }
 
     if (rStatus != WLAN_STATUS_SUCCESS) {
         DBGLOG(REQ, WARN, "disassociate error:%lx\n", rStatus);
         return -EFAULT;
     }
+
+    //cfg80211_disconnected(ndev, reason_code, NULL, 0, true, GFP_KERNEL);
+
+    DBGLOG(REQ, INFO, "mtk_cfg80211_disconnect: Disconnection successfully reported upstream.\n");
 
     return 0;
 }
@@ -1600,8 +1629,31 @@ int mtk_cfg80211_deauth(struct wiphy *wiphy, struct net_device *ndev,
 
     kalIndicateStatusAndComplete(prGlueInfo, WLAN_STATUS_JOIN_ABORT, NULL, 0);
 
-    rStatus = kalIoctl(prGlueInfo, wlanoidSetDisassociate, NULL, 0, false,
-                       false, true, &u4BufLen);
+    P_ADAPTER_T prAdapter = prGlueInfo->prAdapter;
+
+    if (prAdapter->rWifiVar.rConnSettings.fgIsConnInitialized != true) {
+        P_MSG_AIS_ABORT_T prAbortMsg = NULL;
+
+        DBGLOG(REQ, INFO, "Device in negotiation phase during Deauth. Dispatching Mailbox Abort.\n");
+
+        prAbortMsg = (P_MSG_AIS_ABORT_T)cnmMemAlloc(
+            prAdapter, RAM_TYPE_MSG, sizeof(MSG_AIS_ABORT_T));
+
+        if (prAbortMsg == NULL) {
+            DBGLOG(REQ, ERROR, "Failed to allocate memory structure for Deauth Abort Message\n");
+            return -ENOMEM;
+        }
+
+        prAbortMsg->rMsgHdr.eMsgId = MID_OID_AIS_FSM_ABORT;
+        prAbortMsg->ucReasonOfDisconnect = DISCONNECT_REASON_CODE_DEAUTHENTICATED;
+        prAbortMsg->fgDelayIndication = false;
+
+        mboxSendMsg(prAdapter, MBOX_ID_0, (P_MSG_HDR_T)prAbortMsg, MSG_SEND_METHOD_BUF);
+
+        rStatus = WLAN_STATUS_SUCCESS;
+    } else {
+        rStatus = kalIoctl(prGlueInfo, wlanoidSetDisassociate, NULL, 0, false, false, true, &u4BufLen);
+    }
 
     if (rStatus != WLAN_STATUS_SUCCESS) {
         DBGLOG(REQ, WARN, "disassociate error:%x\n", rStatus);
@@ -3097,6 +3149,7 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev,
                 u4AkmSuite = RSN_AKM_SUITE_802_1X;
                 break;
 
+	    case WLAN_AKM_SUITE_FT_PSK:
             case WLAN_AKM_SUITE_PSK:
                 eAuthMode = AUTH_MODE_WPA2_PSK;
                 u4AkmSuite = RSN_AKM_SUITE_PSK;
@@ -3147,6 +3200,7 @@ int mtk_cfg80211_assoc(struct wiphy *wiphy, struct net_device *ndev,
             }
         }
     }
+
     if (prGlueInfo->rWpaInfo.u4WpaVersion == IW_AUTH_WPA_VERSION_DISABLED) {
         eAuthMode =
             (prGlueInfo->rWpaInfo.u4AuthAlg == IW_AUTH_ALG_OPEN_SYSTEM) ?

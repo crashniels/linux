@@ -692,11 +692,13 @@ static ssize_t procGetTxpwrTblRead(struct file *filp, char __user *buf,
 
     kalMemZero(&pwr_tbl, sizeof(pwr_tbl));
 
+#if CFG_SUPPORT_DBDC
     if (prAdapter->rWifiVar.fgDbDcModeEn) {
         pwr_tbl.ucDbdcIdx = prBssInfo->eDBDCBand;
-    }else{
+    } else
+#endif
         pwr_tbl.ucDbdcIdx = ENUM_BAND_0;
-    }
+
 
     status = kalIoctl(prGlueInfo, wlanoidGetTxPwrTbl, &pwr_tbl,
                       sizeof(pwr_tbl), true, false, true, &oid_len);

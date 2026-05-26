@@ -5191,6 +5191,7 @@ priv_driver_dump_stat_info(P_ADAPTER_T prAdapter, IN char *pcCommand,
             pcCommand + i4BytesWritten, i4TotalLen - i4BytesWritten,
             "%s", "----- MIB Info (Group 0x02) -----\n");
 
+#if CFG_SUPPORT_DBDC
         if (!prAdapter->rWifiVar.fgDbDcModeEn) {
             i4BytesWritten += kalScnprintf(
                 pcCommand + i4BytesWritten,
@@ -5215,6 +5216,7 @@ priv_driver_dump_stat_info(P_ADAPTER_T prAdapter, IN char *pcCommand,
                              "%-20s%s%d\n", "RX drop FIFO full",
                              " = ", au4RxFifoCnt[ENUM_BAND_0]);
         } else {
+#endif
             for (ucDbdcIdx = 0; ucDbdcIdx < ENUM_BAND_NUM;
                  ucDbdcIdx++) {
                 i4BytesWritten += kalScnprintf(
@@ -5246,7 +5248,9 @@ priv_driver_dump_stat_info(P_ADAPTER_T prAdapter, IN char *pcCommand,
                     "%-20s%s%d\n", "RX drop FIFO full",
                     " = ", au4RxFifoCnt[ucDbdcIdx]);
             }
+#if CFG_SUPPORT_DBDC
         }
+#endif
 
         if (fgResetCnt) {
             kalMemZero(au4RxMpduCnt, sizeof(au4RxMpduCnt));
@@ -5335,6 +5339,7 @@ priv_driver_dump_stat_info(P_ADAPTER_T prAdapter, IN char *pcCommand,
             pcCommand + i4BytesWritten, i4TotalLen - i4BytesWritten,
             "%s", "----- Last TX Info (Group 0x08) -----\n");
 
+#if CFG_SUPPORT_DBDC
         if (!prAdapter->rWifiVar.fgDbDcModeEn) {
             i4BytesWritten += priv_driver_tx_vector_info(
                 pcCommand + i4BytesWritten,
@@ -5365,6 +5370,7 @@ priv_driver_dump_stat_info(P_ADAPTER_T prAdapter, IN char *pcCommand,
                          2));
             }
         } else {
+#endif
             for (ucDbdcIdx = 0; ucDbdcIdx < ENUM_BAND_NUM;
                  ucDbdcIdx++) {
                 i4BytesWritten += kalScnprintf(
@@ -5405,7 +5411,9 @@ priv_driver_dump_stat_info(P_ADAPTER_T prAdapter, IN char *pcCommand,
                              2));
                 }
             }
+#if CFG_SUPPORT_DBDC
         }
+#endif
     }
 
     /* =========== Group 0x0010 =========== */

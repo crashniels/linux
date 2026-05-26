@@ -3579,7 +3579,7 @@ void nicEventDebugMsg(IN P_ADAPTER_T prAdapter, IN P_WIFI_EVENT_T prEvent,
     prEventDebugMsg = (P_EVENT_DEBUG_MSG_T)(prEvent->aucBuffer);
 
     if (u4EventBufLen <
-        sizeof(EVENT_DEBUG_MSG_T) + prEventDebugMsg->u2MsgSize - 1) {
+        /*sizeof(EVENT_DEBUG_MSG_T) +*/ prEventDebugMsg->u2MsgSize /*- 1*/) {
         DBGLOG(NIC, ERROR, "%s: Invalid event length: %d < %d\n", __func__,
                u4EventBufLen,
                sizeof(EVENT_DEBUG_MSG_T) + prEventDebugMsg->u2MsgSize);

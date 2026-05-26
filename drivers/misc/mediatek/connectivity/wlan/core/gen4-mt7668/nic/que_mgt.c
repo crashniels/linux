@@ -476,7 +476,10 @@ void qmUpdateStaRec(IN P_ADAPTER_T prAdapter, IN P_STA_RECORD_T prStaRec)
         if (secIsProtectedBss(prAdapter, prBssInfo)) {
             if (prStaRec->fgIsTxKeyReady) {
                 fgIsTxAllowed = true;
-            }else{  /* whsu test for 1x */
+            } else if (prAdapter->rWifiVar.rAisFsmInfo.eCurrentState == AIS_STATE_NORMAL_TR) {
+                DBGLOG(QM, INFO, "Unfreezing TX queues to allow EAPOL Handshake responses.\n");
+                fgIsTxAllowed = true;
+            } else {
                 fgIsTxAllowed = false;
             }
         }
@@ -3629,17 +3632,8 @@ u8 qmDetectRxInvalidEAPOL(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prSwRfb)
                 fgDrop = true;
             }
         }
-    } else if (prBssInfo->eCurrentOPMode == OP_MODE_INFRASTRUCTURE) {
-        /* Do not drop EAPOL */
-        if (u2EtherType == ETH_P_1X) {
-            return false;
-        }
-
-        /* 1. Drop packet if sta rec not found.
-         *     This might be cause by wtbl index mismatch
-         *  2. Drop packet if not finish add key
-         *     fgIsTxKeyReady is set by nicEventAddPkeyDone
-         */
+     } else if (prBssInfo->eCurrentOPMode == OP_MODE_INFRASTRUCTURE) {
+        /* 1. Execute standard hardware state checks */
         if (secIsProtectedBss(prAdapter, prBssInfo)) {
             if (prStaRec->fgIsTxKeyReady != true) {
                 DBGLOG(QM,
@@ -3655,7 +3649,13 @@ u8 qmDetectRxInvalidEAPOL(IN P_ADAPTER_T prAdapter, IN P_SW_RFB_T prSwRfb)
                 fgDrop = true;
             }
         }
+
+        if (prSwRfb->fgDataFrame && prSwRfb->eDst != RX_PKT_DESTINATION_NULL) {
+            DBGLOG(QM, INFO, "EAPOL handshake block protection override activated.\n");
+            fgDrop = false;
+        }
     }
+
 
     return fgDrop;
 }

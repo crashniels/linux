@@ -2170,6 +2170,7 @@ P_BSS_DESC_T scanSearchBssDescByPolicy(IN P_ADAPTER_T prAdapter,
         /* 4 <2.5> Check if this BSS_DESC_T is stale */
         if (CHECK_FOR_TIMEOUT(rCurrentTime, prBssDesc->rUpdateTime,
                               SEC_TO_SYSTIME(SCN_BSS_DESC_STALE_SEC))) {
+#if CFG_SUPPORT_DBDC_TC6
             if (prAisBssInfo->fgReConnBypassScan &&
                 EQUAL_MAC_ADDR(prConnSettings->aucBSSID, prBssDesc->aucBSSID) &&
                 prAisBssInfo->eConnectionState ==
@@ -2179,12 +2180,15 @@ P_BSS_DESC_T scanSearchBssDescByPolicy(IN P_ADAPTER_T prAdapter,
                        "SEARCH: Found target Bss but skip stale state for DBDC "
                        "reconnect\n");
             } else {
+#endif
                 DBGLOG(
                     SCN, LOUD,
                     "SEARCH: Ignore stale Bss, CurrTime[%ld] BssUpdateTime[%ld]\n",
                     rCurrentTime, prBssDesc->rUpdateTime);
                 continue;
+#if CFG_SUPPORT_DBDC_TC6
             }
+#endif
         }
         /* 4 <3> Check if reach the excessive join retry limit */
         /* NOTE(Kevin): STA_RECORD_T is recorded by TA. */

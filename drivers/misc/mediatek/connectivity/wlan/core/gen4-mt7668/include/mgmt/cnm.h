@@ -261,19 +261,17 @@ u8 cnmWmmIndexDecision(IN P_ADAPTER_T prAdapter, IN P_BSS_INFO_T prBssInfo);
 void cnmFreeWmmIndex(IN P_ADAPTER_T prAdapter, IN P_BSS_INFO_T prBssInfo);
 #endif
 
-#if CFG_SUPPORT_DBDC_TC6
-u8 cnmSapIsActive(IN P_ADAPTER_T prAdapter);
+P_BSS_INFO_T cnmGetp2pSapBssInfo(IN P_ADAPTER_T prAdapter);
 
 u8 cnmSapIsConcurrent(IN P_ADAPTER_T prAdapter);
-
-P_BSS_INFO_T cnmGetp2pSapBssInfo(IN P_ADAPTER_T prAdapter);
 
 void cnmSapChannelSwitchReq(IN P_ADAPTER_T prAdapter,
                             IN P_RF_CHANNEL_INFO_T prRfChannelInfo,
                             IN u8 ucRoleIdx);
 
+#if CFG_SUPPORT_DBDC_TC6
+u8 cnmSapIsActive(IN P_ADAPTER_T prAdapter);
 u8 cnmIdcCsaReq(IN P_ADAPTER_T prAdapter, IN u8 ch_num, IN u8 ucRoleIdx);
-
 #endif
 
 #if CFG_SUPPORT_DBDC

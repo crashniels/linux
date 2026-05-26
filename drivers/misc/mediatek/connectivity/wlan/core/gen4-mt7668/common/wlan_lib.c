@@ -10229,6 +10229,7 @@ u8 wlanGetSpeIdx(IN P_ADAPTER_T prAdapter, IN u8 ucBssIndex,
      * if DBDC enable return 0, else depend 2.4G/5G & support WF path
      * retrun accurate value
      */
+ #if CFG_SUPPORT_DBDC
     if (!prAdapter->rWifiVar.fgDbDcModeEn) {
         if (prBssInfo->fgIsGranted) {
             eBand = prBssInfo->eBandGranted;
@@ -10265,6 +10266,7 @@ u8 wlanGetSpeIdx(IN P_ADAPTER_T prAdapter, IN u8 ucBssIndex,
     DBGLOG(INIT, INFO, "SpeIdx:%d,D:%d,G=%d,B=%d,Bss=%d\n", ucRetValSpeIdx,
            prAdapter->rWifiVar.fgDbDcModeEn, prBssInfo->fgIsGranted, eBand,
            ucBssIndex);
+#endif
 #endif
     return ucRetValSpeIdx;
 }

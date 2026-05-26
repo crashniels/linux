@@ -1003,8 +1003,13 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
     case WLAN_STATUS_ROAM_OUT_FIND_BEST:
     case WLAN_STATUS_MEDIA_CONNECT:
 
-        prGlueInfo->eParamMediaStateIndicated =
-            PARAM_MEDIA_STATE_CONNECTED;
+	if (eStatus == WLAN_STATUS_MEDIA_CONNECT || eStatus == WLAN_STATUS_ROAM_OUT_FIND_BEST) {
+            if (prGlueInfo->eParamMediaStateIndicated == PARAM_MEDIA_STATE_CONNECTED) {
+                DBGLOG(INIT, INFO, "FENCE DROP: Suppressing duplicate concurrent connect token.\n");
+                return;
+            }
+            prGlueInfo->eParamMediaStateIndicated = PARAM_MEDIA_STATE_CONNECTED;
+        }	
 
         /* indicate assoc event */
         wlanQueryInformation(prGlueInfo->prAdapter, wlanoidQueryBssid,
@@ -1012,10 +1017,42 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
         wext_indicate_wext_event(prGlueInfo, SIOCGIWAP, arBssid,
                                  bufLen);
 
-        /* switch netif on */
+	DBGLOG(INIT, INFO, "Skip report CONNECTED when using supplicant SME\n");
+
+        /* Extract your over-the-air information elements */
+        prBssDesc = ((P_AIS_FSM_INFO_T)(&(prGlueInfo->prAdapter->rWifiVar.rAisFsmInfo)))->prTargetBssDesc;
+
+        if (prGlueInfo->prAdapter->prAisBssInfo != NULL) {
+            u8 ucTargetBssIdx = prGlueInfo->prAdapter->prAisBssInfo->ucBssIndex;
+            P_STA_RECORD_T prStaRec = cnmGetStaRecByAddress(prGlueInfo->prAdapter, ucTargetBssIdx, arBssid);
+
+            if (prStaRec != NULL) {
+                cnmStaRecChangeState(prGlueInfo->prAdapter, prStaRec, STA_STATE_3);
+                qmSetStaRecTxAllowed(prGlueInfo->prAdapter, prStaRec, true);
+                prGlueInfo->prAdapter->rWifiVar.rAisFsmInfo.eCurrentState = AIS_STATE_NORMAL_TR;
+            }
+        }
+
+	/* switch netif on */
         netif_carrier_on(prGlueInfo->prDevHandler);
-        DBGLOG(INIT, INFO,
-               "Skip report CONNECTED when using supplicant SME\n");
+
+#if 0
+        if (prBssDesc != NULL && prBssDesc->u2IELength > 0) {
+            DBGLOG(INIT, INFO, "Syncing true Association IEs (%d bytes) to unblock 4-way encryption.\n",
+                   prBssDesc->u2IELength);
+
+            cfg80211_connect_result(
+                prGlueInfo->prDevHandler,
+                arBssid,
+                prBssDesc->aucIEBuf,       // Feed the true over-the-air Request IEs
+                prBssDesc->u2IELength,
+                NULL, 0,                   // Response IEs can safely pass as empty
+                WLAN_STATUS_SUCCESS,
+                GFP_KERNEL
+            );
+        } else
+#endif
+            cfg80211_connect_result(prGlueInfo->prDevHandler, arBssid, NULL, 0, NULL, 0, WLAN_STATUS_SUCCESS, GFP_KERNEL);
         return;
 
         do {
@@ -1146,14 +1183,6 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
                                 prGlueInfo->u4RspIeLength,
                                 GFP_KERNEL);
 #endif
-            } else {
-                cfg80211_connect_result(
-                    prGlueInfo->prDevHandler, arBssid,
-                    prGlueInfo->aucReqIe,
-                    prGlueInfo->u4ReqIeLength,
-                    prGlueInfo->aucRspIe,
-                    prGlueInfo->u4RspIeLength,
-                    WLAN_STATUS_SUCCESS, GFP_KERNEL);
             }
 
             /*20180418 frog: we get the bss, we need put it back. */
@@ -1178,6 +1207,11 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
          */
         /* switch netif off */
 
+	if (prGlueInfo->eParamMediaStateIndicated == PARAM_MEDIA_STATE_DISCONNECTED) {
+            DBGLOG(INIT, INFO, "FENCE DROP: Suppressing redundant trailing disconnect notification.\n");
+            return;
+        }
+
         DBGLOG(INIT, INFO, "[wifi] %s netif_carrier_off\n",
                prGlueInfo->prDevHandler->name);
 
@@ -1193,6 +1227,10 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
 
         prGlueInfo->eParamMediaStateIndicated =
             PARAM_MEDIA_STATE_DISCONNECTED;
+
+	DBGLOG(INIT, INFO, "Reporting definitive DISCONNECTED event upstream to cfg80211.\n");
+
+	cfg80211_disconnected(prGlueInfo->prDevHandler, 3, NULL, 0, (eStatus == WLAN_STATUS_MEDIA_DISCONNECT_LOCALLY) ? true : false, flags);
         break;
 
     case WLAN_STATUS_SCAN_COMPLETE:
@@ -1309,6 +1347,9 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
             &prGlueInfo->prAdapter->rWifiVar.rConnSettings;
         DBGLOG(INIT, INFO,
                "Skip report CONNECTED when using supplicant SME\n");
+
+	prGlueInfo->eParamMediaStateIndicated = PARAM_MEDIA_STATE_DISCONNECTED;
+
         if (prConnSettings->bss) {
             kalWDevLockThread(prGlueInfo, prGlueInfo->prDevHandler,
                               CFG80211_ASSOC_TIMEOUT,
@@ -1319,19 +1360,29 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
                              prConnSettings->bss);
             prConnSettings->bss = NULL;
         }
-        return;
+        //return;
 
         if (prBssDesc) {
             COPY_MAC_ADDR(arBssid, prBssDesc->aucBSSID);
         }
+#if 0
         cfg80211_connect_result(prGlueInfo->prDevHandler, arBssid,
                                 prGlueInfo->aucReqIe,
                                 prGlueInfo->u4ReqIeLength,
                                 prGlueInfo->aucRspIe,
                                 prGlueInfo->u4RspIeLength,
                                 WLAN_STATUS_AUTH_TIMEOUT, GFP_KERNEL);
-        break;
+#endif
+	cfg80211_connect_result(
+                prGlueInfo->prDevHandler,
+                arBssid,
+                NULL, 0,                   // Clear Request IEs
+                NULL, 0,                   // Clear Response IEs
+                WLAN_STATUS_AUTH_TIMEOUT,  // Inform kernel of the authentication failure
+                GFP_KERNEL
+            );
     }
+    return;
 
     case WLAN_STATUS_BEACON_TIMEOUT:
         cfg80211_cqm_beacon_loss_notify(prGlueInfo->prDevHandler,

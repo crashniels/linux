@@ -361,6 +361,7 @@ void p2pFuncClassifyAction(IN P_SW_RFB_T prSwRfb);
 void p2pFuncModifyChandef(IN P_ADAPTER_T prAdapter,
                           IN P_GL_P2P_INFO_T prGlueP2pInfo,
                           IN P_BSS_INFO_T prBssInfo);
+#else
 u8 p2pFuncSwitchSapChannel(IN P_ADAPTER_T prAdapter);
 #endif
 

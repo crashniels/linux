@@ -2615,7 +2615,6 @@ int mtk_p2p_cfg80211_auth(struct wiphy *wiphy,
     return mtk_p2p_cfg80211_connect(wiphy, ndev, sme);
 }
 
-
 int mtk_p2p_cfg80211_assoc(struct wiphy *wiphy,
                            struct net_device *ndev,
                            struct cfg80211_assoc_request *req)
@@ -2698,9 +2697,40 @@ int mtk_p2p_cfg80211_assoc(struct wiphy *wiphy,
                    "invalid cipher pairwise (%d)\n",
                    req->crypto.ciphers_pairwise[0]);
             /* do cfg80211_put_bss before return */
-            return -EINVAL;
+	    goto error_cleanup_bss;
         }
     }
+
+    if (req->crypto.cipher_group) {
+        u32 u4Group = IW_AUTH_CIPHER_NONE;
+
+        DBGLOG(RSN, INFO, "[P2P] cipher group (%x) for role %d\n", 
+               req->crypto.cipher_group, ucRoleIdx);
+
+        // Store group suite directly into the structural P2P array
+        prGlueInfo->prAdapter->rWifiVar.rConnSettings.rRsnInfo
+            .u4GroupKeyCipherSuite = req->crypto.cipher_group;
+
+        switch (req->crypto.cipher_group) {
+        case WLAN_CIPHER_SUITE_WEP40:     u4Group = IW_AUTH_CIPHER_WEP40;   break;
+        case WLAN_CIPHER_SUITE_WEP104:    u4Group = IW_AUTH_CIPHER_WEP104;  break;
+        case WLAN_CIPHER_SUITE_TKIP:      u4Group = IW_AUTH_CIPHER_TKIP;    break;
+        case WLAN_CIPHER_SUITE_CCMP:
+        case WLAN_CIPHER_SUITE_AES_CMAC:  u4Group = IW_AUTH_CIPHER_CCMP;    break;
+        case WLAN_CIPHER_SUITE_BIP_GMAC_256:
+        case WLAN_CIPHER_SUITE_GCMP_256:  u4Group = IW_AUTH_CIPHER_GCMP256; break;
+        case WLAN_CIPHER_SUITE_NO_GROUP_ADDR: break;
+        default:
+            DBGLOG(REQ, WARN, "invalid P2P cipher group (%d)\n", req->crypto.cipher_group);
+	    goto error_cleanup_bss;
+        }
+
+        /* Update the hardware engine variable directly. 
+         * Depending on your MediaTek branch layout, this requires assigning 
+         * to rWpaInfo or triggering an internal update command. */
+        prGlueInfo->rWpaInfo.u4CipherGroup = u4Group; 
+    }
+
     /* end	*/
 
     if (prStaRec) {
@@ -2711,6 +2741,15 @@ int mtk_p2p_cfg80211_assoc(struct wiphy *wiphy,
     }
 
     return 0;
+
+error_cleanup_bss:
+    if (prGlueInfo->prAdapter->rWifiVar.rConnSettings.bss) {
+        cfg80211_put_bss(wiphy, prGlueInfo->prAdapter->rWifiVar.rConnSettings.bss);
+        prGlueInfo->prAdapter->rWifiVar.rConnSettings.bss = NULL;
+    }
+    cfg80211_connect_result(ndev, req->bss->bssid, NULL, 0, NULL, 0,
+                                    WLAN_STATUS_CIPHER_SUITE_REJECTED, GFP_KERNEL);
+    return -EINVAL; // Return the error code to the kernel
 }
 
 int mtk_p2p_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
@@ -2814,6 +2853,7 @@ int mtk_p2p_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
     return i4Rslt;
 }
 
+#if 0
 int mtk_p2p_cfg80211_disconnect(struct wiphy *wiphy, struct net_device *dev,
                                 u16 reason_code)
 {
@@ -2863,6 +2903,55 @@ int mtk_p2p_cfg80211_disconnect(struct wiphy *wiphy, struct net_device *dev,
     } while (false);
 
     return i4Rslt;
+}
+#endif
+
+int mtk_p2p_cfg80211_disconnect(struct wiphy *wiphy, struct net_device *dev, u16 reason_code)
+{
+    P_GLUE_INFO_T prGlueInfo = NULL;
+    P_MSG_P2P_CONNECTION_ABORT_T prDisconnMsg = NULL;
+    P_CONNECTION_SETTINGS_T prP2pConnSettings = NULL;
+    u8 aucBCAddr[] = BC_MAC_ADDR;
+    u8 ucRoleIdx = 0;
+
+    if (!wiphy || !dev) {
+        return -EINVAL;
+    }
+
+    prGlueInfo = (P_GLUE_INFO_T)wiphy_priv(wiphy);
+
+    if (mtk_Netdev_To_RoleIdx(prGlueInfo, dev, &ucRoleIdx) < 0) {
+        return -EINVAL;
+    }
+
+    DBGLOG(P2P, INFO, "mtk_p2p_cfg80211_disconnect (Explicit Mailbox): Role %d\n", ucRoleIdx);
+    prP2pConnSettings = &prGlueInfo->prAdapter->rWifiVar.rConnSettings;
+
+    prDisconnMsg = (P_MSG_P2P_CONNECTION_ABORT_T)cnmMemAlloc(
+        prGlueInfo->prAdapter, RAM_TYPE_MSG, sizeof(MSG_P2P_CONNECTION_ABORT_T));
+
+    if (prDisconnMsg == NULL) {
+        ASSERT(false);
+        return -ENOMEM;
+    }
+
+    prDisconnMsg->rMsgHdr.eMsgId = MID_MNY_P2P_CONNECTION_ABORT;
+    prDisconnMsg->ucRoleIdx = ucRoleIdx;
+    prDisconnMsg->u2ReasonCode = reason_code;
+    prDisconnMsg->fgSendDeauth = true;
+    COPY_MAC_ADDR(prDisconnMsg->aucTargetID, aucBCAddr);
+
+    mboxSendMsg(prGlueInfo->prAdapter, MBOX_ID_0, (P_MSG_HDR_T)prDisconnMsg, MSG_SEND_METHOD_BUF);
+
+    if (prP2pConnSettings && prP2pConnSettings->bss) {
+        cfg80211_put_bss(wiphy, prP2pConnSettings->bss);
+        prP2pConnSettings->bss = NULL;
+    }
+    prP2pConnSettings->fgIsSendAssoc = false;
+
+    cfg80211_disconnected(dev, reason_code, NULL, 0, true, GFP_KERNEL);
+
+    return 0;
 }
 
 #if KERNEL_VERSION(4, 12, 0) <= CFG80211_VERSION_CODE

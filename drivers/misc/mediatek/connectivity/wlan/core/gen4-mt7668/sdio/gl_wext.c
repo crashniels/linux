@@ -3528,6 +3528,7 @@ void wext_indicate_wext_event(IN P_GLUE_INFO_T prGlueInfo,
         }else{
             eth_zero_addr((u8 *)&wrqu.ap_addr.sa_data);
         }
+
         break;
 
     case IWEVASSOCREQIE:

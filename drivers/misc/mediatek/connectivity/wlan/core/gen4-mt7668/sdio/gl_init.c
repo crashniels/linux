@@ -1260,6 +1260,8 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
     }
 
     sa = (struct sockaddr *)addr;
+    prGlueInfo = *((P_GLUE_INFO_T *)netdev_priv(ndev));
+    prAdapter = prGlueInfo->prAdapter;
 
     if (!is_valid_ether_addr(sa->sa_data)) {
         DBGLOG(INIT, ERROR, "Rejecting completely invalid MAC address\n");
@@ -1280,7 +1282,10 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
         return WLAN_STATUS_NOT_ACCEPTED;
     }
 #else
-    if (wdev->connected) {
+    if (wdev->connected ||
+	    prGlueInfo->prAdapter->rWifiVar.rAisFsmInfo.eCurrentState == AIS_STATE_LOOKING_FOR ||
+            prGlueInfo->prAdapter->rWifiVar.rAisFsmInfo.eCurrentState == AIS_STATE_REQ_CHANNEL_JOIN ||
+            prGlueInfo->prAdapter->rWifiVar.rAisFsmInfo.eCurrentState == AIS_STATE_JOIN) {
         DBGLOG(INIT, ERROR, "Reject macaddr change due to connected(%d)\n",
                wdev->connected);
         return WLAN_STATUS_NOT_ACCEPTED;
@@ -1296,8 +1301,8 @@ static int wlanSetMacAddress(struct net_device *ndev, void *addr)
      **********************************************************************
      */
     //sa = (struct sockaddr *)addr;
-    prGlueInfo = *((P_GLUE_INFO_T *)netdev_priv(ndev));
-    prAdapter = prGlueInfo->prAdapter;
+    //prGlueInfo = *((P_GLUE_INFO_T *)netdev_priv(ndev));
+    //prAdapter = prGlueInfo->prAdapter;
 
     COPY_MAC_ADDR(prAdapter->prAisBssInfo->aucBSSID, sa->sa_data);
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 17, 0)
@@ -1666,7 +1671,7 @@ static const struct net_device_ops wlan_netdev_ops = {
     .ndo_start_xmit = wlanHardStartXmit,
     .ndo_init = wlanInit,
     .ndo_select_queue = wlanSelectQueue,
-    .ndo_set_mac_address = wlanSetMacAddress
+    //.ndo_set_mac_address = wlanSetMacAddress
 };
 
 #if CFG_ENABLE_UNIFY_WIPHY

@@ -1899,6 +1899,20 @@ void aisFsmRunEventAbort(IN P_ADAPTER_T prAdapter, IN P_MSG_HDR_T prMsgHdr)
     prConnSettings = &(prAdapter->rWifiVar.rConnSettings);
     prAisBssInfo = prAdapter->prAisBssInfo;
 
+    if (prMsgHdr != NULL && prMsgHdr->eMsgId == MID_MNY_AIS_MGMT_TX) {
+        if (prAdapter != NULL && prAdapter->prGlueInfo != NULL && prAdapter->prGlueInfo->prDevHandler != NULL) {
+            struct wireless_dev *wdev = prAdapter->prGlueInfo->prDevHandler->ieee80211_ptr;
+
+            if (wdev && wdev->connected) {
+                DBGLOG(AIS, WARN, "FENCE DROP: Suppressed a false-alarm MGMT_TX abort event to preserve active link.\n");
+
+                /* Free the allocated message memory immediately to prevent a resource leak */
+                cnmMemFree(prAdapter, prMsgHdr);
+                return; /* Block the abort pipeline from execution completely */
+            }
+        }
+    }
+
     // @ShiuanWen - Bug fix when run WPA3-SAE 5.2.1 then 5.2.6
     // TC5.2.1, prAisBssInfo->aucSSID keep the ssid Wi-Fi-5.2.1 due to
     // connect successful. TC5.2.6, aisFsmJoinCompleteAction use the wrong
@@ -1966,6 +1980,110 @@ void aisFsmRunEventAbort(IN P_ADAPTER_T prAdapter, IN P_MSG_HDR_T prMsgHdr)
                          fgDelayIndication);
     }
 }
+
+#if 0
+void aisFsmRunEventAbort(IN P_ADAPTER_T prAdapter, IN P_MSG_HDR_T prMsgHdr)
+{
+    P_MSG_AIS_ABORT_T prAisAbortMsg;
+    P_AIS_FSM_INFO_T prAisFsmInfo;
+    u8 ucReasonOfDisconnect;
+    u8 fgDelayIndication;
+    P_CONNECTION_SETTINGS_T prConnSettings;
+    struct _BSS_INFO_T *prAisBssInfo;
+
+    DEBUGFUNC("aisFsmRunEventAbort()");
+
+    /* 1. STAGE 1 SAFETY CRASH PREVENTION GATES:
+     * Enforce strict validation on input address arguments before performing 
+     * any structural memory tracking assignments or variable dereferencing! */
+    ASSERT(prAdapter);
+    ASSERT(prMsgHdr);
+    if (!prAdapter || !prMsgHdr) {
+        return;
+    }
+
+    prAisFsmInfo = &(prAdapter->rWifiVar.rAisFsmInfo);
+    prConnSettings = &(prAdapter->rWifiVar.rConnSettings);
+    prAisBssInfo = prAdapter->prAisBssInfo;
+
+    /* 2. THE PRODUCTION UNBREAKABLE FSM STATE FENCE HOOK:
+     * Intercept the outbound management frame transmit failure message (MID_MNY_AIS_MGMT_TX).
+     * If our driver state machine has already successfully achieved the active operational mode
+     * (AIS_STATE_NORMAL_TR), DISCARD the error packet. This blocks the hardware watchdog 
+     * from forcefully tearing down a healthy connected network payload pipeline! */
+    if (prMsgHdr->eMsgId == MID_MNY_AIS_MGMT_TX && 
+        prAisFsmInfo->eCurrentState == AIS_STATE_NORMAL_TR) {
+        
+        DBGLOG(AIS, WARN, "CRITICAL FENCE: Suppressed false-alarm MGMT_TX abort event to preserve live link.\n");
+        
+        /* Free the allocated message memory block immediately to prevent a resource leak */
+        cnmMemFree(prAdapter, prMsgHdr);
+        return; /* Force early function context termination to shield the link variables */
+    }
+
+    /* 3. WPA3-SAE SSID Leakage Mitigation Patch Block (ShiuanWen fix runs safely below) */
+    // @ShiuanWen - Bug fix when run WPA3-SAE 5.2.1 then 5.2.6
+    // TC5.2.1, prAisBssInfo->aucSSID keep the ssid Wi-Fi-5.2.1 due to
+    // connect successful. TC5.2.6, aisFsmJoinCompleteAction use the wrong
+    // prAisBssInfo->aucSSID and run to scanSearchBssDescByBssidAndSsid. It
+    // caused the prBssDesc is NULL and return to
+    // aisFsmRunEventJoinComplete. AIS state machine is blocked on JOIN
+    // state.
+    if (prAisBssInfo != NULL) {
+        kalMemZero(prAisBssInfo->aucSSID, sizeof(prAisBssInfo->aucSSID));
+        prAisBssInfo->ucSSIDLen = 0;
+    }
+
+    /* 4. Extract information of Abort Message and then free memory. */
+    prAisAbortMsg = (P_MSG_AIS_ABORT_T)prMsgHdr;
+    ucReasonOfDisconnect = prAisAbortMsg->ucReasonOfDisconnect;
+    fgDelayIndication = prAisAbortMsg->fgDelayIndication;
+    cnmMemFree(prAdapter, prMsgHdr);
+
+    /* record join request time */
+    GET_CURRENT_SYSTIME(&(prAisFsmInfo->rJoinReqTime));
+
+    /* clear previous pending connection request and insert new one */
+    if (ucReasonOfDisconnect == DISCONNECT_REASON_CODE_DEAUTHENTICATED
+#if CFG_SUPPORT_DBDC_TC6
+        || ucReasonOfDisconnect == DISCONNECT_REASON_CODE_DBDC_REASSOCIATION
+#endif
+        || ucReasonOfDisconnect == DISCONNECT_REASON_CODE_DISASSOCIATED) {
+        prConnSettings->fgIsDisconnectedByNonRequest = true;
+    } else {
+        prConnSettings->fgIsDisconnectedByNonRequest = false;
+    }
+
+    /* to support user space triggered roaming */
+    if (ucReasonOfDisconnect == DISCONNECT_REASON_CODE_REASSOCIATION && 
+        prAisFsmInfo->eCurrentState != AIS_STATE_DISCONNECTING) {
+        
+        if (prAisFsmInfo->eCurrentState == AIS_STATE_NORMAL_TR && 
+            prAisFsmInfo->fgIsInfraChannelFinished == true) {
+#if CFG_SUPPORT_SAME_BSS_REASSOC
+            if (prAisBssInfo != NULL) {
+                prAisBssInfo->ucReasonOfDisconnect = ucReasonOfDisconnect;
+            }
+#endif
+            aisFsmSteps(prAdapter, AIS_STATE_SEARCH);
+        } else {
+            aisFsmIsRequestPending(prAdapter, AIS_REQUEST_ROAMING_SEARCH, true);
+            aisFsmIsRequestPending(prAdapter, AIS_REQUEST_ROAMING_CONNECT, true);
+            aisFsmInsertRequest(prAdapter, AIS_REQUEST_ROAMING_CONNECT);
+        }
+        return;
+    }
+
+    aisFsmIsRequestPending(prAdapter, AIS_REQUEST_RECONNECT, true);
+    aisFsmInsertRequest(prAdapter, AIS_REQUEST_RECONNECT);
+
+    if (prAisFsmInfo->eCurrentState != AIS_STATE_DISCONNECTING) {
+        /* invoke abort handler */
+        DBGLOG(AIS, STATE, "ucReasonOfDisconnect:%d\n", ucReasonOfDisconnect);
+        aisFsmStateAbort(prAdapter, ucReasonOfDisconnect, fgDelayIndication);
+    }
+}
+#endif
 
 /*----------------------------------------------------------------------------*/
 /*!
@@ -2177,6 +2295,25 @@ void aisFsmRunEventJoinComplete(IN struct _ADAPTER_T *prAdapter,
     if (eNextState == AIS_STATE_NORMAL_TR) {
         DBGLOG(AIS, STATE, "cancel beacon lost timer.\n");
         cnmTimerStopTimer(prAdapter, &prAisFsmInfo->rBeaconLostTimer);
+
+#if 0
+        P_BSS_INFO_T prBssInfo = prAdapter->prAisBssInfo;
+
+        if (prBssInfo != NULL) {
+            DBGLOG(AIS, WARN, "AIS FSM Core: Synchronizing hardware registers down to silicon tables.\n");
+
+            nicUpdateBss(prAdapter, prBssInfo->ucBssIndex);
+
+            P_STA_RECORD_T prStaRec = cnmGetStaRecByAddress(prAdapter, prBssInfo->ucBssIndex, prBssInfo->aucBSSID);
+
+            if (prStaRec != NULL) {
+                cnmStaRecChangeState(prAdapter, prStaRec, STA_STATE_3);
+                qmSetStaRecTxAllowed(prAdapter, prStaRec, true);
+            } else {
+                DBGLOG(AIS, WARN, "AIS FSM: Active StaRec not cached yet for target BSSID.\n");
+            }
+        }
+#endif
     }
 
     if (prAssocRspSwRfb) {
@@ -2862,8 +2999,7 @@ void aisPostponedEventOfDisconnTimeout(IN P_ADAPTER_T prAdapter,
     prAisBssInfo->u2DeauthReason += REASON_CODE_BEACON_TIMEOUT;
     /* 4 <3> Indicate Disconnected Event to Host immediately. */
     aisFsmStateAbort(prAdapter, DISCONNECT_REASON_CODE_RADIO_LOST, false);
-    // aisIndicationOfMediaStateToHost(prAdapter,
-    // PARAM_MEDIA_STATE_DISCONNECTED, false);
+    //aisIndicationOfMediaStateToHost(prAdapter, PARAM_MEDIA_STATE_DISCONNECTED, false);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -4161,6 +4297,7 @@ void aisBssBeaconTimeout(IN P_ADAPTER_T prAdapter, IN u8 ucReasonCode)
             /* 20210326 frog: Once BCN timeout, disconnect
              * imediately. */
             prConnSettings->fgIsConnReqIssued = false;
+#if CFG_SUPPORT_DBDC
             prCnmInfo->fgSkipDbdcDisable = true;
 
             if (ucReasonCode ==
@@ -4168,11 +4305,11 @@ void aisBssBeaconTimeout(IN P_ADAPTER_T prAdapter, IN u8 ucReasonCode)
                 aisFsmStateAbort(
                     prAdapter, DISCONNECT_REASON_CODE_DBDC_REASSOCIATION,
                     true);
-            } else {
+            } else
+#endif
                 aisFsmStateAbort(prAdapter,
                                  DISCONNECT_REASON_CODE_RADIO_LOST,
                                  true);
-            }
         }
     }
 }
