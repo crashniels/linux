@@ -589,7 +589,7 @@
 
 //  WARNINNG !!!
 
-#define CFG_MGMT_FRAME_HANDLING             1
+#define CFG_MGMT_FRAME_HANDLING             0   //   1
 
 #define CFG_MGMT_HW_ACCESS_REPLACEMENT          0
 
@@ -644,7 +644,7 @@
 #define CFG_SUPPORT_AMPDU_RX                1
 #define CFG_SUPPORT_TSPEC \
     0  /* Enable/disable TS-related Action frames handling */
-#define CFG_SUPPORT_UAPSD               1
+#define CFG_SUPPORT_UAPSD               0   //   1
 #define CFG_SUPPORT_UL_PSMP             0
 
 #ifndef CFG_SUPPORT_SAME_BSS_REASSOC
@@ -664,8 +664,8 @@
  */
 
 #define CFG_SUPPORT_802_11K             1
-#define CFG_SUPPORT_802_11V             0 //1
-#define CFG_SUPPORT_802_11V_BSS_TRANSITION_MGT      0 //1
+#define CFG_SUPPORT_802_11V             1
+#define CFG_SUPPORT_802_11V_BSS_TRANSITION_MGT      1
 
 #define CFG_SUPPORT_ROAMING_SKIP_ONE_AP         1
 #if CFG_SUPPORT_ROAMING_SKIP_ONE_AP

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0
 ccflags-y += -Wno-error=restrict -Wno-error=unused-variable -Wno-error=unused-function -Wno-error=format -Wno-error=implicit-fallthrough -Wno-error=pointer-to-int-cast -Wno-error=empty-body \
-	-D CFG_SUPPORT_SINGLE_SKU_LOCAL_DB=1 -D CFG_DRIVER_INF_NAME_CHANGE -DDBG=1 \
+	-D CFG_SUPPORT_SINGLE_SKU_LOCAL_DB=1 -D CFG_DRIVER_INF_NAME_CHANGE -DDBG=0 \
 	-I$(src)/include \
 	-I$(src)/include/nic \
 	-I$(src)/include/mgmt \
