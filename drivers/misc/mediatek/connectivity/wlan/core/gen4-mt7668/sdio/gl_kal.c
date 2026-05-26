@@ -1014,8 +1014,7 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
         /* indicate assoc event */
         wlanQueryInformation(prGlueInfo->prAdapter, wlanoidQueryBssid,
                              &arBssid[0], sizeof(arBssid), &bufLen);
-        wext_indicate_wext_event(prGlueInfo, SIOCGIWAP, arBssid,
-                                 bufLen);
+        wext_indicate_wext_event(prGlueInfo, SIOCGIWAP, arBssid, bufLen);
 
 	DBGLOG(INIT, INFO, "Skip report CONNECTED when using supplicant SME\n");
 
@@ -1036,7 +1035,6 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
 	/* switch netif on */
         netif_carrier_on(prGlueInfo->prDevHandler);
 
-#if 0
         if (prBssDesc != NULL && prBssDesc->u2IELength > 0) {
             DBGLOG(INIT, INFO, "Syncing true Association IEs (%d bytes) to unblock 4-way encryption.\n",
                    prBssDesc->u2IELength);
@@ -1051,7 +1049,6 @@ void kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo,
                 GFP_KERNEL
             );
         } else
-#endif
             cfg80211_connect_result(prGlueInfo->prDevHandler, arBssid, NULL, 0, NULL, 0, WLAN_STATUS_SUCCESS, GFP_KERNEL);
         return;
 

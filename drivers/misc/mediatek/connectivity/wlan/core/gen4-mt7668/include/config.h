@@ -589,7 +589,7 @@
 
 //  WARNINNG !!!
 
-#define CFG_MGMT_FRAME_HANDLING             0   //   1
+#define CFG_MGMT_FRAME_HANDLING             1
 
 #define CFG_MGMT_HW_ACCESS_REPLACEMENT          0
 
@@ -652,7 +652,7 @@
 #endif
 
 #ifndef CFG_SUPPORT_ROAMING
-#define CFG_SUPPORT_ROAMING             1  /* Roaming System */
+#define CFG_SUPPORT_ROAMING             0  //  1  /\* Roaming System \*\/
 #endif
 #if (CFG_SUPPORT_ROAMING == 1)
 

@@ -1732,7 +1732,7 @@ static void wlanCreateWirelessDevice(void)
     prWiphy->flags |= WIPHY_FLAG_HAS_CHANNEL_SWITCH;
 #endif
     
-#if (CFG_SUPPORT_SAE == 1)
+#if CFG_SUPPORT_SAE
     prWiphy->features |= NL80211_FEATURE_SAE;
 #endif
 
