@@ -1363,10 +1363,16 @@ WLAN_STATUS nicUpdateBss(IN P_ADAPTER_T prAdapter, IN u8 ucBssIndex)
 
     if ((prBssInfo->eDBDCBand != ENUM_BAND_0) &&
         (prBssInfo->eDBDCBand != ENUM_BAND_1)) {
-        DBGLOG(BSS, ERROR, "Wrong eDBDCBand - [%u]\n", prBssInfo->eDBDCBand);
-        prBssInfo->eDBDCBand = ENUM_BAND_0;  /* Work around : temp
+	if (prBssInfo->eBand == BAND_2G4) {
+                    prBssInfo->eDBDCBand = ENUM_BAND_0;
+            } else if (prBssInfo->eBand == BAND_5G) {
+		    prBssInfo->eDBDCBand = ENUM_BAND_1;
+	    } else {
+		    DBGLOG(BSS, ERROR, "Wrong eDBDCBand - [%u]\n", prBssInfo->eDBDCBand);
+		    prBssInfo->eDBDCBand = ENUM_BAND_0;  /* Work around : temp
                                               * solution */
-        /*ASSERT(0);*/                      /* FATAL ERROR */
+	            /*ASSERT(0);*/                      /* FATAL ERROR */
+	    }
     }
 
     kalMemZero(&rCmdSetBssInfo, sizeof(CMD_SET_BSS_INFO));
