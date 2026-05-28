@@ -12,6 +12,7 @@
 #ifdef CONFIG_X86_PS4
 
 #include <linux/irqdomain.h>
+#include <linux/pci.h>
 
 #define PS4_DEFAULT_TSC_FREQ 1594000000
 

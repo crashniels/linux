@@ -1,0 +1,27 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0
+#
+# Copyright(C) 2024 Yogi Hermawan <yogist.xda@gmail.com>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of version 2 of the GNU General Public License as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See http://www.gnu.org/licenses/gpl-2.0.html for more details.
+
+export PATH="$HOME/toolchain/arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-linux-gnu/bin/:$PATH"
+export ARCH="arm64"
+export CROSS_COMPILE="aarch64-none-linux-gnu-"
+export INSTALL_MOD_STRIP=1
+
+export CONFIG_MT7668S_WIFI=m
+export CONFIG_MT7668S_WIFI_MESON_G12A_PATCH=y
+
+# replace KERNELDIR with your kernel path
+export KERNELDIR="$HOME/projects/kcompiler/compile-kernel/kernel/linux-6.13.y"
+
+./clean
+make -j8 KERNELDIR="${KERNELDIR}"

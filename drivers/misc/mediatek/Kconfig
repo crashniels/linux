@@ -1,0 +1,6 @@
+menu "Mediatek Connectivity"
+
+source "drivers/misc/mediatek/connectivity/Kconfig"
+source "drivers/misc/mediatek/btif/Kconfig"
+endmenu  # only USB
+

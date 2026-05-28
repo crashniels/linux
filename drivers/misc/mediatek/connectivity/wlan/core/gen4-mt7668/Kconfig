@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: GPL-2.0
+
+config MT7668S_WIFI
+	tristate "Mediatek MT7668S WiFi support"
+	depends on MMC
+	select CFG80211_WEXT
+	select CFG80211_WEXT_EXPORT
+	default m
+	help
+	  Enable support for the Mediatek MT7668S SDIO WiFi chipset.
+	  This driver provides the necessary functionality to operate
+	  the MT7668S chipset via SDIO interface.
+
+	  To compile this driver as a loadable kernel module, choose 'M'
+	  here. This will create a module named 'mt7668s.ko'.
+
+config MT7668S_WIFI_MESON_G12A_PATCH
+	bool "MT7668S WiFi Meson G12A workaround"
+	depends on MT7668S_WIFI
+	depends on PINCTRL_MESON_G12A
+	default y
+	help
+	  Enable this option to apply a workaround specific to the
+	  Meson G12A platform. Due to buffer length constraints on
+	  G12A, this workaround reduces the overall buffer length
+	  to prevent issues with WiFi operation.
+
+	  Select 'y' to enable the workaround, ensuring stable
+	  performance on the Meson G12A platform. Select 'n' to
+	  disable the workaround if it is not needed.
