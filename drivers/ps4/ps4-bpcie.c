@@ -246,14 +246,6 @@ struct irq_domain *bpcie_create_irq_domain(struct bpcie_dev *sc, struct pci_dev 
 	return domain;
 }
 
-int bpcie_is_compatible_device(struct pci_dev *dev)
-{
-	if (!dev || dev->vendor != PCI_VENDOR_ID_SONY) {
-		return 0;
-	}
-	return (dev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE);
-}
-
 int bpcie_assign_irqs(struct pci_dev *dev, int nvec)
 {
 	int ret;
@@ -264,7 +256,7 @@ int bpcie_assign_irqs(struct pci_dev *dev, int nvec)
 	sc_devfn = (dev->devfn & ~7) | BAIKAL_FUNC_ID_PCIE;
 	sc_dev = pci_get_slot(dev->bus, sc_devfn);
 
-	if (!bpcie_is_compatible_device(sc_dev)) {
+	if (sc->pdev->device != PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
 		dev_err(&dev->dev, "bpcie: this is not a Baikal device\n");
 		ret = -ENODEV;
 		goto fail;
@@ -404,14 +396,14 @@ static int bpcie_glue_resume(struct bpcie_dev *sc) {
 
 
 int apcie_uart_init(struct bpcie_dev *sc);
-int bpcie_icc_init(struct bpcie_dev *sc);
-void bpcie_uart_remove(struct bpcie_dev *sc);
-void bpcie_icc_remove(struct bpcie_dev *sc);
+int apcie_icc_init(struct bpcie_dev *sc);
+void apcie_uart_remove(struct bpcie_dev *sc);
+void apcie_icc_remove(struct bpcie_dev *sc);
 #ifdef CONFIG_PM
-void bpcie_uart_suspend(struct bpcie_dev *sc, pm_message_t state);
-void bpcie_icc_suspend(struct bpcie_dev *sc, pm_message_t state);
-void bpcie_uart_resume(struct bpcie_dev *sc);
-void bpcie_icc_resume(struct bpcie_dev *sc);
+void apcie_uart_suspend(struct bpcie_dev *sc, pm_message_t state);
+void apcie_icc_suspend(struct bpcie_dev *sc, pm_message_t state);
+void apcie_uart_resume(struct bpcie_dev *sc);
+void apcie_icc_resume(struct bpcie_dev *sc);
 #endif
 
 /* From arch/x86/platform/ps4/ps4.c */
@@ -456,14 +448,14 @@ static int bpcie_probe(struct pci_dev *dev, const struct pci_device_id *id) {
 		goto free_bars;
 	if ((ret = apcie_uart_init(sc)) < 0)
 		goto remove_glue;
-	if ((ret = bpcie_icc_init(sc)) < 0)
+	if ((ret = apcie_icc_init(sc)) < 0)
 		goto remove_uart;
 
 	bpcie_initialized = true;
 	return 0;
 
 remove_uart:
-	bpcie_uart_remove(sc);
+	apcie_uart_remove(sc);
 remove_glue:
 	bpcie_glue_remove(sc);
 free_bars:
@@ -483,8 +475,8 @@ static void bpcie_remove(struct pci_dev *dev) {
 	struct bpcie_dev *sc;
 	sc = pci_get_drvdata(dev);
 
-	bpcie_icc_remove(sc);
-	bpcie_uart_remove(sc);
+	apcie_icc_remove(sc);
+	apcie_uart_remove(sc);
 	bpcie_glue_remove(sc);
 
 	if (sc->bar0)
@@ -502,8 +494,8 @@ static int bpcie_suspend(struct pci_dev *dev, pm_message_t state) {
 	struct bpcie_dev *sc;
 	sc = pci_get_drvdata(dev);
 
-	bpcie_icc_suspend(sc, state);
-	bpcie_uart_suspend(sc, state);
+	apcie_icc_suspend(sc, state);
+	apcie_uart_suspend(sc, state);
 	bpcie_glue_suspend(sc, state);
 	return 0;
 }
@@ -512,9 +504,9 @@ static int bpcie_resume(struct pci_dev *dev) {
 	struct bpcie_dev *sc;
 	sc = pci_get_drvdata(dev);
 
-	bpcie_icc_resume(sc);
+	apcie_icc_resume(sc);
 	bpcie_glue_resume(sc);
-	bpcie_uart_resume(sc);
+	apcie_uart_resume(sc);
 	return 0;
 }
 #endif

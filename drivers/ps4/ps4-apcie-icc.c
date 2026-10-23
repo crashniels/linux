@@ -9,6 +9,7 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 #include <asm/ps4.h>
+#include "baikal.h"
 #include "aeolia.h"
 
 /* There should normally be only one Aeolia device in a system. This allows
@@ -154,19 +155,28 @@ static irqreturn_t icc_interrupt(int irq, void *arg)
 		status = ioread32(sc->bar4 + APCIE_REG_ICC_STATUS);
 
 		if (status & APCIE_ICC_ACK) {
-			iowrite32(APCIE_ICC_ACK,
-				  sc->bar4 + APCIE_REG_ICC_STATUS);
+			if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+				iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar2 + BPCIE_REG_ICC_STATUS);
+			} else {
+				iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar4 + APCIE_REG_ICC_STATUS);
+			}
 			ret = IRQ_HANDLED;
 		}
 
 		if (status & APCIE_ICC_SEND) {
-			iowrite32(APCIE_ICC_SEND,
-				  sc->bar4 + APCIE_REG_ICC_STATUS);
+			if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+				iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar2 + BPCIE_REG_ICC_STATUS);
+			} else {
+				iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar4 + APCIE_REG_ICC_STATUS);
+			}
 			handle_message(sc);
 			iowrite32(0, REPLY + BUF_FULL);
 			iowrite32(1, REPLY + BUF_EMPTY);
-			iowrite32(APCIE_ICC_ACK,
-				  sc->bar4 + APCIE_REG_ICC_DOORBELL);
+			if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+				iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar2 + BPCIE_REG_ICC_DOORBELL);
+			} else {
+				iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar4 + APCIE_REG_ICC_DOORBELL);
+			}
 			ret = IRQ_HANDLED;
 		}
 	} while (status);
@@ -221,7 +231,11 @@ static int _apcie_icc_cmd(struct apcie_dev *sc, u8 major, u16 minor, const void 
 	sc->icc.reply_pending = true;
 	spin_unlock_irq(&sc->icc.reply_lock);
 
-	iowrite32(APCIE_ICC_SEND, sc->bar4 + APCIE_REG_ICC_DOORBELL);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		iowrite32(BPCIE_ICC_SEND, sc->bar2 + BPCIE_REG_ICC_DOORBELL);
+	} else {
+		iowrite32(APCIE_ICC_SEND, sc->bar4 + APCIE_REG_ICC_DOORBELL);
+	}
 
 	if (intr)
 		ret = wait_event_interruptible_timeout(sc->icc.wq,
@@ -263,14 +277,9 @@ static int _apcie_icc_cmd(struct apcie_dev *sc, u8 major, u16 minor, const void 
 	return sc->icc.reply.length - ICC_HDR_SIZE;
 }
 
-/* From arch/x86/platform/ps4/ps4.c */
-extern bool bpcie_initialized;
 int apcie_icc_cmd(u8 major, u16 minor, const void *data, u16 length,
 		   void *reply, u16 reply_length)
-{
-	if (bpcie_initialized)
-			return bpcie_icc_cmd(major, minor, data, length, reply, reply_length);
-	
+{	
 	int ret;
 
 	mutex_lock(&icc_mutex);
@@ -290,6 +299,16 @@ static void resetUsbPort(void)
 	u8 off = 0, on = 1;
 	u8 resp[20];
 	int ret;
+
+	/* Get usb 0 status */
+	ret = bpcie_icc_cmd(5, 0x11, NULL, 0, resp, 20);
+	printk("usb0 status: ret=%d, reply %02x %02x %02x %02x", ret, resp[0], resp[1], resp[2], resp[3]);
+	if(ret < 0) {
+		printk("USB status failed");
+	} else if (resp[2]) {
+		printk("USB is already turned ON!");
+		return;
+	}
 	
 	//Turn OFF Usb
 	ret = apcie_icc_cmd(5, 0x10, &off, sizeof(off), resp, 20);
@@ -460,11 +479,15 @@ int apcie_icc_init(struct apcie_dev *sc)
 		return -ENODEV;
 	}
 
-	if (!request_mem_region(pci_resource_start(sc->pdev, 4) +
-				APCIE_RGN_ICC_BASE, APCIE_RGN_ICC_SIZE,
-				"apcie.icc")) {
-		sc_err("icc: failed to request ICC register region\n");
-		return -EBUSY;
+	// already reserved the whole bar2 at glue_init().
+	// Note for Baikal
+	if (sc->pdev->device != PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		if (!request_mem_region(pci_resource_start(sc->pdev, 4) +
+					APCIE_RGN_ICC_BASE, APCIE_RGN_ICC_SIZE,
+					"apcie.icc")) {
+			sc_err("icc: failed to request ICC register region\n");
+			return -EBUSY;
+		}
 	}
 
 	sc->icc.spm_base = pci_resource_start(mem_dev, 5) + APCIE_SPM_ICC_BASE;
@@ -486,8 +509,11 @@ int apcie_icc_init(struct apcie_dev *sc)
 	init_waitqueue_head(&sc->icc.wq);
 
 	/* Clear flags */
-	iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK,
-		  sc->bar4 + APCIE_REG_ICC_STATUS);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar2 + BPCIE_REG_ICC_STATUS);
+	} else {
+		iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar4 + APCIE_REG_ICC_STATUS);
+	}
 
 	ret = request_irq(apcie_irqnum(sc, APCIE_SUBFUNC_ICC),
 			  icc_interrupt, IRQF_SHARED, "icc", sc);
@@ -510,8 +536,11 @@ int apcie_icc_init(struct apcie_dev *sc)
 	icc_sc = sc;
 
 	/* Enable IRQs */
-	iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK,
-		  sc->bar4 + APCIE_REG_ICC_IRQ_MASK);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar2 + APCIE_REG_ICC_IRQ_MASK);
+	} else {
+		iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar4 + APCIE_REG_ICC_IRQ_MASK);
+	}
 	mutex_unlock(&icc_mutex);
 
 	ret = icc_i2c_init(sc);
@@ -521,7 +550,8 @@ int apcie_icc_init(struct apcie_dev *sc)
 	}
 	
 	resetBtWlan();
-//	resetUsbPort();
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE)
+		resetUsbPort();
 	
 	ret = icc_pwrbutton_init(sc);
 	/* Not fatal */
@@ -547,7 +577,11 @@ int apcie_icc_init(struct apcie_dev *sc)
 
 unassign_global:
 	mutex_lock(&icc_mutex);
-	iowrite32(0, sc->bar4 + APCIE_REG_ICC_IRQ_MASK);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar2 + APCIE_REG_ICC_IRQ_MASK);
+	} else {
+		iowrite32(APCIE_ICC_SEND | APCIE_ICC_ACK, sc->bar4 + APCIE_REG_ICC_IRQ_MASK);
+	}
 	icc_sc = NULL;
 	mutex_unlock(&icc_mutex);
 free_irq:
@@ -557,8 +591,11 @@ iounmap:
 release_spm:
 	release_mem_region(sc->icc.spm_base, APCIE_SPM_ICC_SIZE);
 release_icc:
-	release_mem_region(pci_resource_start(sc->pdev, 4) +
-			   APCIE_RGN_ICC_BASE, APCIE_RGN_ICC_SIZE);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		release_mem_region(pci_resource_start(sc->pdev, 4) + BPCIE_RGN_ICC_BASE, BPCIE_RGN_ICC_SIZE);
+	} else {
+		release_mem_region(pci_resource_start(sc->pdev, 4) + APCIE_RGN_ICC_BASE, APCIE_RGN_ICC_SIZE);
+	}
 	return ret;
 }
 
@@ -569,14 +606,21 @@ void apcie_icc_remove(struct apcie_dev *sc)
 	icc_pwrbutton_remove(sc);
 	icc_i2c_remove(sc);
 	mutex_lock(&icc_mutex);
-	iowrite32(0, sc->bar4 + APCIE_REG_ICC_IRQ_MASK);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		iowrite32(0, sc->bar2 + APCIE_REG_ICC_IRQ_MASK);
+	} else {
+		iowrite32(0, sc->bar4 + APCIE_REG_ICC_IRQ_MASK);
+	}
 	icc_sc = NULL;
 	mutex_unlock(&icc_mutex);
 	free_irq(apcie_irqnum(sc, APCIE_SUBFUNC_ICC), sc);
 	iounmap(sc->icc.spm);
 	release_mem_region(sc->icc.spm_base, APCIE_SPM_ICC_SIZE);
-	release_mem_region(pci_resource_start(sc->pdev, 4) +
-			   APCIE_RGN_ICC_BASE, APCIE_RGN_ICC_SIZE);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		release_mem_region(pci_resource_start(sc->pdev, 4) + BPCIE_RGN_ICC_BASE, BPCIE_RGN_ICC_SIZE);
+	} else {
+		release_mem_region(pci_resource_start(sc->pdev, 4) + APCIE_RGN_ICC_BASE, APCIE_RGN_ICC_SIZE);
+	}
 }
 
 #ifdef CONFIG_PM

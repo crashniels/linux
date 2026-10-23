@@ -207,7 +207,6 @@ static inline void pci_pm_stop_all(struct pci_dev *dev)
 	cpu_stop();
 }
 
-int bpcie_is_compatible_device(struct pci_dev *dev);
 u32 glue_read32(struct bpcie_dev *sc, u32 offset);
 void glue_write32(struct bpcie_dev *sc, u32 offset, u32 value);
 

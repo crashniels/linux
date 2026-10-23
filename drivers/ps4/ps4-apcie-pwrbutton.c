@@ -46,9 +46,7 @@ int icc_pwrbutton_init(struct abpcie_dev *sc)
 
 	// enable power button notifications
 	button = 0x100;
-	ret = bpcie_is_compatible_device(sc->pdev) ?
-			bpcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0) :
-			apcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0);
+	apcie_icc_cmd(8, 1, &button, sizeof(button), NULL, 0);
 	if (ret < 0) {
 		sc_info("%s: Failed to enable power notifications (%d)\n",
 			__func__, ret);

@@ -53,15 +53,13 @@ int apcie_status(void)
 {
 	if (!is_ps4)
 		return -ENODEV;
-	return apcie_initialized || bpcie_initialized;
+	return apcie_initialized;
 }
 EXPORT_SYMBOL_GPL(apcie_status);
 
 int bpcie_status(void)
 {
-	if (!is_ps4)
-		return -ENODEV;
-	return bpcie_initialized;
+	return apcie_status();
 }
 EXPORT_SYMBOL_GPL(bpcie_status);
 
