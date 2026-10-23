@@ -283,7 +283,7 @@ EXPORT_SYMBOL_GPL(bpcie_icc_cmd);
 
 static void bpcie_init_usb(struct bpcie_dev *sc, int usb_no) {
 	u32 value_to_write;
-	u32 addr;
+	void* addr;
 	u32 offset;
 
 	offset = usb_no ? 0x68 : 0x64;
