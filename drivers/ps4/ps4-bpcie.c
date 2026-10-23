@@ -403,7 +403,7 @@ static int bpcie_glue_resume(struct bpcie_dev *sc) {
 #endif
 
 
-int bpcie_uart_init(struct bpcie_dev *sc);
+int apcie_uart_init(struct bpcie_dev *sc);
 int bpcie_icc_init(struct bpcie_dev *sc);
 void bpcie_uart_remove(struct bpcie_dev *sc);
 void bpcie_icc_remove(struct bpcie_dev *sc);
@@ -454,7 +454,7 @@ static int bpcie_probe(struct pci_dev *dev, const struct pci_device_id *id) {
 
 	if ((ret = bpcie_glue_init(sc)) < 0)
 		goto free_bars;
-	if ((ret = bpcie_uart_init(sc)) < 0)
+	if ((ret = apcie_uart_init(sc)) < 0)
 		goto remove_glue;
 	if ((ret = bpcie_icc_init(sc)) < 0)
 		goto remove_uart;

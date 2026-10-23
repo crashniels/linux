@@ -3,6 +3,7 @@
 #include <linux/serial_reg.h>
 
 #include "aeolia.h"
+#include "baikal.h"
 
 void apcie_uart_remove(struct apcie_dev *sc);
 
@@ -18,6 +19,7 @@ int apcie_uart_init(struct apcie_dev *sc)
 	for (i = 0; i < APCIE_NR_UARTS; i++) {
 		uint32_t off = APCIE_RGN_UART_BASE + (i << 12);
 		memset(&uart, 0, sizeof(uart));
+		
 		uart.port.irq		= apcie_irqnum(sc, APCIE_SUBFUNC_UART0 + i);
 		uart.port.uartclk	= 58500000;
 		uart.port.flags		= UPF_SHARE_IRQ;
@@ -26,6 +28,11 @@ int apcie_uart_init(struct apcie_dev *sc)
 		uart.port.membase	= sc->bar4 + off;
 		uart.port.regshift	= 2;
 		uart.port.dev		= &sc->pdev->dev;
+
+		if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+			uart.port.irq		= apcie_irqnum(sc, BPCIE_SUBFUNC_UART0 + i);
+			uart.port.mapbase	= pci_resource_start(sc->pdev, 2) + off;
+		}
 
 		sc->serial_line[i] = serial8250_register_8250_port(&uart);
 		if (sc->serial_line[i] < 0) {
