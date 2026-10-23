@@ -26,7 +26,6 @@
 
 /* Number of implemented MSI registers per function */
 static const int subfuncs_per_func[BAIKAL_NUM_FUNCS] = {
-	//4, 4, 4, 4, 31, 2, 2, 4
 	2, 1, 1, 1, 31, 2, 3, 3
 };
 
@@ -62,139 +61,10 @@ static void bpcie_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
 	pci_msi_domain_write_msg(data, msg);
 }
 
-static void bpcie_msi_unmask(struct irq_data *data)
-{
-	pci_msi_unmask_irq(data);
-	return;
-	struct bpcie_dev *sc = data->chip_data;
-	u8 subfunc = get_subfunc(data->hwirq);//data->hwirq & 0xff;
-	struct msi_desc *desc = irq_data_get_msi_desc(data);
-	struct pci_dev *pdev = msi_desc_to_pci_dev(desc);
-	int msi_allocated = desc->nvec_used;
-	int msi_msgnum = pci_msi_vec_count(pdev);
-	u32 msi_mask = desc->pci.msi_mask; //(1LL << msi_msgnum) - 1;
-
-	/*
-	if ( msi_alloc > 0 )
-  	{
-	    int i = 0;
-	    do
-	    {
-	      unsigned int unit_no = subfunc + i++;
-	      msi_mask &= rol(-2, unit_no);
-	    }
-	    while ( i < msi_alloc );
-  	}
-	*/
-	u32 result;
-	asm volatile(".intel_syntax noprefix;"
-							"mov 	 eax, %[amsi_allocated];"
-							"mov 	 edx, %[asubfunc];"
-							"mov 	 ebx, %[amsi_mask];"
-							"mov 	 esi, 0;"  //i = 0
-							"loop2:  lea  ecx, [rdx+rsi];"
-							"mov	 edi, 0x0FFFFFFFE;" //-2
-							"inc     esi;"
-							"rol     edi, cl;"
-							"and     ebx, edi;"
-							"cmp     esi, eax;"
-							"jl      short loop2;"
-							"mov 	 %[aResult], ebx;"  //msi_mask
-						".att_syntax prefix;"
-						: [aResult] "=r" (result)
-						: [amsi_allocated] "r" (msi_allocated), [asubfunc] "r" ((u32)subfunc), [amsi_mask] "r" (msi_mask)
-						: "eax", "ebx", "edx");
-	msi_mask = result;
-
-	dev_dbg(data->common->msi_desc->dev, "bpcie_msi_unmask(msi_mask=0x%X, msi_allocated=0x%X)\n", msi_mask, msi_allocated);
-	//msi_mask = 0;
-	pci_write_config_dword(pdev, desc->pci.mask_pos,
-			       msi_mask);
-	desc->pci.msi_mask = msi_mask;
-
-	//this code equals msi_mask = 0;
-}
-
-static void bpcie_msi_mask(struct irq_data *data)
-{
-	pci_msi_mask_irq(data);
-	return;
-	struct bpcie_dev *sc = data->chip_data;
-	u8 subfunc = get_subfunc(data->hwirq);
-	struct msi_desc *desc = irq_data_get_msi_desc(data);
-	struct pci_dev *pdev = msi_desc_to_pci_dev(desc);
-	u32 msi_mask = desc->pci.msi_mask;
-	u32 msi_allocated = desc->nvec_used; //pci_msi_vec_count(msi_desc_to_pci_dev(desc)); 32 for bpcie glue
-	
-	if ( msi_allocated > 0 )
-    {
-      /*
-	  int i = 0;
-      do
-      {
-    	  u16 unit_plus_i = subfunc + i++;
-    	  unit_plus_i &= 0x1F;
-    	  msi_mask |= 1 << unit_plus_i;
-      }
-      while ( i < msi_allocated );
-      */
-		u32 result;
-		asm volatile(".intel_syntax noprefix;"
-							"mov 	 eax, %[amsi_allocated];"
-							"mov 	 edx, %[asubfunc];"
-							"mov 	 ebx, %[amsi_mask];"
-							"mov 	 esi, 0;"  //i = 0
-							"loop:   lea  ecx, [rdx+rsi];"
-							"mov	 edi, 1;"
-							"inc     esi;"
-							"shl     edi, cl;"
-							"or      ebx, edi;"
-							"cmp     esi, eax;"
-							"jl      short loop;"
-							"mov 	 %[aResult], ebx;"  //msi_mask
-						".att_syntax prefix;"
-						: [aResult] "=r" (result)
-						: [amsi_allocated] "r" (msi_allocated), [asubfunc] "r" ((u32)subfunc), [amsi_mask] "r" (msi_mask)
-						: "eax", "ebx", "edx");
-		msi_mask = result;
-    }
-	
-	dev_dbg(data->common->msi_desc->dev, "bpcie_msi_mask(msi_mask=0x%X, msi_allocated=0x%X)\n", msi_mask, msi_allocated);
-	//msi_mask = 0;
-	pci_write_config_dword(pdev, desc->pci.mask_pos,
-			       msi_mask);
-	desc->pci.msi_mask = msi_mask;
-	//TODO: disable ht. See apcie_bpcie_msi_ht_disable_and_bpcie_set_msi_mask
-
-	//this code equals msi_mask = 0xFFFFFFFF;
-}
-
-static void bpcie_msi_calc_mask(struct irq_data *data) {
-	//struct bpcie_dev *sc = data->chip_data;
-	u8 subfunc = get_subfunc(data->hwirq);//data->hwirq & 0xff;
-	data->mask = 1 << subfunc;
-	dev_dbg(data->common->msi_desc->dev, "bpcie_msi_calc_mask(0x%X)\n", data->mask);
-	
-	/*
-  num_of_alloc_messages = ivars->cfg.msi.msi_alloc;
-  if ( num_of_alloc_messages > 0 )
-  {
-    // add subfunc to msi_mask
-    count = 0;
-    do
-    {
-      unit_no = LOWORD(ivars->conf.pd_unit) + count++;// unit_no is subfunction
-      DWORD msi_mask &= __ROL4__(-2, unit_no);
-    }
-    while ( count < num_of_alloc_messages );
-  }
-	*/
-}
-
 static struct irq_chip bpcie_msi_controller = {
 	.name = "Baikal-MSI",
-	.irq_unmask = bpcie_msi_unmask,
-	.irq_mask = bpcie_msi_mask,
+	.irq_unmask = pci_msi_unmask_irq,
+	.irq_mask = pci_msi_mask_irq,
 	.irq_ack = irq_chip_ack_parent,
 	.irq_set_affinity = msi_domain_set_affinity,
 	.irq_retrigger = irq_chip_retrigger_hierarchy,
@@ -273,7 +143,6 @@ static int bpcie_msi_init(struct irq_domain *domain,
 	data = irq_domain_get_irq_data(domain, virq);
 	irq_domain_set_info(domain, virq, hwirq, info->chip, info->chip_data,
 			bpcie_handle_edge_irq/*handle_edge_irq*/, NULL, "edge");
-	//bpcie_msi_calc_mask(data);
 	return 0;
 }
 

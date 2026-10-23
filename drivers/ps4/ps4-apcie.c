@@ -372,10 +372,7 @@ EXPORT_SYMBOL(apcie_assign_irqs);
 
 void apcie_free_irqs(unsigned int virq, unsigned int nr_irqs)
 {
-	if (bpcie_initialized)
-		bpcie_free_irqs(virq, nr_irqs);
-	else
-		irq_domain_free_irqs(virq, nr_irqs);
+	irq_domain_free_irqs(virq, nr_irqs);
 }
 EXPORT_SYMBOL(apcie_free_irqs);
 
