@@ -301,7 +301,7 @@ static void resetUsbPort(void)
 	int ret;
 
 	/* Get usb 0 status */
-	ret = bpcie_icc_cmd(5, 0x11, NULL, 0, resp, 20);
+	ret = apcie_icc_cmd(5, 0x11, NULL, 0, resp, 20);
 	printk("usb0 status: ret=%d, reply %02x %02x %02x %02x", ret, resp[0], resp[1], resp[2], resp[3]);
 	if(ret < 0) {
 		printk("USB status failed");

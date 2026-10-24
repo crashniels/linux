@@ -141,9 +141,6 @@ static inline int bpcie_irqnum(struct bpcie_dev *sc, int index)
 	//return pci_irq_vector(sc->pdev, index);
 }
 
-int bpcie_icc_cmd(u8 major, u16 minor, const void *data, u16 length,
-	    void *reply, u16 reply_length);
-
 #define CHAR_BIT 8	/* Normally in <limits.h> */
 static inline u32 rol (u32 n, unsigned int c) {
 	const unsigned int mask = (CHAR_BIT*sizeof(n) - 1);  // assumes width is a power of 2.
@@ -206,8 +203,5 @@ static inline void pci_pm_stop_all(struct pci_dev *dev)
 	}
 	cpu_stop();
 }
-
-u32 glue_read32(struct bpcie_dev *sc, u32 offset);
-void glue_write32(struct bpcie_dev *sc, u32 offset, u32 value);
 
 #endif
