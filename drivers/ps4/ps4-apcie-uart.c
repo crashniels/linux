@@ -17,7 +17,13 @@ int apcie_uart_init(struct apcie_dev *sc)
 	}
 
 	for (i = 0; i < APCIE_NR_UARTS; i++) {
-		uint32_t off = APCIE_RGN_UART_BASE + (i << 12);
+		uint32_t off;
+
+		if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+			off = BPCIE_RGN_UART_BASE + (i << 12);
+		} else {
+			off = APCIE_RGN_UART_BASE + (i << 12);
+		}
 		memset(&uart, 0, sizeof(uart));
 		
 		uart.port.irq		= apcie_irqnum(sc, APCIE_SUBFUNC_UART0 + i);
