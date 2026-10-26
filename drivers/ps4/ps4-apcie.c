@@ -396,6 +396,7 @@ static struct irq_domain *apcie_create_irq_domain(struct apcie_dev *sc)
 {
 	struct irq_domain *domain, *parent;
 	struct fwnode_handle *fn;
+	struct irq_fwspec fwspec;
 
 	sc_dbg("apcie_create_irq_domain\n");
 	if (x86_vector_domain == NULL)
@@ -414,7 +415,14 @@ static struct irq_domain *apcie_create_irq_domain(struct apcie_dev *sc)
 
 	sc_dbg("devid = %d\n", pci_dev_id(sc->pdev));
 
-	parent = pci_msi_get_device_domain(sc->pdev);
+	fwspec.fwnode = fn;
+	fwspec.param_count = 1;
+
+	// It should be correct to put the pci device id in here
+	fwspec.param[0] = pci_dev_id(sc->pdev);
+
+	parent = irq_find_matching_fwspec(&fwspec, DOMAIN_BUS_ANY);
+	
 	if (!parent) {
 		sc_dbg("no parent \n");
 		parent = x86_vector_domain;
@@ -710,7 +718,6 @@ static int apcie_probe(struct pci_dev *dev, const struct pci_device_id *id) {
 	int ret;
 
 	dev_dbg(&dev->dev, "apcie_probe()\n");
-	sc_info("apcie device: %x", sc->pdev->device);
 
 	ret = pci_enable_device(dev);
 	if (ret) {
