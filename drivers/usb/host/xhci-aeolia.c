@@ -226,7 +226,7 @@ static int ahci_init_one(struct pci_dev *pdev)
 			ctlr->trace_len = 6;
 			if (pdev->device == PCI_DEVICE_ID_SONY_BELIZE_XHCI) {
 				belize_sata_phy_init(&pdev->dev, ctlr);
-			} else if (pdev->device == PCI_DEVICE_ID_SONY_BELIZE_XHCI) {
+			} else if (pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_XHCI) {
 				// baikal_sata_phy_init(&pdev->dev, ctlr);
 			}
 			kfree(ctlr);
