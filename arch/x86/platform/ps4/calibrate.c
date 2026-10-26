@@ -7,6 +7,8 @@
  * of the License.
  */
 
+#include "linux/pci.h"
+#include "linux/pci_ids.h"
 #define pr_fmt(fmt) "ps4: " fmt
 
 #include <linux/jiffies.h>
@@ -36,13 +38,24 @@ static __init inline void emctimer_write32(unsigned int reg, u32 val)
 static __init inline u32 emctimer_read(void)
 {
 	u32 t1, t2;
-	t1 = emctimer_read32(EMC_TIMER_VALUE);
-	while (1) {
-		t2 = emctimer_read32(EMC_TIMER_VALUE);
-		if (t1 == t2)
-			return t1;
-		t1 = t2;
+	if (!pci_get_device(PCI_VENDOR_ID_SONY, PCI_DEVICE_ID_SONY_BAIKAL_PCIE, NULL)) {
+		t1 = emctimer_read32(EMC_TIMER_VALUE_BAIKAL);
+		while (1) {
+			t2 = emctimer_read32(EMC_TIMER_VALUE_BAIKAL);
+			if (t1 == t2)
+				return t1;
+			t1 = t2;
+		}
+	} else {
+		t1 = emctimer_read32(EMC_TIMER_VALUE);
+		while (1) {
+			t2 = emctimer_read32(EMC_TIMER_VALUE);
+			if (t1 == t2)
+				return t1;
+			t1 = t2;
+		}
 	}
+	
 }
 
 static __init unsigned long ps4_measure_tsc_freq(void)
@@ -51,19 +64,38 @@ static __init unsigned long ps4_measure_tsc_freq(void)
 	u32 t1, t2;
 	u64 tsc1, tsc2;
 
-	// This is part of the Aeolia pcie device, but it's too early to
-	// do this in a driver.
-	emc_timer = early_ioremap(EMC_TIMER_BASE, 0x100);
-	if (!emc_timer)
-		goto fail;
+	if (!pci_get_device(PCI_VENDOR_ID_SONY, PCI_DEVICE_ID_SONY_BAIKAL_PCIE, NULL)) {
+		// This is part of the Aeolia pcie device, but it's too early to
+		// do this in a driver.
+		emc_timer = early_ioremap(EMC_TIMER_BASE_BAIKAL, 0x100);
+		if (!emc_timer)
+			goto fail;
 
-	// reset/start the timer
-	emctimer_write32(EMC_TIMER_ON_OFF, emctimer_read32(EMC_TIMER_ON_OFF) & 0xFFFFFFC8 | 0x32);
-	// udelay is not calibrated yet, so this is likely wildly off, but good
-	// enough to work.
-	udelay(300);
-	emctimer_write32(EMC_TIMER_RESET_VALUE, emctimer_read32(EMC_TIMER_RESET_VALUE) & 0xFFFFFFE0 | 0x10);
-	emctimer_write32(EMC_TIMER_ON_OFF, emctimer_read32(EMC_TIMER_ON_OFF) | 0x33);
+		// reset/start the timer
+		emctimer_write32(EMC_TIMER_ON_OFF, emctimer_read32(EMC_TIMER_ON_OFF) & 0xFFFFFFC8 | 0x32);
+
+		// udelay is not calibrated yet, so this is likely wildly off, but good
+		// enough to work.
+		udelay(300);
+		emctimer_write32(EMC_TIMER_RESET_VALUE, emctimer_read32(EMC_TIMER_RESET_VALUE) & 0xFFFFFFE0 | 0x10);
+		emctimer_write32(EMC_TIMER_ON_OFF, emctimer_read32(EMC_TIMER_ON_OFF) | 0x33);
+	} else {
+		// This is part of the Aeolia pcie device, but it's too early to
+		// do this in a driver.
+		emc_timer = early_ioremap(EMC_TIMER_BASE, 0x100);
+		if (!emc_timer)
+			goto fail;
+
+		// reset/start the timer
+		emctimer_write32(0x84, emctimer_read32(0x84) & (~0x01));
+		
+		// udelay is not calibrated yet, so this is likely wildly off, but good
+		// enough to work.
+		udelay(300);
+		emctimer_write32(0x00, emctimer_read32(0x00) | 0x01);
+		emctimer_write32(0x84, emctimer_read32(0x84) | 0x01);
+		
+	}
 
 	t1 = emctimer_read();
 	tsc1 = tsc2 = rdtsc();
