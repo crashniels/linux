@@ -484,7 +484,7 @@ struct ahci_controller{
 	u32 trace_len;
 };
 
-void bpcie_sata_phy_init(struct device *dev, struct ahci_controller *ctlr);
+void belize_sata_phy_init(struct device *dev, struct ahci_controller *ctlr);
 
 static inline void bpcie_ahci_write(struct f_resource *r_mem, u32 offset, u32 val) {
 	iowrite32(val, r_mem->r_bushandle + offset);

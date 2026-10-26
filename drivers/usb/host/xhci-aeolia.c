@@ -224,31 +224,11 @@ static int ahci_init_one(struct pci_dev *pdev)
 			ctlr->r_mem = r_mem;
 			ctlr->dev_id = 0;
 			ctlr->trace_len = 6;
-
-			// ctlr->dev_id |= PCI_VENDOR_ID_SONY << 16
-			// ctlr->dev_id |= aeolia, belize or baikal pci id
-			// will be in this format: 0x90ca104d 
-			// with 0x90ca being belize ahci and 0x104d being sony vendor id
-
-			// ctlr->dev_id = 0;
-			// ctrl->dev_id |= PCI_VENDOR_ID_SONY << 16;
-			// switch (pdev->device) {
-			// 	case PCI_DEVICE_ID_SONY_AEOLIA_XHCI:
-			// 		ctrl->dev_id |= PCI_DEVICE_ID_SONY_AEOLIA_AHCI;
-			// 		break;
-			// 	case PCI_DEVICE_ID_SONY_BELIZE_XHCI:
-			// 		ctrl->dev_id |= PCI_DEVICE_ID_SONY_BELIZE_AHCI;
-			//		belize_sata_phy_init(&pdev->dev, ctlr);
-			// 		break;
-			// 	case PCI_DEVICE_ID_SONY_BAIKAL_XHCI:
-			// 		ctrl->dev_id |= PCI_DEVICE_ID_SONY_BAIKAL_AHCI;
-			//		baikal_sata_phy_init(&pdev->dev, ctlr);
-			// 		break;
-			// 	default:
-			// 		ctrl->dev_id = 0;
-			// }
-
-			bpcie_sata_phy_init(&pdev->dev, ctlr);
+			if (pdev->device == PCI_DEVICE_ID_SONY_BELIZE_XHCI) {
+				belize_sata_phy_init(&pdev->dev, ctlr);
+			} else if (pdev->device == PCI_DEVICE_ID_SONY_BELIZE_XHCI) {
+				// baikal_sata_phy_init(&pdev->dev, ctlr);
+			}
 			kfree(ctlr);
 		}
 		kfree(r_mem);

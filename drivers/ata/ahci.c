@@ -47,6 +47,7 @@ enum {
 	AHCI_PCI_BAR_ENMOTUS	= 2,
 	AHCI_PCI_BAR_CAVIUM_GEN5	= 4,
 	AHCI_PCI_BAR_STANDARD	= 5,
+	AHCI_PCI_BAR0_BAIKAL	= 0,
 };
 
 enum board_ids {
@@ -1736,7 +1737,7 @@ static void ahci_init_irq(struct pci_dev *pdev, unsigned int n_ports,
 	int nvec;
 
 	#ifdef CONFIG_X86_PS4
-	if (pdev->vendor == PCI_VENDOR_ID_SONY) {
+	if (pdev->device != PCI_DEVICE_ID_SONY_BAIKAL_AHCI) {
 		apcie_assign_irqs(pdev, n_ports);
 		return;
 	}
@@ -1925,6 +1926,9 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	} else if (pdev->vendor == PCI_VENDOR_ID_LOONGSON) {
 		if (pdev->device == 0x7a08)
 			ahci_pci_bar = AHCI_PCI_BAR_LOONGSON;
+	} else if (pdev->vendor == PCI_VENDOR_ID_SONY) {
+		if (pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_AHCI)
+			ahci_pci_bar = AHCI_PCI_BAR0_BAIKAL;
 	}
 
 	/* acquire resources */
@@ -2162,7 +2166,7 @@ static void ahci_remove_one(struct pci_dev *pdev)
 }
 
 #ifdef CONFIG_X86_PS4
-void bpcie_sata_phy_init(struct device *dev, struct ahci_controller *ctlr)
+void belize_sata_phy_init(struct device *dev, struct ahci_controller *ctlr)
 {
 	int i;
 	u32 v;
@@ -2402,7 +2406,7 @@ void bpcie_sata_phy_init(struct device *dev, struct ahci_controller *ctlr)
 	//done!
 }
 
-EXPORT_SYMBOL_GPL(bpcie_sata_phy_init);
+EXPORT_SYMBOL_GPL(belize_sata_phy_init);
 #endif
 
 module_pci_driver(ahci_pci_driver);
