@@ -38,7 +38,7 @@ static __init inline void emctimer_write32(unsigned int reg, u32 val)
 static __init inline u32 emctimer_read(void)
 {
 	u32 t1, t2;
-	if (!pci_get_device(PCI_VENDOR_ID_SONY, PCI_DEVICE_ID_SONY_BAIKAL_PCIE, NULL)) {
+	if (pci_get_device(PCI_VENDOR_ID_SONY, PCI_DEVICE_ID_SONY_BAIKAL_PCIE, NULL)) {
 		t1 = emctimer_read32(EMC_TIMER_VALUE_BAIKAL);
 		while (1) {
 			t2 = emctimer_read32(EMC_TIMER_VALUE_BAIKAL);
