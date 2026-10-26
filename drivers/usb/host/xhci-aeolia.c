@@ -18,6 +18,8 @@
 
 #include "xhci.h"
 
+extern int apcie_assign_irqs(struct pci_dev *dev, int nvec);
+
 static const char hcd_name[] = "xhci_aeolia";
 
 static struct hc_driver __read_mostly xhci_aeolia_hc_driver;

@@ -47,6 +47,8 @@
 #include "sdhci-pci.h"
 #include "sdhci-uhs2.h"
 
+extern int apcie_assign_irqs(struct pci_dev *dev, int nvec);
+
 static void sdhci_pci_hw_reset(struct sdhci_host *host);
 
 #ifdef CONFIG_PM_SLEEP

@@ -483,6 +483,8 @@ static void bpcie_msi_domain_set_desc(msi_alloc_info_t *arg,
 	#endif
 }
 
+int apcie_assign_irqs(struct pci_dev *dev, int nvec);
+
 /* From arch/x86/platform/ps4/ps4.c */
 int apcie_assign_irqs(struct pci_dev *dev, int nvec)
 {

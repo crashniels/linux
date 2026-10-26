@@ -40,6 +40,8 @@
 #define DRV_NAME	"ahci"
 #define DRV_VERSION	"3.0"
 
+extern int apcie_assign_irqs(struct pci_dev *dev, int nvec);
+
 enum {
 	AHCI_PCI_BAR_STA2X11	= 0,
 	AHCI_PCI_BAR_CAVIUM	= 0,

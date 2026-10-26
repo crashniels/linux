@@ -74,6 +74,8 @@
 
 #define RING_NEXT(x, s)	(((x)+1) & ((s)-1))
 
+extern int apcie_assign_irqs(struct pci_dev *dev, int nvec);
+
 static const u32 default_msg =
     NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK
     | NETIF_MSG_TIMER | NETIF_MSG_TX_ERR | NETIF_MSG_RX_ERR
