@@ -177,8 +177,6 @@ static void apcie_msi_calc_mask(struct irq_data *data) {
 static void apcie_irq_msi_compose_msg(struct irq_data *data,
 				       struct msi_msg *msg)
 {
-	struct irq_cfg *cfg = irqd_cfg(data);
-
 	memset(msg, 0, sizeof(*msg));
 	msg->address_hi = X86_MSI_BASE_ADDRESS_HIGH;
 	msg->address_lo = 0xfee00000;// Just do it like this for now
@@ -190,11 +188,6 @@ static void apcie_irq_msi_compose_msg(struct irq_data *data,
 }
 
 static void bpcie_msi_domain_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
-
-static u8 get_subfunc(unsigned long hwirq) {
-	//u32 func = (hwirq >> 5) & 7;
-	return hwirq & 0x1f;
-}
 
 static void bpcie_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
 {
@@ -214,12 +207,6 @@ static void bpcie_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
 }
 
 static void bpcie_msi_domain_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
-
-static irq_hw_number_t bpcie_msi_get_hwirq(struct msi_domain_info *info,
-					  msi_alloc_info_t *arg)
-{
-	return arg->hwirq;
-}
 
 static void bpcie_handle_edge_irq(struct irq_desc *desc)
 {
@@ -382,7 +369,7 @@ static struct msi_domain_info apcie_msi_domain_info = {
 
 
 static struct msi_domain_ops bpcie_msi_domain_ops = {
-	.get_hwirq	= bpcie_msi_get_hwirq,
+	.get_hwirq	= apcie_msi_get_hwirq,
 	.msi_init	= bpcie_msi_init,
 	.msi_free	= bpcie_msi_free,
 	.set_desc	= bpcie_msi_domain_set_desc,
@@ -409,39 +396,46 @@ static struct irq_domain *apcie_create_irq_domain(struct apcie_dev *sc)
 {
 	struct irq_domain *domain, *parent;
 	struct fwnode_handle *fn;
-	struct irq_fwspec fwspec;
 
 	sc_dbg("apcie_create_irq_domain\n");
 	if (x86_vector_domain == NULL)
 		return NULL;
 
-	apcie_msi_domain_info.chip_data = (void *)sc;
-
-	fn = irq_domain_alloc_named_id_fwnode(apcie_msi_controller.name, pci_dev_id(sc->pdev));
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		bpcie_msi_domain_info.chip_data = (void *)sc;
+		fn = irq_domain_alloc_named_id_fwnode(bpcie_msi_controller.name, pci_dev_id(sc->pdev));
+	} else {
+		apcie_msi_domain_info.chip_data = (void *)sc;
+		fn = irq_domain_alloc_named_id_fwnode(apcie_msi_controller.name, pci_dev_id(sc->pdev));
+	}
 	if (!fn) {
 		return NULL;
 	}
 
 	sc_dbg("devid = %d\n", pci_dev_id(sc->pdev));
 
-	fwspec.fwnode = fn;
-	fwspec.param_count = 1;
-
-	// It should be correct to put the pci device id in here
-	fwspec.param[0] = pci_dev_id(sc->pdev);
-
-	parent = irq_find_matching_fwspec(&fwspec, DOMAIN_BUS_ANY);
+	parent = pci_msi_get_device_domain(sc->pdev);
 	if (!parent) {
 		sc_dbg("no parent \n");
 		parent = x86_vector_domain;
 	} else if (parent == x86_vector_domain) {
 		sc_dbg("no parent \n");
 	} else {
-		apcie_msi_domain_info.flags |= MSI_FLAG_MULTI_PCI_MSI;
-		apcie_msi_controller.name = "IR-Aeolia-MSI";
+		if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+			bpcie_msi_domain_info.flags |= MSI_FLAG_MULTI_PCI_MSI;
+			bpcie_msi_controller.name = "IR-Baikal-MSI";
+		} else {
+			apcie_msi_domain_info.flags |= MSI_FLAG_MULTI_PCI_MSI;
+			apcie_msi_controller.name = "IR-Aeolia-MSI";
+		}
 	}
 
-	domain = msi_create_irq_domain(fn, &apcie_msi_domain_info, parent);
+	if (sc->pdev->device == PCI_DEVICE_ID_SONY_BAIKAL_PCIE) {
+		domain = msi_create_irq_domain(fn, &bpcie_msi_domain_info, parent);
+	} else {
+		domain = msi_create_irq_domain(fn, &apcie_msi_domain_info, parent);
+	}
+	
 	if (!domain) {
 		irq_domain_free_fwnode(fn);
 		pr_warn("Failed to initialize Aeolia-MSI irqdomain.\n");
@@ -512,7 +506,6 @@ int apcie_assign_irqs(struct pci_dev *dev, int nvec)
 	//info.msi_dev = sc->pdev;
 	info.devid = pci_dev_id(sc->pdev);
 	
-	int i, base = 0;
 	struct msi_desc *desc;
 	struct device* bare_dev = &sc->pdev->dev;
 	
@@ -715,6 +708,7 @@ static int apcie_probe(struct pci_dev *dev, const struct pci_device_id *id) {
 	int ret;
 
 	dev_dbg(&dev->dev, "apcie_probe()\n");
+	sc_info("apcie device: %x", sc->pdev->device);
 
 	ret = pci_enable_device(dev);
 	if (ret) {
